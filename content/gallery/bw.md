@@ -6,4 +6,9 @@ date: 2024-11-23
 draft: false
 ---
 
-{{< gallery path="img/bw" >}}
+{{< gallery
+baseUrl="https://s3.valentin-kolb.blog/gallery/bw"
+filePattern="img-<num>.jpg"
+start=1
+end=68
+>}}

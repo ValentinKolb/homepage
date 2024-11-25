@@ -1,19 +1,20 @@
 {{- $lightboxJS := resources.Get "js/lightbox.js" }}
 {{- $galleryJS := slice $lightboxJS | resources.Concat "assets/js/gallery.js" | minify | fingerprint }}
 
-<div class="gallery">
-    {{ $path := .Get "path" }}
-    {{ $images := readDir (printf "static/%s" $path) | shuffle }}
+<section class="gallery">
+    {{ $baseUrl := .Get "baseUrl" }}
+    {{ $filePattern := .Get "filePattern" }}
+    {{ $start := .Get "start" | default 1 }}
+    {{ $end := .Get "end" | default 10 }}
     <div class="gallery-grid">
-        {{ range $images }}
-        {{ if not .IsDir }}
-        <a href="{{ printf "/%s/%s" $path .Name | relURL }}" data-lightbox="gallery">
-            <img src="{{ printf "/%s/%s" $path .Name | relURL }}" alt="{{ .Name }}">
+        {{ range seq $start $end }}
+        {{ $fileName := replace $filePattern "<num>" (printf "%d" .) }}
+        <a href="{{ printf "%s/%s" $baseUrl $fileName }}" target="_blank">
+        <img src="{{ printf "%s/%s" $baseUrl $fileName }}" alt="Image {{ . }}" class="gallery-image">
         </a>
         {{ end }}
-        {{ end }}
     </div>
-</div>
+</section>
 
 <!-- Lightbox JS -->
 <script type="application/javascript" src="{{ $galleryJS.Permalink }}"></script>

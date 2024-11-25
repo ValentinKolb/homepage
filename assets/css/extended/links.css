@@ -1,0 +1,65 @@
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 4 Spalten */
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .links-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 Spalten auf mobilen Geräten */
+    }
+}
+
+.link-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+    text-align: center;
+    height: 100%;
+}
+
+.link-card:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.link-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: block; /* Wird angezeigt, wenn ein Bild angegeben ist */
+}
+
+.link-logo.hidden {
+    display: none; /* Versteckt das Bild, wenn es nicht angegeben wurde */
+}
+
+.link-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    justify-content: center;
+}
+
+.link-buttons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    text-decoration: none;
+    box-shadow: none;
+    transition: transform 0.2s ease;
+}
+
+.link-buttons a:hover {
+    transform: scale(1.01);
+}

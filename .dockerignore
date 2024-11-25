@@ -1,0 +1,24 @@
+# Exclude Hugo build files
+public/
+resources/
+
+# Git files
+.git
+.gitignore
+
+# Node modules (falls im Projekt vorhanden)
+node_modules/
+
+# OS und Editor spezifische Dateien
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.swp
+*.log
+*.tmp
+
+# Docker specific files
+Dockerfile
+docker-compose.yml
+.github/

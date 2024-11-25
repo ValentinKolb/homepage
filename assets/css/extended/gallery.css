@@ -1,0 +1,28 @@
+.gallery-grid {
+    column-count: 3; /* Anzahl der Spalten */
+    column-gap: 10px; /* Horizontaler Abstand zwischen den Spalten */
+}
+
+.gallery-grid > a {
+    display: inline-block;
+    box-shadow: none;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px; /* Optionale Abrundung der Ecken */
+    transition: transform 0.2s ease;
+    margin: 0;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.01); /* Vergrößerung beim Hover */
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 1024px) {
+    .gallery-grid {
+        column-count: 2; /* Weniger Spalten auf mittelgroßen Geräten */
+    }
+}

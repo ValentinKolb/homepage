@@ -4,20 +4,17 @@ FROM alpine:latest AS build
 # Install the Hugo go app.
 RUN apk add --update hugo
 
-# check Hugo version
-RUN hugo version
-
 WORKDIR /opt/HugoApp
 
 # Copy Hugo config into the container Workdir.
 COPY . .
 
-RUN ls -la /opt/HugoApp
+# install PaperMod Theme
+RUN git submodule add https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod && \
+    git submodule update --init --recursive
 
 # Run Hugo in the Workdir to generate HTML.
 RUN hugo
-
-RUN ls -la /opt/HugoApp/public
 
 # Stage 2
 FROM nginx:1.25-alpine

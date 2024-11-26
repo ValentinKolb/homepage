@@ -2,7 +2,14 @@
 FROM alpine:latest AS build
 
 # Install the Hugo go app and git
-RUN apk add --update hugo git
+RUN apk add --no-cache curl tar git
+
+# Set the Hugo version
+ARG HUGO_VERSION=0.139.0
+
+# Download and install the specific version of Hugo
+RUN curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz \
+    | tar -xz -C /usr/local/bin hugo
 
 # Set workdir to the Hugo app dir.
 WORKDIR /opt/HugoApp

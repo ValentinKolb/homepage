@@ -12,7 +12,7 @@ RUN curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/
     | tar -xz -C /usr/local/bin hugo
 
 # Verify Hugo installation
-RUN hugo version
+RUN /usr/local/bin/hugo version
 
 WORKDIR /opt/HugoApp
 
@@ -20,7 +20,7 @@ WORKDIR /opt/HugoApp
 COPY . .
 
 # Run Hugo to generate the HTML files
-RUN hugo --minify
+RUN /usr/local/bin/hugo --minify
 
 # Stage 2: Serve with NGINX
 FROM nginx:1.25-alpine

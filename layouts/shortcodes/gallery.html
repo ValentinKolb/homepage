@@ -11,51 +11,15 @@
         {{ $fileName := replace $filePattern "<num>" (printf "%d" .) }}
         <div class="gallery-item">
             <img
-                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                    data-src="{{ printf "%s/%s" $baseUrl $fileName }}"
-            alt="Image {{ . }}"
-            class="lazy gallery-image"
-            loading="lazy"
+                src="{{ printf "%s/%s" $baseUrl $fileName }}"
+                alt="Image {{ . }}"
+                class="gallery-image"
+                loading="lazy"
             >
         </div>
         {{ end }}
     </div>
 </section>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const lazyImages = document.querySelectorAll(".lazy");
-
-        const imageObserver = new IntersectionObserver(
-            (entries, observer) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        const src = img.getAttribute("data-src");
-
-                        if (src) {
-                            img.src = src; // Set the image source
-                            img.onload = () => {
-                                img.classList.add("lazy-loaded"); // Add a class when loaded
-                            };
-                            img.removeAttribute("data-src"); // Remove the lazy load marker
-                            observer.unobserve(img); // Stop observing this image
-                        }
-                    }
-                });
-            },
-            {
-                root: null, // Viewport is the root
-                rootMargin: "200px", // Preload 200px before the image is in view
-                threshold: 0.1, // Trigger when 10% of the image is visible
-            }
-        );
-
-        lazyImages.forEach((img) => {
-            imageObserver.observe(img);
-        });
-    });
-</script>
 
 <!-- Lightbox JS -->
 <script type="application/javascript" src="{{ $galleryJS.Permalink }}"></script>

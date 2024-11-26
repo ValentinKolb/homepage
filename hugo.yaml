@@ -1,7 +1,8 @@
-baseURL: https://example.org/
+baseURL: https://valentin-kolb.blog/
 languageCode: de-DE
 title: "Valentin Kolb"
 theme: ["PaperMod"]
+
 
 taxonomies:
   tag: tags

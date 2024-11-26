@@ -1,34 +1,27 @@
-# Stage 1: Build
+# Stage 1
 FROM alpine:latest AS build
 
-# Install required tools
-RUN apk add --no-cache curl tar
+# Install the Hugo go app.
+RUN apk add --update hugo
 
-# Set the Hugo version
-ARG HUGO_VERSION=0.139.0
-
-# Download and install the specific version of Hugo
-RUN curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz \
-    | tar -xz -C /usr/local/bin hugo
-
-# Verify Hugo installation
-RUN /usr/local/bin/hugo version
+# check Hugo version
+RUN hugo version
 
 WORKDIR /opt/HugoApp
 
-# Copy Hugo config and site files into the container Workdir
+# Copy Hugo config into the container Workdir.
 COPY . .
 
-# Run Hugo to generate the HTML files
-RUN /usr/local/bin/hugo --minify
+# Run Hugo in the Workdir to generate HTML.
+RUN hugo
 
-# Stage 2: Serve with NGINX
+# Stage 2
 FROM nginx:1.25-alpine
 
-# Set workdir to the NGINX default dir
+# Set workdir to the NGINX default dir.
 WORKDIR /usr/share/nginx/html
 
-# Copy the generated HTML files from the build stage
+# Copy HTML from previous build into the Workdir.
 COPY --from=build /opt/HugoApp/public .
 
 # Expose port 80

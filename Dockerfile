@@ -1,8 +1,8 @@
 # Stage 1: Build
-FROM alpine:latest AS build
+FROM ubuntu AS build
 
 # Install dependencies
-RUN apk add --no-cache curl tar git
+RUN apt install curl tar git
 
 # Set the Hugo version
 ARG HUGO_VERSION=0.139.0

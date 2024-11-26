@@ -11,8 +11,7 @@ WORKDIR /opt/HugoApp
 COPY . .
 
 # install PaperMod Theme
-RUN git submodule add --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
-RUN git submodule update --init --recursive # needed when you reclone your repo (submodules may not get cloned automatically)
+RUN git clone https://github.com/adityatelange/hugo-PaperMod themes/PaperMod --depth=1
 
 # Run Hugo in the Workdir to generate HTML.
 RUN hugo

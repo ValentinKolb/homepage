@@ -13,13 +13,15 @@
             <img
                 src="{{ printf "%s/%s" $baseUrl $fileName }}"
                 alt="Image {{ . }}"
-                class="gallery-image"
                 loading="lazy"
             >
         </div>
         {{ end }}
     </div>
 </section>
+
+<script>
+</script>
 
 <!-- Lightbox JS -->
 <script type="application/javascript" src="{{ $galleryJS.Permalink }}"></script>

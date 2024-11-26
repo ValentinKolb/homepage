@@ -2,7 +2,7 @@
 title: "Farbige Fotografie"
 description: "Lebendige Farben und spannende Motive"
 keywords: ["Galerie", "Fotografie", "Bilder"]
-date: 2024-11-23
+date: 2024-11-19
 draft: false
 ---
 

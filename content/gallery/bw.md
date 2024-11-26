@@ -2,7 +2,7 @@
 title: "Schwarz-Weiß Fotografie"
 description: "Klare Kontraste und interessante Formen im Fokus"
 keywords: [ "Galerie", "Fotografie", "Bilder" ]
-date: 2024-11-23
+date: 2024-11-19
 draft: false
 ---
 

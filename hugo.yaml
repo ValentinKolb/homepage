@@ -1,7 +1,7 @@
 baseURL: https://valentin-kolb.blog/
 languageCode: de-DE
 title: "Valentin Kolb"
-theme: ["PaperMod"]
+theme: [ "PaperMod" ]
 
 
 taxonomies:
@@ -26,12 +26,12 @@ params:
 
 menu:
   main:
-    - name: Fotografie
-      url: /gallery/
-      weight: 10
-    - name: Projekte
-      url: /projects/
-      weight: 20
     - name: Blog
       url: /blog/
+      weight: 10
+    - name: Fotografie
+      url: /gallery/
+      weight: 20
+    - name: Projekte
+      url: /projects/
       weight: 30

@@ -12,8 +12,10 @@ WORKDIR /opt/HugoApp
 # Copy Hugo config into the container Workdir.
 COPY . .
 
+RUN ls -la /opt/HugoApp
+
 # Run Hugo in the Workdir to generate HTML.
-RUN hugo build
+RUN hugo
 
 RUN ls -la /opt/HugoApp/public
 

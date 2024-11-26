@@ -15,6 +15,8 @@ COPY . .
 # Run Hugo in the Workdir to generate HTML.
 RUN hugo
 
+RUN ls -la /opt/HugoApp/public
+
 # Stage 2
 FROM nginx:1.25-alpine
 

@@ -8,6 +8,7 @@ draft: false
 
 {{< gallery
     baseUrl="https://s3.valentin-kolb.blog/gallery/color"
+    thumbPath="https://s3.valentin-kolb.blog/gallery/color/thumb"
     filePattern="img-<num>.jpg"
     start=1
     end=91

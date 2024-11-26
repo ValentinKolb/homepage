@@ -35,3 +35,6 @@ menu:
     - name: Projekte
       url: /projects/
       weight: 30
+    - name: Tags
+      url: /tags/
+      weight: 40

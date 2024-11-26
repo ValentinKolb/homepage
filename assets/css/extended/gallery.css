@@ -1,3 +1,28 @@
+/* Spinner container */
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 20px auto;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Progress text */
+.progress-text {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Hide the gallery grid until loaded */
+.gallery-grid.hidden {
+    display: none;
+}
+
+/* Show the gallery when loaded */
 .gallery-grid {
     column-count: 3; /* Number of columns */
     column-gap: 10px; /* Space between columns */
@@ -30,5 +55,15 @@
 @media (max-width: 1024px) {
     .gallery-grid {
         column-count: 2; /* Reduce columns on smaller screens */
+    }
+}
+
+/* Spinner animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }

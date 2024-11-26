@@ -13,7 +13,7 @@ WORKDIR /opt/HugoApp
 COPY . .
 
 # Run Hugo in the Workdir to generate HTML.
-RUN hugo
+RUN hugo build
 
 RUN ls -la /opt/HugoApp/public
 

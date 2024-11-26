@@ -1,9 +1,10 @@
 # Stage 1
 FROM alpine:latest AS build
 
-# Install the Hugo go app.
-RUN apk add --update hugo
+# Install the Hugo go app and git
+RUN apk add --update hugo git
 
+# Set workdir to the Hugo app dir.
 WORKDIR /opt/HugoApp
 
 # Copy Hugo config into the container Workdir.

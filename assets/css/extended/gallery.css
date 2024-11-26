@@ -1,28 +1,32 @@
 .gallery-grid {
-    column-count: 3; /* Anzahl der Spalten */
-    column-gap: 10px; /* Horizontaler Abstand zwischen den Spalten */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 3 columns on desktop, 2 on mobile */
+    gap: 10px; /* Space between items */
+    margin: 0 auto;
+    max-width: 1200px; /* Limit the gallery width */
 }
 
-.gallery-grid > a {
-    display: inline-block;
-    box-shadow: none;
+.gallery-item {
+    position: relative;
+    overflow: hidden;
 }
 
-.gallery-grid img {
+.gallery-image {
     width: 100%;
     height: auto;
-    border-radius: 5px; /* Optionale Abrundung der Ecken */
-    transition: transform 0.2s ease;
-    margin: 0;
+    display: block;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease-in-out;
 }
 
-.gallery-grid img:hover {
-    transform: scale(1.01); /* Vergrößerung beim Hover */
+/* When the image is loaded */
+.gallery-image.lazy-loaded {
+    opacity: 1;
 }
 
-/* Responsive Anpassungen */
-@media (max-width: 1024px) {
+/* Responsive adjustments */
+@media (max-width: 768px) {
     .gallery-grid {
-        column-count: 2; /* Weniger Spalten auf mittelgroßen Geräten */
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
     }
 }

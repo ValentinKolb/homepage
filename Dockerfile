@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the Hugo website
-RUN hugo --minify
+RUN hugo build
 
 # Stage 2: Serve the site
 FROM nginx:alpine

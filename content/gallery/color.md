@@ -7,8 +7,8 @@ draft: false
 ---
 
 {{< gallery
-baseUrl="https://s3.valentin-kolb.blog/gallery/color"
-filePattern="img-<num>.jpg"
-start=1
-end=91
+    baseUrl="https://s3.valentin-kolb.blog"
+    filePattern="image-<num>.jpg"
+    start=1
+    end=20
 >}}

@@ -1,0 +1,12 @@
+<footer class="footer">
+    <div class="footer-content">
+        <p>
+            &copy; Valentin Kolb {{ now.Format "2006" }} |
+            <a href="{{ "impressum" | relURL }}">Impressum</a>
+        </p>
+    </div>
+</footer>
+
+{{- $tabsJS := resources.Get "js/tabs.js" | minify | fingerprint}}
+<!-- Load Tabs JS -->
+<script type="application/javascript" src="{{ $tabsJS.Permalink }}"></script>

@@ -1,0 +1,106 @@
+---
+import { getEntry, getEntryBySlug } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { slugify } from "@/lib/utils/textConverter";
+import { IconArrowLeft, IconArrowRight, IconX } from "@tabler/icons-react";
+import { Image } from "astro:assets";
+
+export async function getStaticPaths() {
+  const galleries = await getSinglePage("gallery");
+  return galleries.map((gallery) => ({
+    params: {
+      slug: slugify(gallery.data.name),
+    },
+    props: { gallery },
+  }));
+}
+
+const { gallery } = Astro.props;
+const { name, description, images } = gallery.data;
+---
+
+<Base title={name}>
+  <section class="py-16">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-8">{name}</h1>
+      {description && <p class="mb-8 text-gray-400">{description}</p>}
+
+      <!-- Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {images.map((image, index) => (
+          <>
+            <!-- Thumbnail -->
+            <a
+              href={`#lightbox-${index}`}
+              class="block aspect-square overflow-hidden rounded-lg"
+            >
+              <Image
+                src={image.thumb || image.src}
+                alt={image.alt || name}
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+                inferSize={true}
+              />
+            </a>
+
+            <!-- Lightbox -->
+            <div
+              id={`lightbox-${index}`}
+              class="hidden target:flex fixed inset-0 z-50 bg-black/90 justify-center items-center"
+              role="dialog"
+              aria-modal="true"
+            >
+              <div class="relative w-full h-full flex items-center justify-center p-4">
+                <!-- Navigation Buttons Container -->
+                <div class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
+                  <div class="w-16 flex justify-start pointer-events-auto">
+                    {index > 0 && (
+                      <a
+                        href={`#lightbox-${index - 1}`}
+                        class="text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
+                        aria-label="Vorheriges Bild"
+                      >
+                        <IconArrowLeft className="w-6 h-6" />
+                      </a>
+                    )}
+                  </div>
+                  <div class="w-16 flex justify-end pointer-events-auto">
+                    {index < images.length - 1 && (
+                      <a
+                        href={`#lightbox-${index + 1}`}
+                        class="text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
+                        aria-label="Nächstes Bild"
+                      >
+                        <IconArrowRight className="w-6 h-6" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <!-- Image Container -->
+                <div class="relative max-w-[95vw] max-h-[95vh] flex items-center justify-center">
+                  <Image
+                    src={image.src}
+                    alt={image.alt || name}
+                    class="max-w-full max-h-[95vh] object-contain"
+                    inferSize={true}
+                  />
+                </div>
+
+                <!-- Close Button -->
+                <a
+                  href="#"
+                  class="absolute top-4 right-4 text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
+                  aria-label="Schließen"
+                >
+                  <IconX className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

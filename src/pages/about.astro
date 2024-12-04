@@ -1,0 +1,112 @@
+---
+import { getEntryBySlug } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "@/layouts/Base.astro";
+import {
+  IconCode,
+  IconTools,
+  IconBriefcase,
+  IconStar,
+} from "@tabler/icons-react";
+import { getEntry } from "astro:content";
+
+const about = await getEntry("about", "index");
+const { title, meta_title, description, image, skills, jobs } = about!.data;
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <!-- Hero Section -->
+  <section class="py-16 bg-gray-50">
+    <div
+      class="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
+    >
+      <!-- Image -->
+      {
+        image && (
+          <div class="md:col-span-4">
+            <Image
+              src={image}
+              width={400}
+              height={400}
+              alt={title}
+              class="rounded-lg shadow-md w-full"
+            />
+          </div>
+        )
+      }
+
+      <!-- Description -->
+      <div class="md:col-span-8">
+        <h1 class="text-3xl font-bold mb-4">{title}</h1>
+        <p class="text-lg text-gray-600 leading-relaxed">{description}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="py-16">
+    <div class="container mx-auto">
+      <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
+        <IconCode className="h-6 w-6 text-blue-500" /> Kompetenzen
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Programmiersprachen -->
+        <div>
+          <h3 class="text-xl font-semibold mb-4">
+            {skills.programming_languages.title}
+          </h3>
+          <ul class="list-disc list-inside text-gray-600">
+            {
+              skills.programming_languages.items.map((skill) => (
+                <li>{skill}</li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Software & Tools -->
+        <div>
+          <h3 class="text-xl font-semibold mb-4">
+            {skills.software_tools.title}
+          </h3>
+          <ul class="list-disc list-inside text-gray-600">
+            {skills.software_tools.items.map((tool) => <li>{tool}</li>)}
+          </ul>
+        </div>
+
+        <!-- Interessen -->
+        <div>
+          <h3 class="text-xl font-semibold mb-4">{skills.interests.title}</h3>
+          <ul class="list-disc list-inside text-gray-600">
+            {skills.interests.items.map((interest) => <li>{interest}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto">
+      <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
+        <IconBriefcase className="h-6 w-6 text-green-500" /> Berufserfahrung
+      </h2>
+      <div class="space-y-8">
+        {
+          jobs.items.map((job) => (
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-lg font-bold">{job.role}</h3>
+              <p class="text-gray-500 text-sm">{job.company}</p>
+              <p class="text-gray-600 mt-2">{job.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

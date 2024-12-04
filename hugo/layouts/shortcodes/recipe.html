@@ -1,0 +1,15 @@
+{{- $file := .Get 0 -}}
+{{- if $file -}}
+    {{- $recipe := index site.Data.recipes $file -}}
+    {{- if $recipe -}}
+        <div class="recipe">
+            {{ range $step := $recipe.steps }}
+                {{ partial "recipe.html" (dict "Step" $step "Root" true) }}
+            {{ end }}
+        </div>
+    {{- else -}}
+        <p class="error">Rezept nicht gefunden: {{ $file }}</p>
+    {{- end -}}
+{{- else -}}
+    <p class="error">Kein Rezeptname angegeben!</p>
+{{- end -}}

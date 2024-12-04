@@ -1,0 +1,33 @@
+---
+import Base from "@/layouts/Base.astro";
+import SearchBar from "@/layouts/SearchBar";
+import { getSinglePage } from "@/lib/contentParser.astro";
+
+// Retrieve all articles
+const blogs = await getSinglePage("blogs");
+
+// List of items to search in
+const searchList = blogs.map((item: any) => ({
+  slug: item.slug,
+  data: item.data,
+  content: item.body,
+}));
+---
+
+<Base title={`Suchen`}>
+  <!-- Header -->
+  <section class="py-8">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold text-center mb-10">Blogs durchsuchen</h1>
+      <p class="text-lg text-center text-gray-600">
+        Eine Übersicht über einige meiner Projekte, mit denen ich mich
+        beschäftigt habe.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SearchBar client:load searchList={searchList} />
+    </div>
+  </section>
+</Base>

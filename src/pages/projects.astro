@@ -1,0 +1,72 @@
+---
+import Base from "@/layouts/Base.astro";
+import { IconExternalLink, IconBrandGithub } from "@tabler/icons-react";
+import { getCollection } from "astro:content";
+
+// Projekte aus der Content Collection laden
+const projects = await getCollection("projects");
+---
+
+<Base title="Meine Projekte">
+  <!-- Header -->
+  <section class="py-8">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold text-center mb-10">Meine Projekte</h1>
+      <p class="text-lg text-center text-gray-600">
+        Eine Übersicht über einige meiner Projekte, mit denen ich mich beschäftige.
+      </p>
+    </div>
+  </section>
+
+  <!-- Projekte -->
+  <section class="py-8">
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {projects.map(({ data: project }) => (
+        <div class="bg-white border rounded-lg shadow group hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col gap-4">
+          <!-- Bildbereich -->
+          {project.logo && (
+          <div class="overflow-hidden relative w-32 h-32 mx-auto bg-gray-100 rounded-md flex items-center justify-center">
+            <img
+              src={project.logo}
+              alt={`${project.name} Logo`}
+              class="h-full w-full object-cover"
+            />
+          </div>
+          )}
+          <!-- Inhalt -->
+          <div class="flex-grow">
+            <h2 class="text-xl font-bold mb-2 text-center ">
+              {project.name}
+            </h2>
+            <p class="text-gray-600 text-center">{project.desc}</p>
+          </div>
+          <!-- Links -->
+          <div class="flex items-center justify-center gap-4">
+            {project.url && (
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary group-hover:text-blue-500 transition hover:scale-105"
+                title="Zur Website"
+              >
+                <IconExternalLink className="h-6 w-6" />
+              </a>
+            )}
+            {project.git_url && (
+              <a
+                href={project.git_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary group-hover:text-blue-500 transition hover:scale-105"
+                title="Zum GitHub-Repository"
+              >
+                <IconBrandGithub className="h-6 w-6" />
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

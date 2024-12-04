@@ -1,0 +1,26 @@
+{
+  "main": [
+    {
+      "name": "Projekte",
+      "url": "/projects"
+    },
+    {
+      "name": "Gallerie",
+      "url": "/gallery"
+    },
+    {
+      "name": "Blogs",
+      "url": "/blog"
+    }
+  ],
+  "footer": [
+    {
+      "name": "Über Mich",
+      "url": "/about"
+    },
+    {
+      "name": "Impressum",
+      "url": "/privacy-policy"
+    }
+  ]
+}

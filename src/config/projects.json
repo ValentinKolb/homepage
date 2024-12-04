@@ -1,0 +1,57 @@
+[
+  {
+    "name": "StuVe IT",
+    "desc": "Verwaltungstools für Prozesse der Studierendenvertretung der Universität Ulm.",
+    "logo": "https://it.stuve.uni-ulm.de/stuve-logo.svg",
+    "url": "https://it.stuve.uni-ulm.de",
+    "git_url": "https://git.stuve.uni-ulm.de/stuve-it/stuve-it-frontend"
+  },
+  {
+    "name": "Excel-Merger",
+    "desc": "Webtool um mehrere Excel-Dateien zusammenzuführen.",
+    "url": "https://table-merger.kolb-antik.com/",
+    "git_url": "https://github.com/ValentinKolb/TableMerger"
+  },
+  {
+    "name": "Jpegger",
+    "desc": "CLI-Tool um Bilder für das Web zu optimieren.",
+    "logo": "https://github.com/ValentinKolb/jpegger/raw/main/assets/banner.png",
+    "git_url": "https://github.com/ValentinKolb/jpegger"
+  },
+  {
+    "name": "How-To Docker",
+    "desc": "Github-Repository um Docker zu erlernen.",
+    "logo": "https://github.com/ValentinKolb/docker-demo/raw/main/assets/banner.png",
+    "git_url": "https://github.com/ValentinKolb/docker-demo/"
+  },
+  {
+    "name": "Websocket Client",
+    "desc": "Simpler Websocket-Client als Webapp.",
+    "url": "https://softwaregrund.pro/jekt/"
+  },
+  {
+    "name": "Stroodle.me",
+    "desc": "Todo App mit Fokus auf einfache Bedienung als Progressive Web App.",
+    "logo": "https://stroodle.me/logo-square.svg",
+    "url": "https://stroodle.me/",
+    "git_url": "https://github.com/ValentinKolb/stroodle"
+  },
+  {
+    "name": "Kleinsteanzeigen.de",
+    "desc": "Redesign und Implementierung einer Kleinanzeigen-Webseite.",
+    "logo": "https://kleinsteanzeigen.de/logo.png",
+    "url": "https://kleinsteanzeigen.de/",
+    "git_url": "https://github.com/ValentinKolb/kleinsteanzeigen.de"
+  },
+  {
+    "name": "Bad Words Server",
+    "desc": "REST API um Schimpfwörter zu erkennen.",
+    "logo": "https://github.com/ValentinKolb/bad-words/raw/main/assets/banner.png",
+    "git_url": "https://github.com/ValentinKolb/bad-words"
+  },
+  {
+    "name": "SSH-CLI",
+    "desc": "Python-CLI um SSH-Verbindungen eines Jumphosts zu verwalten.",
+    "git_url": "https://github.com/ValentinKolb/ssh-cli"
+  }
+]

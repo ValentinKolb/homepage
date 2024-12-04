@@ -1,0 +1,461 @@
+{
+  "name": "Farbfotographie",
+  "description": "Lebendige Farben und spannende Motive",
+  "images": [
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-1.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-1.jpg",
+      "alt": "Bild 1 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-2.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-2.jpg",
+      "alt": "Bild 2 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-3.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-3.jpg",
+      "alt": "Bild 3 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-4.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-4.jpg",
+      "alt": "Bild 4 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-5.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-5.jpg",
+      "alt": "Bild 5 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-6.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-6.jpg",
+      "alt": "Bild 6 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-7.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-7.jpg",
+      "alt": "Bild 7 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-8.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-8.jpg",
+      "alt": "Bild 8 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-9.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-9.jpg",
+      "alt": "Bild 9 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-10.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-10.jpg",
+      "alt": "Bild 10 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-11.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-11.jpg",
+      "alt": "Bild 11 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-12.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-12.jpg",
+      "alt": "Bild 12 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-13.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-13.jpg",
+      "alt": "Bild 13 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-14.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-14.jpg",
+      "alt": "Bild 14 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-15.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-15.jpg",
+      "alt": "Bild 15 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-16.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-16.jpg",
+      "alt": "Bild 16 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-17.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-17.jpg",
+      "alt": "Bild 17 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-18.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-18.jpg",
+      "alt": "Bild 18 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-19.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-19.jpg",
+      "alt": "Bild 19 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-20.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-20.jpg",
+      "alt": "Bild 20 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-21.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-21.jpg",
+      "alt": "Bild 21 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-22.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-22.jpg",
+      "alt": "Bild 22 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-23.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-23.jpg",
+      "alt": "Bild 23 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-24.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-24.jpg",
+      "alt": "Bild 24 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-25.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-25.jpg",
+      "alt": "Bild 25 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-26.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-26.jpg",
+      "alt": "Bild 26 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-27.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-27.jpg",
+      "alt": "Bild 27 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-28.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-28.jpg",
+      "alt": "Bild 28 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-29.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-29.jpg",
+      "alt": "Bild 29 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-30.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-30.jpg",
+      "alt": "Bild 30 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-31.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-31.jpg",
+      "alt": "Bild 31 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-32.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-32.jpg",
+      "alt": "Bild 32 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-33.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-33.jpg",
+      "alt": "Bild 33 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-34.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-34.jpg",
+      "alt": "Bild 34 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-35.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-35.jpg",
+      "alt": "Bild 35 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-36.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-36.jpg",
+      "alt": "Bild 36 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-37.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-37.jpg",
+      "alt": "Bild 37 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-38.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-38.jpg",
+      "alt": "Bild 38 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-39.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-39.jpg",
+      "alt": "Bild 39 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-40.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-40.jpg",
+      "alt": "Bild 40 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-41.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-41.jpg",
+      "alt": "Bild 41 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-42.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-42.jpg",
+      "alt": "Bild 42 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-43.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-43.jpg",
+      "alt": "Bild 43 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-44.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-44.jpg",
+      "alt": "Bild 44 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-45.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-45.jpg",
+      "alt": "Bild 45 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-46.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-46.jpg",
+      "alt": "Bild 46 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-47.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-47.jpg",
+      "alt": "Bild 47 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-48.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-48.jpg",
+      "alt": "Bild 48 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-49.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-49.jpg",
+      "alt": "Bild 49 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-50.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-50.jpg",
+      "alt": "Bild 50 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-51.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-51.jpg",
+      "alt": "Bild 51 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-52.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-52.jpg",
+      "alt": "Bild 52 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-53.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-53.jpg",
+      "alt": "Bild 53 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-54.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-54.jpg",
+      "alt": "Bild 54 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-55.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-55.jpg",
+      "alt": "Bild 55 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-56.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-56.jpg",
+      "alt": "Bild 56 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-57.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-57.jpg",
+      "alt": "Bild 57 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-58.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-58.jpg",
+      "alt": "Bild 58 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-59.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-59.jpg",
+      "alt": "Bild 59 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-60.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-60.jpg",
+      "alt": "Bild 60 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-61.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-61.jpg",
+      "alt": "Bild 61 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-62.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-62.jpg",
+      "alt": "Bild 62 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-63.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-63.jpg",
+      "alt": "Bild 63 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-64.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-64.jpg",
+      "alt": "Bild 64 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-65.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-65.jpg",
+      "alt": "Bild 65 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-66.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-66.jpg",
+      "alt": "Bild 66 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-67.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-67.jpg",
+      "alt": "Bild 67 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-68.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-68.jpg",
+      "alt": "Bild 68 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-69.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-69.jpg",
+      "alt": "Bild 69 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-70.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-70.jpg",
+      "alt": "Bild 70 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-71.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-71.jpg",
+      "alt": "Bild 71 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-72.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-72.jpg",
+      "alt": "Bild 72 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-73.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-73.jpg",
+      "alt": "Bild 73 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-74.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-74.jpg",
+      "alt": "Bild 74 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-75.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-75.jpg",
+      "alt": "Bild 75 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-76.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-76.jpg",
+      "alt": "Bild 76 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-77.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-77.jpg",
+      "alt": "Bild 77 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-78.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-78.jpg",
+      "alt": "Bild 78 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-79.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-79.jpg",
+      "alt": "Bild 79 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-80.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-80.jpg",
+      "alt": "Bild 80 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-81.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-81.jpg",
+      "alt": "Bild 81 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-82.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-82.jpg",
+      "alt": "Bild 82 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-83.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-83.jpg",
+      "alt": "Bild 83 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-84.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-84.jpg",
+      "alt": "Bild 84 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-85.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-85.jpg",
+      "alt": "Bild 85 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-86.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-86.jpg",
+      "alt": "Bild 86 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-87.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-87.jpg",
+      "alt": "Bild 87 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-88.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-88.jpg",
+      "alt": "Bild 88 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-89.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-89.jpg",
+      "alt": "Bild 89 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-90.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-90.jpg",
+      "alt": "Bild 90 (Farbfotographie)"
+    },
+    {
+      "src": "https://s3.valentin-kolb.blog/gallery/color/img-91.jpg",
+      "thumb": "https://s3.valentin-kolb.blog/gallery/color/thumb/img-91.jpg",
+      "alt": "Bild 91 (Farbfotographie)"
+    }
+  ]
+}

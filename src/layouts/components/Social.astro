@@ -1,0 +1,484 @@
+---
+const { source, className } = Astro.props;
+
+import {
+  IconBrandFacebook,
+  IconBrandTwitter,
+  IconBrandMastodon,
+  IconBrandInstagram,
+  IconBrandYoutube,
+  IconBrandLinkedin,
+  IconBrandGithub,
+  IconBrandGitlab,
+  IconBrandDiscord,
+  IconBrandSlack,
+  IconBrandMedium,
+  IconBrandCodepen,
+  IconBrandBitbucket,
+  IconBrandDribbble,
+  IconBrandBehance,
+  IconBrandPinterest,
+  IconBrandSoundcloud,
+  IconBrandTumblr,
+  IconBrandReddit,
+  IconBrandVk,
+  IconBrandWhatsapp,
+  IconBrandSnapchat,
+  IconBrandVimeo,
+  IconBrandTiktok,
+  IconBrandFoursquare,
+  IconRss,
+  IconMail,
+  IconPhone,
+  IconGlobe,
+  IconLocation,
+} from "@tabler/icons-react";
+
+const {
+  facebook,
+  twitter,
+  mastodon,
+  instagram,
+  youtube,
+  linkedin,
+  github,
+  gitlab,
+  discord,
+  slack,
+  medium,
+  codepen,
+  bitbucket,
+  dribbble,
+  behance,
+  pinterest,
+  soundcloud,
+  tumblr,
+  reddit,
+  vk,
+  whatsapp,
+  snapchat,
+  vimeo,
+  tiktok,
+  foursquare,
+  rss,
+  email,
+  phone,
+  address,
+  skype,
+  website,
+} = source;
+---
+
+<ul class={className}>
+  {
+    facebook && (
+      <li class="inline-block">
+        <a
+          aria-label="facebook"
+          href={facebook}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandFacebook />
+        </a>
+      </li>
+    )
+  }
+  {
+    twitter && (
+      <li class="inline-block">
+        <a
+          aria-label="twitter"
+          href={twitter}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandTwitter />
+        </a>
+      </li>
+    )
+  }
+  {
+    mastodon && (
+      <li class="inline-block">
+        <a
+          aria-label="mastodon"
+          href={mastodon}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandMastodon />
+        </a>
+      </li>
+    )
+  }
+  {
+    instagram && (
+      <li class="inline-block">
+        <a
+          aria-label="instagram"
+          href={instagram}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandInstagram />
+        </a>
+      </li>
+    )
+  }
+  {
+    youtube && (
+      <li class="inline-block">
+        <a
+          aria-label="youtube"
+          href={youtube}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandYoutube />
+        </a>
+      </li>
+    )
+  }
+  {
+    linkedin && (
+      <li class="inline-block">
+        <a
+          aria-label="linkedin"
+          href={linkedin}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandLinkedin />
+        </a>
+      </li>
+    )
+  }
+  {
+    github && (
+      <li class="inline-block">
+        <a
+          aria-label="github"
+          href={github}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandGithub />
+        </a>
+      </li>
+    )
+  }
+  {
+    gitlab && (
+      <li class="inline-block">
+        <a
+          aria-label="gitlab"
+          href={gitlab}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandGitlab />
+        </a>
+      </li>
+    )
+  }
+  {
+    discord && (
+      <li class="inline-block">
+        <a
+          aria-label="discord"
+          href={discord}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandDiscord />
+        </a>
+      </li>
+    )
+  }
+  {
+    slack && (
+      <li class="inline-block">
+        <a
+          aria-label="slack"
+          href={slack}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandSlack />
+        </a>
+      </li>
+    )
+  }
+  {
+    medium && (
+      <li class="inline-block">
+        <a
+          aria-label="medium"
+          href={medium}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandMedium />
+        </a>
+      </li>
+    )
+  }
+  {
+    codepen && (
+      <li class="inline-block">
+        <a
+          aria-label="codepen"
+          href={codepen}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandCodepen />
+        </a>
+      </li>
+    )
+  }
+  {
+    bitbucket && (
+      <li class="inline-block">
+        <a
+          aria-label="bitbucket"
+          href={bitbucket}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandBitbucket />
+        </a>
+      </li>
+    )
+  }
+  {
+    dribbble && (
+      <li class="inline-block">
+        <a
+          aria-label="dribbble"
+          href={dribbble}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandDribbble />
+        </a>
+      </li>
+    )
+  }
+  {
+    behance && (
+      <li class="inline-block">
+        <a
+          aria-label="behance"
+          href={behance}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandBehance />
+        </a>
+      </li>
+    )
+  }
+  {
+    pinterest && (
+      <li class="inline-block">
+        <a
+          aria-label="pinterest"
+          href={pinterest}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandPinterest />
+        </a>
+      </li>
+    )
+  }
+  {
+    soundcloud && (
+      <li class="inline-block">
+        <a
+          aria-label="soundcloud"
+          href={soundcloud}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandSoundcloud />
+        </a>
+      </li>
+    )
+  }
+  {
+    tumblr && (
+      <li class="inline-block">
+        <a
+          aria-label="tumblr"
+          href={tumblr}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandTumblr />
+        </a>
+      </li>
+    )
+  }
+  {
+    reddit && (
+      <li class="inline-block">
+        <a
+          aria-label="reddit"
+          href={reddit}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandReddit />
+        </a>
+      </li>
+    )
+  }
+  {
+    vk && (
+      <li class="inline-block">
+        <a
+          aria-label="vk"
+          href={vk}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandVk />
+        </a>
+      </li>
+    )
+  }
+  {
+    whatsapp && (
+      <li class="inline-block">
+        <a
+          aria-label="whatsapp"
+          href={whatsapp}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandWhatsapp />
+        </a>
+      </li>
+    )
+  }
+  {
+    snapchat && (
+      <li class="inline-block">
+        <a
+          aria-label="snapchat"
+          href={snapchat}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandSnapchat />
+        </a>
+      </li>
+    )
+  }
+  {
+    vimeo && (
+      <li class="inline-block">
+        <a
+          aria-label="vimeo"
+          href={vimeo}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandVimeo />
+        </a>
+      </li>
+    )
+  }
+  {
+    tiktok && (
+      <li class="inline-block">
+        <a
+          aria-label="tiktok"
+          href={tiktok}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandTiktok />
+        </a>
+      </li>
+    )
+  }
+  {
+    foursquare && (
+      <li class="inline-block">
+        <a
+          aria-label="foursquare"
+          href={foursquare}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconBrandFoursquare />
+        </a>
+      </li>
+    )
+  }
+  {
+    rss && (
+      <li class="inline-block">
+        <a
+          aria-label="rss feed"
+          href={rss}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconRss />
+        </a>
+      </li>
+    )
+  }
+  {
+    email && (
+      <li class="inline-block">
+        <a aria-label="email" href={`mailto:${email}`}>
+          <IconMail />
+        </a>
+      </li>
+    )
+  }
+  {
+    phone && (
+      <li class="inline-block">
+        <a aria-label="telephone" href={`tel:${phone}`}>
+          <IconPhone />
+        </a>
+      </li>
+    )
+  }
+  {
+    address && (
+      <li class="inline-block">
+        <a
+          aria-label="location"
+          href={address}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconLocation />
+        </a>
+      </li>
+    )
+  }
+
+  {
+    website && (
+      <li class="inline-block">
+        <a
+          aria-label="website"
+          href={website}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IconGlobe />
+        </a>
+      </li>
+    )
+  }
+</ul>

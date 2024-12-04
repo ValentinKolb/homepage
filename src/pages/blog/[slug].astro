@@ -1,0 +1,28 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import BlogView from "@/layouts/BlogView.astro";
+
+export async function getStaticPaths() {
+  const blogs = await getSinglePage("blogs");
+
+  return blogs.map((blog: any) => ({
+    params: {
+      slug: blog.slug,
+    },
+    props: { blog },
+  }));
+}
+
+const { blog } = Astro.props;
+const { title, meta_title, description, image } = blog.data;
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <BlogView blog={blog} />
+</Base>

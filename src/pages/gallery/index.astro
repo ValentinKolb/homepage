@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "@/layouts/Base.astro";
+import { slugify } from "@/lib/utils/textConverter";
+
+const galleries = await getCollection("gallery");
+---
+
+<Base title="Galerie">
+  <section class="py-16">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-8">Galerie</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {
+          galleries.map((gallery) => (
+            <a
+              href={`/gallery/${slugify(gallery.data.name)}`}
+              class="block group"
+            >
+              <div class="aspect-w-4 aspect-h-3 bg-gray-200 rounded-lg overflow-hidden">
+                {gallery.data.images[0] && (
+                  <Image
+                    src={
+                      gallery.data.images[0].thumb ||
+                      (gallery.data.images[0].src as string)
+                    }
+                    inferSize={true}
+                    alt={gallery.data.name}
+                    class="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                )}
+              </div>
+              <h2 class="mt-4 text-xl font-semibold group-hover:text-primary transition-colors">
+                {gallery.data.name}
+              </h2>
+              {gallery.data.description && (
+                <p class="text-gray-600">{gallery.data.description}</p>
+              )}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

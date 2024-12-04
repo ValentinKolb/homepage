@@ -1,0 +1,42 @@
+/* assets/css/recipe.css */
+
+.recipe-step {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.recipe-step .sub-steps .recipe-step {
+    border: var(--border);
+    border-radius: var(--border-radius);
+    padding-left: 10px;
+}
+
+.amount-adjustment {
+    margin-bottom: 20px;
+}
+
+.ingredients li,
+.instructions li {
+    margin-bottom: 5px;
+}
+
+.additional-ingredient {
+    font-style: italic;
+}
+
+.step-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.step-title.root-step {
+    font-size: 2em;
+}
+
+.section-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}

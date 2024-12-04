@@ -1,25 +1,35 @@
-FROM node:lts AS base
+# Wir wählen eine spezifische Node-Version statt 'lts'
+FROM node:18-alpine AS base
+
+# Setzen des Arbeitsverzeichnisses
 WORKDIR /app
 
-# By copying only the package.json here, we ensure that the following `-deps` steps are independent of the source code.
-# Therefore, the `-deps` steps will be skipped if only the source code changes.
-COPY package.json ./
+# Kopieren der Package-Dateien
+COPY package*.json ./
 
-FROM base AS prod-deps
-RUN npm install --omit=dev
-
+# Entwicklungsabhängigkeiten Installation
 FROM base AS build-deps
-RUN npm install
+RUN npm ci
 
+# Quellcode kopieren und Build durchführen
 FROM build-deps AS build
 COPY . .
 RUN npm run build
 
+# Produktions-Image
 FROM base AS runtime
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
 
+# Nur die notwendigen Build-Artefakte kopieren
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package*.json ./
+
+# Produktionsabhängigkeiten installieren
+RUN npm ci --omit=dev
+
+# Konfiguration für den Server
 ENV HOST=0.0.0.0
 ENV PORT=4321
 EXPOSE 4321
-CMD node ./dist/server/entry.mjs
+
+# Anwendung starten
+CMD ["node", "./dist/server/entry.mjs"]

@@ -8,6 +8,7 @@ import { Image } from "astro:assets";
 export const prerender = true
 export async function getStaticPaths() {
   const galleries = await getSinglePage("gallery");
+  console.log("galleries:", galleries.map(g => g.data.name))
   return galleries.map((gallery) => ({
     params: {
       slug: slugify(gallery.data.name),

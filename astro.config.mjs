@@ -8,8 +8,13 @@ import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import config from "./src/config/config.json";
+import node from "@astrojs/node";
 
 export default defineConfig({
+  output: "server",
+  adapter: node({
+    mode: "standalone",
+  }),
   redirects: {
     "/authors/valentin-kolb": "/about",
   },
@@ -33,9 +38,7 @@ export default defineConfig({
     react(),
     sitemap(),
     tailwind({
-      config: {
-        applyBaseStyles: false,
-      },
+      applyBaseStyles: false,
     }),
     AutoImport({
       imports: [
@@ -64,6 +67,5 @@ export default defineConfig({
       theme: "one-dark-pro",
       wrap: true,
     },
-    extendDefaultPlugins: true,
   },
 });

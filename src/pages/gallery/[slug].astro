@@ -5,6 +5,7 @@ import { slugify } from "@/lib/utils/textConverter";
 import { IconArrowLeft, IconArrowRight, IconX } from "@tabler/icons-react";
 import { Image } from "astro:assets";
 
+export const prerender = true
 export async function getStaticPaths() {
   const galleries = await getSinglePage("gallery");
   return galleries.map((gallery) => ({

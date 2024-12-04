@@ -3,6 +3,7 @@ import Base from "@/layouts/Base.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import BlogView from "@/layouts/BlogView.astro";
 
+export const prerender = true
 export async function getStaticPaths() {
   const blogs = await getSinglePage("blogs");
 

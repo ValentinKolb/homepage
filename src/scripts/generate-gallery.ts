@@ -3,7 +3,6 @@ import path from "path";
 import chalk from "chalk";
 import { input, number } from "@inquirer/prompts";
 import { slugify } from "@/lib/utils/textConverter";
-import { isNumber } from "util";
 
 (async () => {
   console.log(chalk.blue("🖼️ Galerie-Generator gestartet...\n"));

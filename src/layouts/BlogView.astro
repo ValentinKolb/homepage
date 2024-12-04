@@ -1,14 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import Share from "@/components/Share.astro";
-import SimilarPosts from "@/components/SimilarPosts.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
-import similerItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import { IconCalendarMonth, IconCategory } from "@tabler/icons-react";
 const allAuthors = await getSinglePage("authors");
-const blogs = await getSinglePage("blogs");
 const { blog } = Astro.props;
 const { Content } = await blog.render();
 const { title, description, authors, categories, image, date, tags } =
@@ -29,7 +26,7 @@ const { title, description, authors, categories, image, date, tags } =
                     .map((author: string) => slugify(author))
                     .includes(slugify(author.data.title)),
                 )
-                .map((author, i) => (
+                .map((author) => (
                   <a
                     href={`/authors/${slugify(author.slug)}`}
                     class="flex items-center hover:text-primary font-medium"

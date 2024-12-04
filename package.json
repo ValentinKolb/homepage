@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "astro dev",
+    "check": "astro check",
     "build": "astro check && astro build",
     "format": "prettier -w .",
     "generate:gallery": "tsx src/scripts/generate-gallery.ts"

@@ -1,4 +1,5 @@
 import rss from "@astrojs/rss";
+import { getSinglePage } from "@/lib/contentParser.astro";
 
 export async function GET(context) {
   const blogs = await getSinglePage("blogs");
@@ -10,7 +11,7 @@ export async function GET(context) {
       title: blog.data.title,
       pubDate: blog.data.pubDate,
       description: blog.data.description,
-      link: `/blog/${post.slug}/`,
+      link: `/blog/${blog.slug}/`,
     })),
   });
 }

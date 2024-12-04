@@ -7,7 +7,7 @@ const blogsCollection = defineCollection({
     title: z.string(),
     meta_title: z.string().optional(),
     description: z.string().optional(),
-    date: z.date().optional(),
+    date: z.date(),
     image: z.string().optional(),
     authors: z.array(z.string()).default(["Valentin Kolb"]),
     categories: z.array(z.string()).default(["others"]),

@@ -1,13 +1,7 @@
 ---
-import { getEntryBySlug } from "astro:content";
 import { Image } from "astro:assets";
 import Base from "@/layouts/Base.astro";
-import {
-  IconCode,
-  IconTools,
-  IconBriefcase,
-  IconStar,
-} from "@tabler/icons-react";
+import { IconCode, IconBriefcase } from "@tabler/icons-react";
 import { getEntry } from "astro:content";
 
 const about = await getEntry("about", "index");

@@ -1,8 +1,8 @@
 import rss from "@astrojs/rss";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getContentPages } from "@/lib/contentParser.astro";
 
 export async function GET(context) {
-  const blogs = await getSinglePage("blogs");
+  const blogs = await getContentPages("blogs");
   return rss({
     title: "Valentin Kolb",
     description: "Blogs über Informatik, Kulinarik und mehr",

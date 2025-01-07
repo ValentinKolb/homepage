@@ -9,29 +9,9 @@ const blogsCollection = defineCollection({
     description: z.string().optional(),
     date: z.date(),
     image: z.string().optional(),
-    authors: z.array(z.string()).default(["Valentin Kolb"]),
     categories: z.array(z.string()).default(["others"]),
     tags: z.array(z.string()).default(["others"]),
     draft: z.boolean().optional().default(false),
-  }),
-});
-
-// Author collection schema
-const authorsCollection = defineCollection({
-  schema: z.object({
-    id: z.string().optional(),
-    title: z.string(),
-    meta_title: z.string().optional(),
-    image: z.string().optional(),
-    description: z.string().optional(),
-    social: z
-      .object({
-        facebook: z.string().optional(),
-        twitter: z.string().optional(),
-        instagram: z.string().optional(),
-      })
-      .optional(),
-    draft: z.boolean().optional(),
   }),
 });
 
@@ -114,7 +94,6 @@ const aboutCollection = defineCollection({
 export const collections = {
   blogs: blogsCollection,
   pages: pagesCollection,
-  authors: authorsCollection,
   gallery: galleryCollection,
   projects: projectsCollection,
   about: aboutCollection,

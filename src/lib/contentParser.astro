@@ -5,7 +5,7 @@ import {
   type CollectionKey,
 } from "astro:content";
 
-export const getSinglePage = async <C extends CollectionKey>(
+export const getContentPages = async <C extends CollectionKey>(
   collectionName: C,
 ): Promise<CollectionEntry<C>[]> => {
   const allPages = await getCollection(collectionName);

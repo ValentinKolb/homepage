@@ -1,13 +1,13 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getContentPages } from "@/lib/contentParser.astro";
 import { slugify } from "@/lib/utils/textConverter";
 import { IconArrowLeft, IconArrowRight, IconX } from "@tabler/icons-react";
 import { Image } from "astro:assets";
 
 export const prerender = true
 export async function getStaticPaths() {
-  const galleries = await getSinglePage("gallery");
+  const galleries = await getContentPages("gallery");
   console.log("galleries:", galleries.map(g => g.data.name))
   return galleries.map((gallery) => ({
     params: {

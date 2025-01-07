@@ -1,7 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import BlogsList from "@/layouts/BlogsList.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getContentPages } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params;
 
-const blogs = await getSinglePage("blogs");
+const blogs = await getContentPages("blogs");
 const filterByTags = taxonomyFilter(blogs, "tags", tag);
 const sortedBlogs = sortByDate(filterByTags);
 

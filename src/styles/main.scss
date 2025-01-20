@@ -16,3 +16,17 @@
 @layer utilities {
   @include meta.load-css("utilities");
 }
+
+/* REMOVE ARROWS FROM NUMBER INPUT FIELDS*/
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

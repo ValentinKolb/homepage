@@ -1,9 +1,0 @@
-<!-- this shortcode renders a tabler icon-->
-{{ $icon := .Get 0 }}
-
-{{ $size := .Get "size" | default "1em" }}
-
-<!-- load the svg sprite -->
-<svg width={{$size}} height={{$size}}>
-    <use xlink:href="{{ printf "/icons/tabler-sprite.svg#tabler-%s" $icon }}"/>
-</svg>

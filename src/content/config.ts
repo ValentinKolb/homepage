@@ -1,3 +1,4 @@
+import { ReciYMLSchema } from "@/components/ReciYML/types";
 import { defineCollection, z } from "astro:content";
 
 // Post collection schema
@@ -12,6 +13,7 @@ const blogsCollection = defineCollection({
     categories: z.array(z.string()).default(["others"]),
     tags: z.array(z.string()).default(["others"]),
     draft: z.boolean().optional().default(false),
+    recipe: ReciYMLSchema.optional(),
   }),
 });
 

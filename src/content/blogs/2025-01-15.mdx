@@ -1,0 +1,241 @@
+---
+title: "Tech Stack"
+description: "Die Technik hinter meinem Blog - Stand 2025"
+tags: ["Technik", "Blog"]
+categories: ["Informatik"]
+date: 2025-01-15
+image: /images/blogs/2025-01-15/banner.jpg
+---
+import  TicTacToe  from '@/components/TicTacToe'
+
+In diesem Blogpost möchte ich beschreiben, welche Technologien ich für meinen Blog verwende – und warum ich mich für genau diese entschieden habe.
+
+Wie ich bereits in meinem ersten [Blogpost](/blog/2024-11-20) erwähnt habe, entstand dieser Blog im Rahmen eines Seminars an meiner Universität. Der Seminarleiter gab uns vor, das Blogsystem [Bludit](https://www.bludit.com/de/) zu nutzen.
+
+Bludit ist eine Art digitales Notizbuch, in dem man direkt auf einer Webseite seine Texte schreiben, formatieren und veröffentlichen kann. Das ist besonders praktisch für Leute, die sich nicht mit Technik herumschlagen wollen und einfach nur bloggen möchten. Ich kann Bludit daher wärmstens empfehlen!
+
+Aber ich bin neugierig – und wollte mehr Flexibilität. Also habe ich mich auf die Suche nach einer Lösung gemacht mit der ich meine eher speziellen Anforderungen umsetzten kann.
+
+## Meine Anforderungen – Warum nicht einfach nur bloggen?
+
+Für mich soll mein Blog mehr können als nur Text anzeigen. Ich wollte, dass er vier zentrale Dinge erfüllt:
+1.	Einfaches Veröffentlichen von Texten – also das klassische Bloggen
+2.	Schöne Darstellung meiner Fotografien
+3.	Übersichtliches Speichern und Anzeigen meiner Rezepte
+4.	Spielwiese für meine Technik-Experimente
+
+Warum sind mir diese Punkte besonders wichtig für mich – und welche Technik habe ich für sie gefunden?
+
+### 1. Bloggen – Warum Markdown?
+
+Ein klassischer Blog arbeitet mit einem Editor, der so ähnlich aussieht wie Word: Man kann Wörter fett machen, Überschriften setzen oder Listen erstellen – alles über Buttons und Menüs.
+
+Ich habe mich aber für eine andere Methode entschieden: [Markdown](https://markdown.de).
+
+Markdown ist wie eine Geheimschrift für Texte.
+Statt auf einen Button zu klicken, schreibt man einfach `**dieses Wort**`, und es wird **fett**. Oder man setzt eine Raute `#` davor, und es wird automatisch eine Überschrift.
+
+Warum nutze ich das?
+- Markdown ist super einfach zu lernen.
+- Ich kann meine Texte in jedem beliebigen Editor schreiben, sogar auf meinem Handy.
+- Ich behalte komplette Kontrolle über das Format, ohne dass ein Programm dazwischen funkt.
+
+Ein Beispiel:
+
+```md
+# Mein Blogpost
+
+Hier ist ein **wichtiger Satz**.
+
+- Punkt 1
+- Punkt 2
+- Punkt 3
+```
+
+Das sieht in Markdown erstmal simpel aus – wird aber auf der Webseite schön formatiert angezeigt!
+
+Doch ich gehe noch einen Schritt weiter und benutze MDX, eine Erweiterung von Markdown.
+
+#### MDX ist wie Markdown auf Steroiden.
+[MDX](https://mdxjs.com/) erlaubt mir, kleine Programme oder interaktive Elemente direkt in meinen Blog einzubauen. Zum Beispiel kann ich ein von mir programmiertes Tic-Tac-Toe-Spiel mitten in diesen Text einfügen:
+
+<TicTacToe client:load/>
+
+### 2. Fotografien – Wie speichere ich meine Bilder?
+
+Neben dem Schreiben ist mir auch die Veröffentlichung meiner [Fotografien](/gallery) wichtig. Ich wollte nicht nur einfach Bilder hochladen, sondern sie schön in einer Galerie anzeigen.
+
+Die Herausforderung dabei: Bilder sind riesig!
+
+Ein hochauflösendes Foto kann mehrere Megabyte groß sein – wenn ich viele davon in meinen Blog packe, dauert es ewig, bis die Seite geladen ist. Das wäre so, als müsste man bei jedem Besuch meines Blogs einen dicken Bildband per Post geliefert bekommen.
+
+Meine Lösung:
+1.  Ich vor-optimiere meine Bilder für das Internet wie in diesem [Blogpost](https://valentin-kolb.blog/blog/2024-11-23) beschrieben.
+2.	Ich speichere meine Bilder auf einem externen Server.
+3.	Mein Blog lädt die Bilder erst dann, wenn sie wirklich gebraucht werden und optimiert diese.
+4.	Die Bilder werden automatisch komprimiert, damit sie schneller laden.
+
+Diese Technik sorgt dafür, dass mein Blog weiterhin flott bleibt, auch wenn ich viele Fotos verwende.
+
+### 3. Rezepte – Warum ich mein eigenes Format entwickelt habe
+
+Jeder kennt das Problem: Man sucht online nach einem Rezept und findet einen Blog, der einem erstmal eine lange Geschichte erzählt:
+
+> Es war ein warmer Sommermorgen in Griechenland, als ich zum ersten Mal diese wunderbaren Kekse probierte…
+
+Und ich denke mir: Ich will doch nur die Zutatenliste und nicht tiefere Bedeutung von Oregano!
+Das war der Punkt, an dem ich entschied: Ich brauche eine bessere Lösung.
+Ich wollte meine Rezepte klar strukturiert, leicht lesbar und flexibel speichern. Also habe ich ein eigenes Rezept-Format entwickelt: [ReciYML](https://github.com/ValentinKolb/reciyml).
+
+Dieses System speichert Rezepte in kleinen Bausteinen. Ein Brotrezept könnte z. B. so unterteilt werden:
+1.	Vorteig ansetzen
+2.	Hauptteig mischen
+3.	Backen
+
+Jeder Schritt enthält genaue Anweisungen, Zeitangaben und Zutaten. Falls ein Schritt zu umfachreich wird, kann ich ihn einfach weiter unterteilen.
+Dieses Bedürfnis nach Ordnung und Klarheit kommt aus meiner eigenen Erfahrung: Wenn ich einen langen Backtag habe, brauche ich einen klaren Plan, den ich Schritt für Schritt abarbeiten kann. Ich kann es mir nicht leisten, alle zehn Minuten wieder durch lange Fließtexte zu scrollen, nur um herauszufinden, was ich bereits erledigt habe und was als Nächstes ansteht. Ein strukturiertes Rezept hilft mir, den Überblick zu behalten und effizient zu arbeiten.
+
+Außerdem habe ich noch zwei Komfort-Features eingebaut:
+- Alle Zutaten der einzelnen Schritte werden automatisch zu einer einzelnen Einkaufsliste zusammengefasst
+- Die Mengen passen sich dynamisch an, wenn man die Gesamtmenge verändert
+
+Ich habe ein kleines Programm geschrieben, das diese Berechnungen live im Browser macht – probiere es [hier](/blog/2024-12-27) aus!
+
+### 4. Die kreative Spielwiese – Warum ich Astro statt Hugo benutze
+
+Jetzt kommen wir zum Herzstück meines Blogs: Das System, das alles zusammenhält - das CMS (kurz für Content-Management-System).
+
+Anfangs habe ich das Blog-System [Hugo](https://gohugo.io/) genutzt. Hugo ist bekannt dafür, dass es rasend schnell ist – perfekt, wenn man einfach nur Texte anzeigen möchte.
+
+Aber: Ich wollte mehr:
+- Kleine interaktive Programme einbauen
+- Rezepte mit dynamischer Mengenumrechnung erstellen
+- Inhalte flexibler gestalten
+
+Hugo ist wie ein leistungsstarkes Fahrrad: Perfekt, um von A nach B zu kommen – aber wenn ich zwischendurch ein Boot brauche, wird es schwierig.
+
+[Astro](https://astro.build/) hingegen ist wie ein Transformer – es kann Fahrrad sein, Auto oder sogar ein Boot, wenn es sein muss. Es ist flexibler und kann besser mit interaktiven Elementen umgehen.
+
+Ich kann mit Astro alles nutzen, was das Internet hergibt: Icons, Animationen, dynamische Inhalte, Spiele…
+
+Ein Beispiel: Ich wollte Icons für meinen Blog nutzen: In Hugo hätte das Stunden oder Tage gedauert. In Astro habe ich in wenigen Sekunden die [Tabler Icons](https://tabler.io/icons) eingebaut.
+
+Hier sind noch ein paar verständliche Erklärungen zu Tailwind CSS und ReactJS, die du in deinen Blogpost einbauen kannst:
+
+#### Tailwind CSS – Styling, aber effizient
+
+Beim Erstellen eines Blogs (oder einer Webseite allgemein) muss man sich überlegen, wie alles aussehen soll:
+- Welche Farben benutze ich?
+- Wie groß sind die Abstände zwischen den Elementen?
+- Welche Schriftarten verwende ich?
+
+Normalerweise schreibt man dafür sogenannte CSS-Dateien, in denen man für jedes Element genau festlegt, wie es dargestellt wird. Das kann jedoch schnell unübersichtlich werden, weil man viele kleine Details manuell anpassen muss.
+
+Hier kommt [Tailwind CSS](https://tailwindcss.com) ins Spiel.
+
+Tailwind ist wie ein Lego-Baukasten für Webseiten. Statt lange und komplizierte CSS-Dateien zu schreiben, kann ich direkt im Code kleine, vordefinierte „Bausteine“ verwenden.
+
+Ein Beispiel:
+Ohne Tailwind müsste ich extra eine CSS-Datei anlegen und dort schreiben:
+
+```css
+.mein-text {
+  font-size: 20px;
+  color: blue;
+  margin: 10px;
+}
+```
+
+Mit Tailwind kann ich das direkt im HTML-Code erledigen:
+
+```html
+<p class="text-xl text-blue-500 m-2">Mein schöner Text</p>
+```
+
+Das spart Zeit und macht es extrem einfach, schnell Änderungen vorzunehmen. Ich kann Tailwind also wärmstens empfehlen – es ist unglaublich praktisch und flexibel.
+
+Tatsächlich nutze ich Tailwind zum ersten Mal in diesem Blog. Ich wollte es schon lange ausprobieren hatte aber bisher nie die Change es bei einem Projekt zu nutzen! Ich sehr froh diese Technologie ausprobiert zu haben und werden sie in Zukunft wann immer möglich nutzen!
+
+### ReactJS – Interaktive Elemente für meinen Blog
+
+Mein Blog ist nicht nur eine Sammlung von Texten – ich möchte auch kleine Programme direkt in die Artikel einbinden.
+
+An dieser Stelle erleichert mir [ReactJS](https://reactjs.org/) das Leben.
+
+ReactJS ist wie ein magisches Buch:
+- Jedes Element kann interaktiv sein.
+- Ich kann bestimmte Teile meines Blogs so gestalten, dass sie sich „verhalten“ wie eine kleine App.
+
+Zum Beispiel:
+- Ein interaktives Tic-Tac-Toe-Spiel, das man direkt im Blog spielen kann.
+- Ein Mengenrechner für meine Rezepte, der automatisch die Zutatenmengen anpasst.
+
+Ohne React wäre es extrem aufwendig, solche Funktionen in einen Blog einzubauen. Mit React geht es schnell, einfach und effizient. Und dann MDX kann ich diese mit React programierten Komponenten ganz einfach in meine Texte einbauen.
+
+Dadurch fühlt sich mein Blog nicht nur wie ein normales Online-Tagebuch an, sondern eher wie eine lebendige Webseite, auf der man mit den Inhalten interagieren kann.
+
+## Mein Blog – Wie läuft das technisch ab?
+
+Jetzt wird’s ein bisschen nerdig, aber ich versuche es verständlich zu erklären.
+
+Mein Blog ist nicht einfach nur eine Webseite, auf die ich mich einlogge und Texte eintippe. Er ist komplett automatisiert. Das bedeutet, dass ich mich nur um das Schreiben der Blogposts kümmern muss – alles andere passiert von alleine im Hintergrund. Aber wie funktioniert das genau?
+
+Stellen wir uns das Ganze wie eine Bäckerei vor.
+
+### 1. Ich schreibe einen neuen Blogpost
+
+Das ist der erste Schritt – der kreative Part. Ich öffne meinen Texteditor und schreibe meinen Blogpost in Markdown, also einer speziellen Textformatierung, die ich bereits erklärt habe.
+
+Man könnte sagen: Das ist wie das Rezept in der Bäckerei.
+
+Sobald der Text fertig ist, speichere ich ihn und schiebe ihn in meine digitale Backstube: [GitHub](https://github.com/ValentinKolb/homepage/).
+
+### 2. GitHub erkennt die Änderung
+
+GitHub ist eine Plattform, auf der mein gesamter Blog gespeichert ist – so wie ein (inteligentes) Rezeptbuch für meine Webseite. Warum inteligient? Sobald ich einen neuen Blogpost hochlade, merkt GitHub automatisch, dass es etwas Neues gibt: „Aha, hier gibt es ein neues Rezept – das muss jetzt gebacken werden!“
+
+### 3. Automatische Aktualisierung – Mein Server startet den Prozess
+
+Jetzt kommt ein Build-Server ins Spiel. Ein Build-Server ist einfach ein Computer der irgendwo läuft (in diesem Fall eine [Github-Pipeline](https://github.com/ValentinKolb/homepage/) und die neueste Version des Blogs baut. Sobald GitHub also eine neue Version erkennt, wird der Build-Server benachrichtigt:
+
+„Hey, es gibt eine neue Bestellung! Du musst das Brot jetzt backen.“
+
+Der Server fängt also an, den neuen Blogpost einzubauen und eine neue Version der Webseite zu erstellen.
+
+### 4. Docker verpackt alles – Das Brot kommt in die Tüte
+
+Mein Blog besteht nicht nur aus Text – es gibt Bilder, kleine Programme und ein Layout. All diese Dinge müssen sauber verpackt werden, bevor sie jemand anschauen kann.
+
+[Docker](https://hub.docker.com/repository/docker/valentinkolb/homepage/general) ist wie eine Brotdose für meinen Blog. Stell dir vor, du hast ein frische Brot, aber du kannst es nicht einfach lose transportieren – es braucht eine stabile Verpackung, damit sie nicht beschädigt wird.
+
+Docker sorgt dafür, dass mein Blog immer gleich aussieht und funktioniert, egal wo er später ausgeliefert wird. Es packt alles in einen Container, also eine Art Dose, die dann weitergegeben werden kann.
+
+### 5. Portainer liefert die neue Version aus
+
+Jetzt haben wir das fertige Brot in einer Dose – aber sie muss noch an den Kunden geliefert werden.
+
+[Portainer](https://www.portainer.io/) ist mein Brot-Lieferant, der automatisch erkennt, dass eine neue Version verfügbar ist, und sie dann ausliefert, also online stellt.
+
+Sobald Portainer das Update bekommt, sorgt es dafür, dass der neue Blog auf meinem Server läuft und für alle sichtbar ist.
+
+Das Beste daran? Es passiert alles automatisch!
+
+### Zusammengefasst
+
+Sobald ich einen neuen Blogpost speichere und hochlade, läuft dieser ganze Prozess von alleine ab:
+1. Mein Blog erkennt die Änderung
+1. Die neue Version wird vorbereitet
+1. Alles wird in einen sicheren Container verpackt
+1. Die neue Version wird ausgeliefert
+
+Ich muss mich also um nichts mehr kümmern – mein Blog aktualisiert sich ganz von selbst! Ich kann mich voll auf das Schreiben konzentrieren, während der technische Ablauf im Hintergrund läuft.
+
+Das fühlt sich ein bisschen an, als hätte ich eine Zauberbäckerei eingerichtet: Ich lege das Rezept (den Blogpost) in die Schüssel, drücke einen Knopf – und wenig später steht das fertige Brot (die neue Version meines Blogs) frisch und dampfend im Regal.
+
+## Fazit
+
+Mein Blog ist mehr als nur ein klassischer Blog – er ist eine Plattform für meine Ideen, meine Rezepte, meine Fotografien und kleine technische Experimente.
+
+Dank Astro, MDX und Docker kann ich ihn flexibel an meine Bedürfnisse anpassen. Die Automatisierung durch GitHub, Docker und Portainer sorgt dafür, dass ich mich nur noch auf das Schreiben konzentrieren muss.
+
+Falls du selbst überlegst, einen Blog zu starten – probier’s aus!

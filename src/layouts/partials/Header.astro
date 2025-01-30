@@ -2,17 +2,10 @@
 import Logo from "@/components/Logo.astro";
 import menu from "@/config/menu.json";
 
-export interface ChildNavigationLink {
-  name: string;
-  url: string;
-}
-
-export interface NavigationLink {
-  name: string;
-  url: string;
-  hasChildren?: boolean;
-  children?: ChildNavigationLink[];
-}
+export type NavigationLink = { name: string } & (
+  | { name: string; url: string; children?: never }
+  | { name: string; children: NavigationLink[]; url?: never }
+);
 
 const { main }: { main: NavigationLink[] } = menu;
 ---
@@ -55,13 +48,10 @@ const { main }: { main: NavigationLink[] } = menu;
       {
         main.map((menu) => (
           <>
-            {menu.hasChildren ? (
+            {menu.children ? (
               <li class="nav-item nav-dropdown group relative cursor-pointer">
                 <span class="nav-link inline-flex items-center">
                   {menu.name}
-                  <svg class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
                 </span>
                 <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
                   {menu.children?.map((child) => (

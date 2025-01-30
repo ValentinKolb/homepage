@@ -1,13 +1,18 @@
 ---
 import { Image } from "astro:assets";
 import ReciYML from "@/components/ReciYML";
-import Share from "@/components/Share.astro";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
-import { IconCalendarMonth, IconCategory } from "@tabler/icons-react";
+import {
+  IconBrandBluesky,
+  IconCalendarMonth,
+  IconCategory,
+} from "@tabler/icons-react";
+import config from "@/config/config.json";
 const { blog } = Astro.props;
 const { Content } = await blog.render();
 const { title, description, categories, image, date, tags, recipe } = blog.data;
+const { base_url } = config.site;
 ---
 
 <section class="section">
@@ -84,12 +89,21 @@ const { title, description, categories, image, date, tags, recipe } = blog.data;
               ))
             }
           </ul>
-          <Share
-            className="social-share mb-4"
-            title={title}
-            description={description}
-            slug={blog.slug}
-          />
+
+          <ul class={`space-x-1}`}>
+            <li class="inline-block">
+              <a
+                class="block p-3 transition duration-300 hover:text-primary"
+                aria-label="bluesky share button"
+                href={` https://bsky.app/intent/compose?text=${base_url}/${blog.slug}`}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <IconBrandBluesky />
+              </a>
+              <c li> </c>
+            </li>
+          </ul>
         </div>
       </div>
     </article>

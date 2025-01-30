@@ -8,27 +8,27 @@ import { markdownify } from "@/lib/utils/textConverter";
 
 <footer class="bg-gray-50 border-t border-gray-200 py-6">
   <div class="container mx-auto text-center">
-    {/* Footer Menu */}
-    <ul class="mb-4 flex justify-center space-x-6">
+    {/* Social Icons */}
+    <Social source={social} className="flex justify-center space-x-4 mb-4" />
+    <ul class="flex justify-center space-x-6 text-xs sm:text-sm text-gray-500">
+      {/* Footer Menu */}
       {
         menu.footer.map((menu) => (
           <li>
             <a
               href={menu.url}
-              class="text-sm text-gray-600 hover:text-gray-800 transition"
+              class="hover:text-gray-800 transition hover:underline"
             >
               {menu.name}
             </a>
           </li>
         ))
       }
+
+      {/* Copyright */}
+      <li>
+        <span set:html={markdownify(config.params.copyright)} />
+      </li>
     </ul>
-    {/* Social Icons */}
-    <Social source={social} className="flex justify-center space-x-4 mb-4" />
-    {/* Copyright */}
-    <p
-      set:html={markdownify(config.params.copyright)}
-      class="text-sm text-gray-500"
-    />
   </div>
 </footer>

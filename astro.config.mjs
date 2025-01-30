@@ -9,6 +9,9 @@ import config from "./src/config/config.json";
 import node from "@astrojs/node";
 
 export default defineConfig({
+  experimental: {
+    svg: true,
+  },
   output: "server",
   adapter: node({
     mode: "standalone",
@@ -39,13 +42,7 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     AutoImport({
-      imports: [
-        "@/shortcodes/Button",
-        "@/shortcodes/Accordion",
-        "@/shortcodes/Notice",
-        "@/shortcodes/Video",
-        "@/shortcodes/Youtube",
-      ],
+      imports: [],
     }),
     mdx(),
   ],

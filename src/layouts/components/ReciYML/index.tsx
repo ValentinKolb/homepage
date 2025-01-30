@@ -1,9 +1,9 @@
 import { type ReciYML } from "@/components/ReciYML/types";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import React, { useState } from "react";
-import Tabs from "@/shortcodes/Tabs";
 import RenderStep from "./RenderStep";
 import RenderShoppingList from "./RenderShoppingList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ReciYML({ recipe }: { recipe: ReciYML }) {
   const [amount, setAmount] = useState(recipe.amount || 1);
@@ -55,29 +55,30 @@ export default function ReciYML({ recipe }: { recipe: ReciYML }) {
           </div>
         </div>
       </div>
-      <Tabs
-        tabs={[
-          {
-            label: "Rezept",
-            content: (
-              <RenderStep
-                step={recipe}
-                depth={0}
-                amountMultiplier={amountMultiplier}
-              />
-            ),
-          },
-          {
-            label: "Einkaufsliste",
-            content: (
-              <RenderShoppingList
-                recipe={recipe}
-                amountMultiplier={amountMultiplier}
-              />
-            ),
-          },
-        ]}
-      />
+
+      <Tabs defaultValue="recipe">
+        <TabsList className="w-full">
+          <TabsTrigger className="w-full" value="recipe">
+            Rezept
+          </TabsTrigger>
+          <TabsTrigger className="w-full" value="shopping-list">
+            Einkaufsliste
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="recipe">
+          <RenderStep
+            step={recipe}
+            depth={0}
+            amountMultiplier={amountMultiplier}
+          />
+        </TabsContent>
+        <TabsContent value="shopping-list">
+          <RenderShoppingList
+            recipe={recipe}
+            amountMultiplier={amountMultiplier}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

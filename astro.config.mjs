@@ -2,11 +2,11 @@
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import config from "./src/config/config.json";
 import node from "@astrojs/node";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   experimental: {
@@ -20,6 +20,7 @@ export default defineConfig({
     "/authors/valentin-kolb": "/about",
   },
   vite: {
+    plugins: [tailwindcss()],
     css: {
       preprocessorOptions: {
         scss: {
@@ -38,9 +39,6 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
     AutoImport({
       imports: [],
     }),

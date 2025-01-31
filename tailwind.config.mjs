@@ -1,7 +1,25 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   darkMode: ["class"],
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  theme: {
+    extend: {
+      fontFamily: {
+        primary: [
+          "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue'",
+          "sans-serif",
+        ],
+        secondary: ["Futura, 'Trebuchet MS', Arial", "sans-serif"],
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/typography"), require("tailwind-scrollbar")],
+};
+
+/** @type {import('tailwindcss').Config} */
+let foo = {
+  darkMode: ["class"],
+  content: ["./src/**/*.{html,js,jsx,ts,tsx,astro}"],
   theme: {
     screens: {
       sm: "540px",
@@ -82,5 +100,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("tailwind-scrollbar")],
+  // plugins: [require("@tailwindcss/typography"), require("tailwind-scrollbar")],
 };

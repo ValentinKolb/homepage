@@ -1,78 +1,143 @@
 ---
-import Logo from "@/components/Logo.astro";
-import menu from "@/config/menu.json";
+import { IconMenu2 } from "@tabler/icons-react";
+import { Image } from "astro:assets";
 
-export type NavigationLink = { name: string } & (
-  | { name: string; url: string; children?: never }
-  | { name: string; children: NavigationLink[]; url?: never }
-);
+const NAV = [
+  {
+    name: "Projekte",
+    url: "/projects",
+  },
+  {
+    name: "Galerie",
+    url: "/gallery",
+  },
+  {
+    name: "Blogs",
+    url: "/blog",
+  },
+];
 
-const { main }: { main: NavigationLink[] } = menu;
+const TOOLS: { title: string; href: string; description: string }[] = [
+  {
+    title: "Ollama Client",
+    href: "/tools/chat",
+    description: "Chat-Anwendung um mit einem Ollama-Server zu kommunizieren.",
+  },
+  {
+    title: "Websocket Tester",
+    href: "#",
+    description: "Im Aufbau",
+  },
+];
 ---
 
-<header class="flex py-3">
-  <nav class="navbar container">
-    <!-- logo -->
-    <div class="order-0">
-      <Logo />
-    </div>
-    <!-- navbar toggler -->
-    <input id="nav-toggle" type="checkbox" class="hidden" />
-    <label
-      id="show-button"
-      for="nav-toggle"
-      class="order-2 flex cursor-pointer items-center text-black md:order-1 md:hidden"
-    >
-      <svg class="h-6 fill-current" viewBox="0 0 20 20">
-        <title>Menu</title>
-        <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
-      </svg>
-    </label>
-    <label
-      id="hide-button"
-      for="nav-toggle"
-      class="order-2 hidden cursor-pointer items-center text-black md:order-1"
-    >
-      <svg class="h-6 fill-current" viewBox="0 0 20 20">
-        <title>Menu Schließen</title>
-        <polygon
-          points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-          transform="rotate(45 10 10)"></polygon>
-      </svg>
-    </label>
-    <!-- /navbar toggler -->
-    <ul
-      id="nav-menu"
-      class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto"
-    >
+<header>
+  <nav
+    class="mx-auto flex max-w-[1260px] items-center justify-between px-4 py-2 md:py-5"
+  >
+    {/* logo */}
+    <a href="/" class="flex items-center">
+      <Image
+        width={150}
+        height={150}
+        alt={"logo"}
+        src="/images/logo.png"
+        class="h-auto w-12"
+      />
+    </a>
+
+    {/* desktop nav */}
+    <div class="hidden gap-2 md:flex">
       {
-        main.map((menu) => (
-          <>
-            {menu.children ? (
-              <li class="nav-item nav-dropdown group relative cursor-pointer">
-                <span class="nav-link inline-flex items-center">
-                  {menu.name}
-                </span>
-                <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
-                  {menu.children?.map((child) => (
-                    <li class="nav-dropdown-item">
-                      <a href={child.url} class="nav-dropdown-link">
-                        {child.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li class="nav-item">
-                <a href={menu.url} class="nav-link block">
-                  {menu.name}
-                </a>
-              </li>
-            )}
-          </>
+        NAV.map((nav) => (
+          <a
+            href={nav.url}
+            class="text-md font-semibold px-2 text-center hover:text-gray-400"
+          >
+            {nav.name}
+          </a>
         ))
       }
-    </ul>
+
+      <div class="group/dropdown relative">
+        <a
+          class="text-md font-semibold px-2 text-center group-hover/dropdown:text-gray-400"
+        >
+          Tools
+        </a>
+
+        <div class="absolute z-10 hidden group-hover/dropdown:block">
+          <div
+            class="bg-white p-2 shadow-lg rounded-lg w-[300px] border mt-3 -ml-[250px]"
+          >
+            <div class="flex flex-col gap-2">
+              {
+                TOOLS.map((tool) => (
+                  <a href={tool.href} class="p-2 cursor-pointer group/link">
+                    <div class="text-sm font-semibold mb-1 group-hover/link:underline">
+                      {tool.title}
+                    </div>
+                    <div class="text-xs text-gray-400">{tool.description}</div>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* mobil nav */}
+    <label
+      class="md:hidden relative z-40 cursor-pointer p-4"
+      html-for="mobile-menu"
+    >
+      <input class="peer hidden" type="checkbox" id="mobile-menu" />
+
+      <IconMenu2 className="h-6 w-6 text-black" />
+
+      {/* bg overlay */}
+      <div
+        class="fixed inset-0 z-30 hidden bg-black/50 backdrop-blur-sm peer-checked:block"
+      >
+      </div>
+
+      {/* offcanvas menu */}
+      <div
+        class="fixed top-0 right-0 z-40 h-full w-4/5 translate-x-full bg-white shadow-2xl transition-transform duration-200 peer-checked:translate-x-0"
+      >
+        <menu class="flex flex-col gap-2 p-2 h-full">
+          {
+            NAV.map((nav) => (
+              <a
+                href={nav.url}
+                class="p-2 text-gray-800 font-bold rounded-lg hover:bg-gray-100"
+              >
+                {nav.name}
+              </a>
+            ))
+          }
+
+          <div class="relative flex items-center mt-auto">
+            <hr class="w-full border-gray-200 rounded-full" />
+            <span
+              class="absolute left-1/2 -translate-x-1/2 bg-white px-4 text-xs text-gray-400"
+            >
+              Tools
+            </span>
+          </div>
+          {
+            TOOLS.map((tool) => (
+              <a href={tool.href} class="p-2 cursor-pointer group/link">
+                <div class="text-sm font-semibold mb-1 group-hover/link:underline">
+                  {tool.title}
+                </div>
+                <div class="text-xs text-gray-400">{tool.description}</div>
+              </a>
+            ))
+          }
+        </menu>
+      </div>
+    </label>
   </nav>
 </header>

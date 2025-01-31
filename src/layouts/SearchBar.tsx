@@ -76,15 +76,15 @@ export default function SearchBar({ searchList }: Props) {
     <div className="">
       {/* Search Input */}
       <div className="mx-auto">
-        <div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-gray-100 overflow-hidden">
+        <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-100 focus-within:shadow-lg">
           {/* Icon */}
-          <div className="grid place-items-center h-full w-12 text-gray-500 peer-focus:text-primary">
+          <div className="peer-focus:text-primary grid h-full w-12 place-items-center text-gray-500">
             <IconSearch className="h-5 w-5" />
           </div>
 
           {/* Input Field */}
           <input
-            className="peer h-full w-full border-none bg-gray-100 pl-3 pr-2 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 transition"
+            className="peer h-full w-full border-none bg-gray-100 pl-3 pr-2 text-sm text-gray-700 placeholder-gray-400 transition focus:outline-none focus:ring-0"
             type="text"
             id="search"
             placeholder="Suche nach Inhalten, Kategorien oder Tags..."
@@ -98,7 +98,7 @@ export default function SearchBar({ searchList }: Props) {
 
       {/* Search Results Info */}
       {inputVal.length > 1 && (
-        <div className="my-6 text-xs text-center text-gray-400">
+        <div className="my-6 text-center text-xs text-gray-400">
           <span className="font-medium">
             {searchResults?.length || 0}{" "}
             {searchResults?.length === 1 ? "Ergebnis" : "Ergebnisse"}
@@ -112,10 +112,10 @@ export default function SearchBar({ searchList }: Props) {
         {searchResults?.map(({ item }) => (
           <li
             key={item.slug}
-            className="py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center"
+            className="flex flex-col py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="flex-grow">
-              <h3 className="text-lg font-bold hover:text-primary transition-colors duration-300">
+              <h3 className="hover:text-primary text-lg font-bold transition-colors duration-300">
                 <a href={`/blog/${item.slug}`}>{item.data.title}</a>
               </h3>
               <p className="text-sm text-gray-600">
@@ -124,7 +124,7 @@ export default function SearchBar({ searchList }: Props) {
                     `${item.content?.slice(0, Number(summary_length))} ...`,
                   )}
               </p>
-              <ul className="flex items-center space-x-4 text-gray-500 text-sm mt-2">
+              <ul className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                 <li className="flex items-center">
                   <IconCalendarMonth className="mr-1 h-4 w-4" />
                   {dateFormat(item.data.date)}

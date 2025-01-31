@@ -26,20 +26,6 @@ const searchList = blogs.map((item: any) => ({
 ---
 
 <Base title={"Blogs"}>
-  <!-- Header Sektion -->
-  <section class="py-8">
-    <div class="container mx-auto">
-      <h1 class="text-3xl font-bold text-center mb-10">Meine Blogs</h1>
-    </div>
-  </section>
-
-  <!-- Suche Sektion -->
-  <section class="section">
-    <div class="container mx-auto">
-      <SearchBar client:load searchList={searchList} />
-    </div>
-  </section>
-
   <!-- Kategorien Sektion -->
   <section class="py-8">
     <div class="container mx-auto">
@@ -48,11 +34,8 @@ const searchList = blogs.map((item: any) => ({
         {
           categories.map((category) => (
             <li>
-              <a
-                href={`/blog/c/${category}`}
-                class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-primary hover:text-white transition"
-              >
-                <IconCategory className="mr-2 h-5 w-5 text-gray-600 hover:text-white transition" />
+              <a href={`/blog/c/${category}`} class="btn-simple p-2 text-sm">
+                <IconCategory size={16} />
                 {humanize(category || "")}
               </a>
             </li>
@@ -70,11 +53,8 @@ const searchList = blogs.map((item: any) => ({
         {
           tags.map((tag) => (
             <li>
-              <a
-                href={`/blog/t/${tag}`}
-                class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-primary hover:text-white transition"
-              >
-                <IconHash className="mr-2 h-5 w-5 text-gray-600 hover:text-white transition" />
+              <a href={`/blog/t/${tag}`} class="btn-simple p-2 text-sm">
+                <IconHash size={16} />
                 {humanize(tag || "")}
               </a>
             </li>

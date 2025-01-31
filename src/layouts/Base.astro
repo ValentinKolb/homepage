@@ -22,7 +22,6 @@ const { title, meta_title, description, image, noindex, canonical, fixedPage } =
   Astro.props;
 ---
 
-<!doctype html>
 <html lang="de">
   <head>
     <!-- favicon -->
@@ -107,10 +106,12 @@ const { title, meta_title, description, image, noindex, canonical, fixedPage } =
       }`}
     />
   </head>
-  <body class={`${fixedPage && "max-h-[100vh] overflow-hidden"}`}>
+  <body
+    class={`${fixedPage && "max-h-[100vh] overflow-hidden"} flex flex-col min-h-[100vh]`}
+  >
     <TwSizeIndicator />
     <Header />
-    <main id="main-content" class="min-h-[60vh] flex flex-col">
+    <main id="main-content" class="min-h-[60vh] flex flex-col flex-grow">
       <slot />
     </main>
     <Footer />

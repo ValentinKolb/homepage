@@ -6,7 +6,6 @@ import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import config from "./src/config/config.json";
 import node from "@astrojs/node";
-import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   experimental: {
@@ -20,14 +19,7 @@ export default defineConfig({
     "/authors/valentin-kolb": "/about",
   },
   vite: {
-    plugins: [tailwindcss()],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: "modern-compiler",
-        },
-      },
-    },
+    // plugins: [tailwindcss()], todo v4
   },
   site: config.site.base_url,
   base: config.site.base_path ? config.site.base_path : "/",

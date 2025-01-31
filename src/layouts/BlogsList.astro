@@ -13,7 +13,7 @@ const { blogs } = Astro.props;
   blogs ? (
     <div class="space-y-6">
       {blogs.map((post: any) => (
-        <article class="bg-white rounded-lg overflow-hidden border hover:shadow-md transition-shadow duration-300">
+        <article class="bg-white rounded-lg paper border-0 overflow-hidden">
           <div class="flex flex-col md:flex-row">
             {post.data.image && (
               <a href={`/blog/${post.slug}`} class="md:w-48 shrink-0">

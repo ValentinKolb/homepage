@@ -1,9 +1,15 @@
 ---
 import Base from "@/layouts/Base.astro";
 import { getContentPages } from "@/lib/contentParser.astro";
-import BlogView from "@/layouts/BlogView.astro";
+import { Image } from "astro:assets";
+import ReciYML from "@/components/ReciYML";
+import dateFormat from "@/lib/utils/dateFormat";
+import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
+import { IconBrandBluesky, IconCalendarMonth } from "@tabler/icons-react";
+import config from "@/config/config.json";
+import calculateReadingTime from "reading-time";
 
-export const prerender = true
+export const prerender = true;
 export async function getStaticPaths() {
   const blogs = await getContentPages("blogs");
 
@@ -16,7 +22,21 @@ export async function getStaticPaths() {
 }
 
 const { blog } = Astro.props;
-const { title, meta_title, description, image } = blog.data;
+const { Content } = await blog.render();
+const {
+  title,
+  meta_title,
+  categories,
+  description,
+  image,
+  date,
+  tags,
+  recipe,
+} = blog.data;
+
+const { base_url } = config.site;
+
+const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
 ---
 
 <Base
@@ -25,5 +45,85 @@ const { title, meta_title, description, image } = blog.data;
   description={description}
   image={image}
 >
-  <BlogView blog={blog} />
+  <acticle class="article flex flex-col gap-6">
+    {/* title */}
+    <h1 class="article-header" set:html={markdownify(title)} />
+
+    <section
+      class="flex flex-row gap-4 justify-center items-center flex-wrap text-sm text-gray-400"
+    >
+      <span class="flex flex-row gap-2 items-center">
+        <IconCalendarMonth size={16} />
+        <span>{dateFormat(date)}</span>
+      </span>
+
+      <span class="text-sm text-gray-400">&#x2022</span>
+
+      <span>{readingTime} min Lesezeit</span>
+    </section>
+
+    {/* image */}
+    {
+      image && (
+        <Image
+          class={"m-0"}
+          width={1000}
+          height={300}
+          src={image}
+          alt={title}
+        />
+      )
+    }
+
+    {/* recipe */}
+    {recipe && <ReciYML recipe={recipe} client:load />}
+
+    {/* blog content */}
+    <section class="text-left w-full m-0">
+      <Content />
+    </section>
+
+    {/* footer actions (cathegories, tags, share, ...) */}
+    <section class="flex flex-row gap-4 justify-center items-center flex-wrap">
+      {
+        categories.map((category: string, i: number) => (
+          <a
+            href={`/blog/c/${slugify(category)}`}
+            class="font-medium underline text-sm hover:text-gray-400"
+          >
+            {humanize(category)}
+            {i !== blog.data.categories.length - 1 && ","}
+          </a>
+        ))
+      }
+
+      <span class="text-sm text-gray-400">&#x2022</span>
+
+      {
+        tags.map((tag: string) => (
+          <a
+            href={`/blog/t/${slugify(tag)}`}
+            class="font-medium text-sm hover:text-gray-400"
+          >
+            #{humanize(tag)}
+          </a>
+        ))
+      }
+
+      <span class="text-sm text-gray-400">&#x2022</span>
+
+      {/* share buttons */}
+      <a
+        aria-label="bluesky share button"
+        href={` https://bsky.app/intent/compose?text=${base_url}/${blog.slug}`}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        <IconBrandBluesky
+          size={16}
+          className="text-gray-700 cursor-pointer hover:text-gray-400"
+        />
+      </a>
+    </section>
+  </acticle>
 </Base>

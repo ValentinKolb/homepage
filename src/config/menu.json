@@ -1,39 +1,4 @@
 {
-  "main": [
-    {
-      "name": "Projekte",
-      "url": "/projects"
-    },
-    {
-      "name": "Galerie",
-      "url": "/gallery"
-    },
-    {
-      "name": "Blogs",
-      "url": "/blog"
-    },
-    {
-      "name": "IT Tools",
-      "children": [
-        {
-          "name": "Ollama Client",
-          "url": "/tools/chat"
-        },
-        {
-          "name": "Websocket Tester",
-          "url": "/tools/ws"
-        },
-        {
-          "name": "REST Client",
-          "url": "/tools/rest"
-        },
-        {
-          "name": "QR Generator",
-          "url": "/tools/qr"
-        }
-      ]
-    }
-  ],
   "footer": [
     {
       "name": "Über Mich",

@@ -1,3 +1,5 @@
+import { custom } from "astro/zod";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -27,6 +29,19 @@ let foo = {
       lg: "1024px",
       xl: "1280px",
       "2xl": "1536px",
+    },
+    typography: {
+      default: {
+        css: {
+          pre: null,
+          code: null,
+          "code::before": null,
+          "code::after": null,
+          "pre code": null,
+          "pre code::before": null,
+          "pre code::after": null,
+        },
+      },
     },
     container: {
       center: true,

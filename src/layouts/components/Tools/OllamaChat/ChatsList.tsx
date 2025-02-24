@@ -1,28 +1,55 @@
-import { useLiveQuery } from "dexie-react-hooks";
-import React from "react";
-import { db, useChatQueryParam } from "./db";
+import { createLiveQuery } from "@/lib/solidjs/db-utils";
+import { db, newChat, useChatQueryParam } from "./db";
+import { For, Show } from "solid-js";
+import Tooltip from "@/components/ui/Tooltip";
+import Loader from "@/components/ui/Loader";
+import { createAutoAnimate } from "@formkit/auto-animate/solid";
 
 export default function ChatsList() {
-  const chats = useLiveQuery(() => db.chats.toArray()); // todo sort by latest chat
+  const [animationParent] = createAutoAnimate();
+
+  const chats = createLiveQuery(
+    () => db.chats.orderBy("latestMessageDate").reverse().toArray(),
+    [],
+  );
 
   const [chatParam, setChatParam] = useChatQueryParam();
 
+  // create new chat and navigate to it
+  const addChat = async () => {
+    const c = await newChat();
+    setChatParam(c);
+  };
+
   return (
-    <div className="overflow-y-auto scrollbar-none space-y-1">
-      <ul className="space-y-1">
-        {chats?.map((chat) => (
-          <li
-            key={chat.id}
-            className={`bg-white rounded-lg border-0 p-4 text-sm
-              text-gray-500 hover:shadow-sm hover:text-gray-700 cursor-pointer
-              ${chat.id === chatParam ? "shadow-sm text-gray-700 font-bold" : ""}
-              `}
-            onClick={() => setChatParam(chat.id)}
-          >
-            {chat.name}({chat.id})
-          </li>
-        ))}
+    <Show when={chats} fallback={<Loader />}>
+      <ul
+        ref={animationParent}
+        class="-mx-10 h-full space-y-1 overflow-y-auto px-10 scrollbar-none"
+      >
+        {/* add new chat button */}
+        <li
+          class={`cursor-pointer truncate rounded-lg border-0 bg-white p-4 py-2 text-sm font-bold text-gray-500 shadow-md hover:text-gray-700`}
+          onClick={addChat}
+          aria-label="Neuen Chat erstellen"
+        >
+          <i class="ti ti-plus mr-2" />
+          Neuen Chat erstellen
+        </li>
+
+        {/* list of chats */}
+        <For each={chats}>
+          {(chat) => (
+            <li
+              class={`cursor-pointer truncate rounded-lg border-0 bg-white p-4 text-sm text-gray-500 shadow-md hover:text-gray-700 ${chat.id === chatParam() ? "font-bold text-gray-700 shadow-xl" : ""}`}
+              onClick={() => setChatParam(chat.id)}
+              aria-label={`Chat '${chat.name}' auswählen`}
+            >
+              {chat.name}
+            </li>
+          )}
+        </For>
       </ul>
-    </div>
+    </Show>
   );
 }

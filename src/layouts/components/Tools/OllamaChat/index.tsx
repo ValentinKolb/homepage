@@ -1,68 +1,32 @@
-import {
-  IconAdjustments,
-  IconCommand,
-  IconCornerDownLeft,
-  IconLoader,
-  IconPencilPlus,
-  IconPlugConnected,
-  IconPlus,
-  IconRobot,
-  IconSend,
-  IconSettings,
-  IconSlash,
-  IconX,
-} from "@tabler/icons-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TextareaAutosize from "react-textarea-autosize";
-import useSWR from "swr";
-import { Ollama, type Message } from "ollama/browser";
+import SidebarLayout from "@/components/ui/SidebarLayout";
 import ChatsList from "./ChatsList";
 import { db, useChatQueryParam } from "./db";
-import { useLiveQuery } from "dexie-react-hooks";
-import { Button } from "@/components/ui/button";
-import Toolbar from "./Toolbar";
+import { createEffect, Show } from "solid-js";
+import { createLiveQuery } from "@/lib/solidjs/db-utils";
+import Chat from "./Chat";
+import Help from "./Help";
 
 const OllamaChat = () => {
-  const [chatParam, _] = useChatQueryParam();
+  const [chatParam] = useChatQueryParam();
 
-  const chat = useLiveQuery(
-    () => (chatParam ? db.chats.get(chatParam) : undefined),
-    [chatParam],
-  );
-
-  console.log("chat", chat);
-
-  /*
-  const queryFunction =
-    data && selectedModel
-      ? async (
-          query: string,
-          config?: { messages?: Message[]; format?: string },
-        ) => {
-          const response = await data?.ollama.chat({
-            model: selectedModel!.name,
-            messages: [
-              { role: "user", content: query },
-              ...(config?.messages || []),
-            ],
-            format: config?.format,
-            stream: true,
-          });
-          return response;
-        }
-      : null;
-  */
+  const chat = createLiveQuery(() => db.chats.get(chatParam() || -1));
 
   return (
-    <div className="flex flex-row bg-gray-100 gap-1 p-1 flex-1 overflow-hidden">
-      <ChatsList />
-
-      {chat && (
-        <div className="flex-1 bg-white rounded-lg p-1">
-          {/* Toolbar */}
-          <Toolbar chat={chat} />
-        </div>
-      )}
+    <div class="flex flex-1 overflow-hidden bg-gray-100">
+      <SidebarLayout sidebar={<ChatsList />}>
+        <Show
+          when={chatParam() && chat?.id}
+          fallback={
+            <div class="flex h-full w-full items-center justify-center">
+              <Help />
+            </div>
+          }
+        >
+          <div class="flex h-full w-full flex-col gap-1">
+            <Chat chat={chat!} />
+          </div>
+        </Show>
+      </SidebarLayout>
     </div>
   );
 };

@@ -1,0 +1,33 @@
+{
+  "nav": [
+    {
+      "name": "Projekte",
+      "url": "/projects"
+    },
+    {
+      "name": "Galerie",
+      "url": "/gallery"
+    },
+    {
+      "name": "Blogs",
+      "url": "/blog"
+    }
+  ],
+  "tools": [
+    {
+      "name": "Ollama AI Chat",
+      "url": "/tools/chat",
+      "description": "Chat-Anwendung um mit einem Ollama-Server zu kommunizieren."
+    }
+  ],
+  "footer": [
+    {
+      "name": "Über Mich",
+      "url": "/about"
+    },
+    {
+      "name": "Impressum",
+      "url": "/privacy-policy"
+    }
+  ]
+}

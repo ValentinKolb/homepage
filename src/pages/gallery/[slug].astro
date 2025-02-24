@@ -2,7 +2,6 @@
 import Base from "@/layouts/Base.astro";
 import { getContentPages } from "@/lib/contentParser.astro";
 import { slugify } from "@/lib/utils/textConverter";
-import { IconArrowLeft, IconArrowRight, IconX } from "@tabler/icons-react";
 import { Image } from "astro:assets";
 
 export const prerender = true
@@ -62,7 +61,7 @@ const { name, description, images } = gallery.data;
                         class="text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
                         aria-label="Vorheriges Bild"
                       >
-                        <IconArrowLeft className="w-6 h-6" />
+                        <i class="ti ti-arrow-left"/>
                       </a>
                     )}
                   </div>
@@ -73,7 +72,7 @@ const { name, description, images } = gallery.data;
                         class="text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
                         aria-label="Nächstes Bild"
                       >
-                        <IconArrowRight className="w-6 h-6" />
+                        <i class="ti ti-arrow-right"/>
                       </a>
                     )}
                   </div>
@@ -95,7 +94,7 @@ const { name, description, images } = gallery.data;
                   class="absolute top-4 right-4 text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
                   aria-label="Schließen"
                 >
-                  <IconX className="w-6 h-6" />
+                  <i class="ti ti-close"/>
                 </a>
               </div>
             </div>

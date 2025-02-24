@@ -1,14 +1,25 @@
+@import "@tabler/icons-webfont/dist/tabler-icons.css";
+@import "@wooorm/starry-night/style/core";
+@import "highlight.js/styles/atom-one-dark.css";
+@import "./starry-nights";
+@import "./katex";
+@import "@wooorm/starry-night/style/dimmed-dark";
+
+.ti {
+  stroke-width: 5; /* todo */
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+@layer custom {
   .section {
     @apply py-5;
   }
 
   .article {
-    @apply prose mx-auto max-w-[65ch] px-2 py-4 pb-10 transition-[max-width] duration-500 ease-in-out md:px-4 lg:max-w-[80ch] [&_img]:mx-auto [&_img]:max-h-[50vh] [&_img]:rounded-lg;
+    @apply prose mx-auto max-w-[65ch] px-2 py-4 pb-10 transition-[max-width] duration-500 ease-in-out md:px-4 lg:max-w-[80ch] [&_img]:mx-auto [&_img]:max-h-[50vh] [&_img]:w-auto [&_img]:rounded-lg;
   }
 
   .article-header {
@@ -29,5 +40,16 @@
 
   .btn-simple {
     @apply paper inline-flex items-center gap-2 rounded-lg px-6 py-3;
+  }
+
+  .no-scrollbar {
+    /* Hide scrollbar for WebKit (Safari, Chrome) */
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
   }
 }

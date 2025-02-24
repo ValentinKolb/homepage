@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 import Base from "@/layouts/Base.astro";
-import { IconCode, IconBriefcase } from "@tabler/icons-react";
 import { getEntry } from "astro:content";
 
 const about = await getEntry("about", "index");
@@ -46,7 +45,7 @@ const { title, meta_title, description, image, skills, jobs } = about!.data;
   <section class="py-16">
     <div class="container mx-auto">
       <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-        <IconCode className="h-6 w-6 text-blue-500" /> Kompetenzen
+        <i class="ti ti-code h-6 w-6 text-blue-500"></i> Kompetenzen
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Programmiersprachen -->
@@ -88,7 +87,7 @@ const { title, meta_title, description, image, skills, jobs } = about!.data;
   <section class="py-16 bg-gray-50">
     <div class="container mx-auto">
       <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-        <IconBriefcase className="h-6 w-6 text-green-500" /> Berufserfahrung
+        <i class="ti ti-briefcase h-6 w-6 text-green-500"></i> Berufserfahrung
       </h2>
       <div class="space-y-8">
         {

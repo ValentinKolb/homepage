@@ -1,0 +1,30 @@
+---
+import config from "@/config/config.json";
+import menu from "./menu.json";
+import { markdownify } from "@/lib/utils/textConverter";
+---
+
+<footer class="hidden md:flex bg-gray-50 border-t border-gray-200 py-4">
+  <div class="container mx-auto text-center">
+    <ul class="flex justify-center space-x-6 text-xs text-gray-400">
+      {/* Footer Menu */}
+      {
+        menu.footer.map((menu) => (
+          <li>
+            <a
+              href={menu.url}
+              class="hover:text-gray-800 transition hover:underline"
+            >
+              {menu.name}
+            </a>
+          </li>
+        ))
+      }
+
+      {/* Copyright */}
+      <li>
+        <span set:html={markdownify(config.params.copyright)} />
+      </li>
+    </ul>
+  </div>
+</footer>

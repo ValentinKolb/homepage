@@ -8,7 +8,6 @@ import { getContentPages } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { humanize } from "@/lib/utils/textConverter";
-import { IconCategory, IconHash } from "@tabler/icons-react";
 
 const categories = await getTaxonomy("blogs", "categories");
 const tags = await getTaxonomy("blogs", "tags");
@@ -35,7 +34,7 @@ const searchList = blogs.map((item: any) => ({
           categories.map((category) => (
             <li>
               <a href={`/blog/c/${category}`} class="btn-simple p-2 text-sm">
-                <IconCategory size={16} />
+                <i class="ti ti-category" />
                 {humanize(category || "")}
               </a>
             </li>
@@ -54,7 +53,7 @@ const searchList = blogs.map((item: any) => ({
           tags.map((tag) => (
             <li>
               <a href={`/blog/t/${tag}`} class="btn-simple p-2 text-sm">
-                <IconHash size={16} />
+                <i class="ti ti-hash" />
                 {humanize(tag || "")}
               </a>
             </li>

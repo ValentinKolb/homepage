@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
-import { IconCalendarMonth, IconCategory } from "@tabler/icons-react";
 
 const { summary_length } = config.settings;
 const { blogs } = Astro.props;
@@ -37,11 +36,11 @@ const { blogs } = Astro.props;
               </h3>
               <ul class="flex flex-wrap items-center text-sm text-gray-500 mb-3">
                 <li class="flex items-center mr-4">
-                  <IconCalendarMonth className="mr-1 h-4 w-4 flex-shrink-0" />
+                  <i class="ti ti-calendar-month mr-1 h-4 w-4 flex-shrink-0" />
                   {dateFormat(post.data.date)}
                 </li>
                 <li class="flex items-center">
-                  <IconCategory className="mr-1 h-4 w-4 flex-shrink-0" />
+                  <i class="ti ti-category mr-1 h-4 w-4 flex-shrink-0" />
                   {post.data.categories.map(
                     (category: string, index: number) => (
                       <span class="mr-1">

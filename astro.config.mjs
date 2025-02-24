@@ -1,11 +1,10 @@
 // @ts-check
 import mdx from "@astrojs/mdx";
-import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import config from "./src/config/config.json";
 import node from "@astrojs/node";
+import solidJs from "@astrojs/solid-js";
 
 export default defineConfig({
   experimental: {
@@ -28,17 +27,10 @@ export default defineConfig({
     domains: ["s3.valentin-kolb.blog"],
     remotePatterns: [{ protocol: "https" }],
   },
-  integrations: [
-    react(),
-    sitemap(),
-    AutoImport({
-      imports: [],
-    }),
-    mdx(),
-  ],
+  integrations: [sitemap(), mdx(), solidJs({ devtools: true })],
   markdown: {
     shikiConfig: {
-      theme: "one-dark-pro",
+      theme: "github-dark-default",
       wrap: true,
     },
   },

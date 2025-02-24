@@ -1,19 +1,18 @@
-import { IconX } from "@tabler/icons-react";
-import React, { useState } from "react";
+import { createSignal, createMemo, For, Show } from "solid-js";
 
 const TicTacToe = () => {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(true);
+  const [board, setBoard] = createSignal(Array(9).fill(null));
+  const [isXNext, setIsXNext] = createSignal(true);
 
-  const winner = calculateWinner(board);
+  const winner = createMemo(() => calculateWinner(board()));
 
   const handleClick = (index: number) => {
-    if (board[index] || winner) return;
+    if (board()[index] || winner()) return;
 
-    const newBoard = [...board];
-    newBoard[index] = isXNext ? "X" : "O";
+    const newBoard = [...board()];
+    newBoard[index] = isXNext() ? "X" : "O";
     setBoard(newBoard);
-    setIsXNext(!isXNext);
+    setIsXNext(!isXNext());
   };
 
   const resetGame = () => {
@@ -22,36 +21,39 @@ const TicTacToe = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Tic Tac Toe</h1>
+    <div class="flex flex-col items-center justify-center rounded-lg bg-gray-100 p-4">
+      <h1 class="mb-4 text-2xl font-bold">Tic Tac Toe</h1>
 
-      <div className="grid grid-cols-3 gap-1">
-        {board.map((cell, index) => (
-          <button
-            key={index}
-            className="h-16 w-16 bg-white border border-gray-300 text-xl font-bold flex items-center justify-center hover:bg-gray-200"
-            onClick={() => handleClick(index)}
-          >
-            {cell}
-          </button>
-        ))}
+      <div class="grid grid-cols-3 gap-1">
+        <For each={board()}>
+          {(cell, index) => (
+            <button
+              class="flex h-16 w-16 items-center justify-center border border-gray-300 bg-white text-xl font-bold hover:bg-gray-200"
+              onClick={() => handleClick(index())}
+            >
+              {cell}
+            </button>
+          )}
+        </For>
       </div>
 
-      <div className="mt-4">
-        {winner ? (
-          <p className="text-lg font-bold text-green-600">
-            {winner} hat gewonnen!
+      <div class="mt-4">
+        <Show when={winner()}>
+          <p class="text-lg font-bold text-green-600">
+            {winner()} hat gewonnen!
           </p>
-        ) : board.every((cell) => cell) ? (
-          <p className="text-lg font-bold text-blue-600">Unentschieden!</p>
-        ) : (
-          <p className="text-lg ">Als nächstes: {isXNext ? "X" : "O"}</p>
-        )}
+        </Show>
+        <Show when={!winner() && board().every((cell) => cell)}>
+          <p class="text-lg font-bold text-blue-600">Unentschieden!</p>
+        </Show>
+        <Show when={!winner() && !board().every((cell) => cell)}>
+          <p class="text-lg">Als nächstes: {isXNext() ? "X" : "O"}</p>
+        </Show>
       </div>
 
       <button
         onClick={resetGame}
-        className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+        class="mt-4 rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
       >
         Neu starten
       </button>
@@ -60,7 +62,7 @@ const TicTacToe = () => {
 };
 
 /**
- * this function calculates the winner of the game
+ * Diese Funktion berechnet den Gewinner des Spiels
  */
 const calculateWinner = (squares: (string | null)[]) => {
   const lines = [

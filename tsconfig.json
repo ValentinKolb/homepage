@@ -2,19 +2,19 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "es6",
+    "target": "es2018",
     "allowJs": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "isolatedModules": true,
     "incremental": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@/components/*": ["./src/layouts/components/*"],
-      "@/helpers/*": ["./src/layouts/helpers/*"],
-      "@/partials/*": ["./src/layouts/partials/*"],
+      "@/layouts/*": ["./src/layouts/*"],
       "@/*": ["./src/*"]
     }
   },

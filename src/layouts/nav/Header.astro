@@ -1,0 +1,138 @@
+---
+import { Image } from "astro:assets";
+import menu from "./menu.json";
+import config from "@/config/config.json";
+import { markdownify } from "@/lib/utils/textConverter";
+---
+
+<header>
+  <nav class="mx-auto flex items-center justify-between px-4 py-2 md:py-5">
+    {/* logo */}
+    <a href="/" class="flex items-center">
+      <Image
+        width={150}
+        height={150}
+        alt={"logo"}
+        src="/images/logo.png"
+        class="h-auto w-8 md:w-12"
+      />
+    </a>
+
+    {/* desktop nav */}
+    <div class="hidden gap-2 md:flex">
+      {
+        menu.nav.map((nav) => (
+          <a
+            href={nav.url}
+            class="text-md font-semibold px-2 text-center hover:text-gray-400"
+          >
+            {nav.name}
+          </a>
+        ))
+      }
+
+      <div class="group/dropdown relative">
+        <a
+          class="text-md font-semibold px-2 text-center group-hover/dropdown:text-gray-400"
+        >
+          Tools
+        </a>
+
+        <div class="absolute z-10 hidden group-hover/dropdown:block">
+          <div
+            class="bg-white p-2 shadow-lg rounded-lg w-[300px] border mt-3 -ml-[250px]"
+          >
+            <div class="flex flex-col gap-2">
+              {
+                menu.tools.map((tool) => (
+                  <a href={tool.url} class="p-2 cursor-pointer group/link">
+                    <div class="text-sm font-semibold mb-1 group-hover/link:underline">
+                      {tool.name}
+                    </div>
+                    <div class="text-xs text-gray-400">{tool.description}</div>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* mobil nav */}
+    <label
+      class="md:hidden relative z-40 cursor-pointer p-1"
+      html-for="mobile-menu"
+    >
+      <input class="peer hidden" type="checkbox" id="mobile-menu" />
+
+      <i class="ti ti-menu-2 text-xl text-black"></i>
+
+      {/* bg overlay */}
+      <div
+        class="fixed inset-0 z-30 hidden bg-black/50 backdrop-blur-sm peer-checked:block"
+      >
+      </div>
+
+      {/* offcanvas menu */}
+      <div
+        class="fixed top-0 right-0 z-40 h-full w-4/5 translate-x-full bg-white shadow-2xl transition-transform duration-200 peer-checked:translate-x-0"
+      >
+        <menu class="flex flex-col gap-2 p-2 h-full">
+          {
+            menu.nav.map((nav) => (
+              <a
+                href={nav.url}
+                class="p-2 text-gray-800 font-bold rounded-lg hover:bg-gray-100"
+              >
+                {nav.name}
+              </a>
+            ))
+          }
+
+          <div class="relative flex items-center mt-auto">
+            <hr class="w-full border-gray-200 rounded-full" />
+            <span
+              class="absolute left-1/2 -translate-x-1/2 bg-white px-4 text-xs text-gray-400"
+            >
+              Tools
+            </span>
+          </div>
+          {
+            menu.tools.map((tool) => (
+              <a href={tool.url} class="p-2 cursor-pointer group/link">
+                <div class="text-sm font-semibold mb-1 group-hover/link:underline">
+                  {tool.name}
+                </div>
+                <div class="text-xs text-gray-400">{tool.description}</div>
+              </a>
+            ))
+          }
+          <div>
+            <hr class="w-full border-gray-200 rounded-full" />
+            <ul class="flex justify-center p-2 text-xs text-gray-400 gap-4">
+              {/* Footer Menu */}
+              {
+                menu.footer.map((menu) => (
+                  <li>
+                    <a
+                      href={menu.url}
+                      class="hover:text-gray-800 transition hover:underline"
+                    >
+                      {menu.name}
+                    </a>
+                  </li>
+                ))
+              }
+
+              {/* Copyright */}
+              <li>
+                <span set:html={markdownify(config.params.copyright)} />
+              </li>
+            </ul>
+          </div>
+        </menu>
+      </div>
+    </label>
+  </nav>
+</header>

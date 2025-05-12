@@ -7,8 +7,7 @@
     "dev:verbose": "astro dev --verbose",
     "check": "astro check",
     "build": "astro check && astro build",
-    "format": "prettier -w .",
-    "generate:gallery": "tsx src/scripts/generate-gallery.ts"
+    "format": "prettier -w ."
   },
   "dependencies": {
     "@astrojs/node": "9.2.1",

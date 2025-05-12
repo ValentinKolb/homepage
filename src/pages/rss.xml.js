@@ -1,5 +1,5 @@
 import rss from "@astrojs/rss";
-import { getContentPages } from "@/lib/contentParser.astro";
+import { getContentPages } from "@/lib/content/contentParser.astro";
 
 export async function GET(context) {
   const blogs = await getContentPages("blogs");

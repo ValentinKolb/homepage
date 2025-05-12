@@ -1,4 +1,4 @@
-import type { ReciYML } from "@/components/ReciYML/types";
+import type { ReciYML } from "@/components/data/ReciYML/types";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 const RenderIngredients = (props: {

@@ -8,13 +8,11 @@ if (Astro.cookies.has("theme")) {
 ---
 
 <script>
-  import { getColorTheme, setColorTheme } from "@/lib/color-theme";
+  import { getColorTheme, setColorTheme } from "@/lib/client/color-theme";
 
   class ThemeToggle extends HTMLElement {
     connectedCallback() {
       const button = this.querySelector("button");
-      const icon = this.querySelector("i");
-      const text = this.querySelector("span");
 
       // Apply theme on page load
       const initialTheme = getColorTheme();
@@ -38,17 +36,19 @@ if (Astro.cookies.has("theme")) {
     }
 
     // Update icon and text based on theme
-    updateUI(theme) {
-      const icon = this.querySelector("i");
-      const text = this.querySelector("span");
+    updateUI(theme: string) {
+      const iconElement = this.querySelector("i");
+      const textElement = this.querySelector("span");
 
-      if (icon) {
-        icon.className = "ti";
-        icon.classList.add(theme === "light" ? "ti-sunset" : "ti-sunrise");
+      if (iconElement) {
+        iconElement.className = "ti";
+        iconElement.classList.add(
+          theme === "light" ? "ti-sunset" : "ti-sunrise",
+        );
       }
 
-      if (text) {
-        text.textContent = theme === "light" ? "Dark" : "Light";
+      if (textElement) {
+        textElement.textContent = theme === "light" ? "Dark" : "Light";
       }
     }
   }

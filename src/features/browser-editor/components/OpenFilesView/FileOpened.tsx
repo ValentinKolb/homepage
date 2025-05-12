@@ -1,4 +1,4 @@
-import CodeEditor from "@/components/ui/CodeEditor";
+import CodeEditor from "@/components/core/CodeEditor";
 import { db, type EditorFile } from "../../utils/db";
 
 export default function FileOpened({

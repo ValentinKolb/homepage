@@ -18,7 +18,7 @@ import type {
   WebsearchAPIWebsiteResult,
 } from "@/pages/api/websearch";
 import { ofetch } from "ofetch";
-import { Ollama } from "ollama";
+import { Ollama } from "ollama/browser";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import type { Chat } from "./db";

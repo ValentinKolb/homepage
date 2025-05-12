@@ -1,70 +1,92 @@
 ---
-import { Image } from "astro:assets";
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
 
 const { summary_length } = config.settings;
 const { blogs } = Astro.props;
+
+// Gruppiere Blogs nach Jahr und Monat
+const groupedBlogs = blogs?.reduce((acc: any, post: any) => {
+  const date = new Date(post.data.date);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  if (!acc[year]) {
+    acc[year] = {};
+  }
+
+  if (!acc[year][month]) {
+    acc[year][month] = [];
+  }
+
+  acc[year][month].push(post);
+  return acc;
+}, {}) || {};
+
+// Sortiere Jahre und Monate absteigend
+const sortedYears = Object.keys(groupedBlogs).sort((a, b) => Number(b) - Number(a));
+const monthNames = [
+  "Januar", "Februar", "März", "April", "Mai", "Juni",
+  "Juli", "August", "September", "Oktober", "November", "Dezember"
+];
 ---
 
 {
-  blogs ? (
-    <div class="space-y-6">
-      {blogs.map((post: any) => (
-        <article class=" rounded-lg paper border-0 overflow-hidden">
-          <div class="flex flex-col md:flex-row">
-            {post.data.image && (
-              <a href={`/blog/${post.slug}`} class="md:w-48 shrink-0">
-                <Image
-                  src={post.data.image}
-                  alt={post.data.title}
-                  width={200}
-                  height={200}
-                  class="w-full h-48 md:h-full object-cover"
-                />
-              </a>
-            )}
-            <div class="p-4 flex-1">
-              <h3 class="text-xl font-semibold mb-2">
-                <a
-                  href={`/blog/${post.slug}`}
-                  class="hover:text-primary transition-colors duration-300"
-                >
-                  {post.data.title}
-                </a>
-              </h3>
-              <ul class="flex flex-wrap items-center text-sm text-gray-500 mb-3">
-                <li class="flex items-center mr-4">
-                  <i class="ti ti-calendar-month mr-1 h-4 w-4 shrink-0" />
-                  {dateFormat(post.data.date)}
-                </li>
-                <li class="flex items-center">
-                  <i class="ti ti-hash mr-1 h-4 w-4 shrink-0" />
-                  {post.data.tags.map(
-                    (tag: string, index: number) => (
-                      <span class="mr-1">
-                        <a
-                          href={`/blog/t/${slugify(tag)}`}
-                          class="hover:text-primary"
-                        >
-                          {humanize(tag)}
+  blogs?.length > 0 ? (
+    <div class="space-y-8">
+      {sortedYears.map((year) => (
+        <div class="blog-year">
+          <h2 class="text-2xl font-bold mb-4 border-b pb-2">{year}</h2>
+
+          {Object.keys(groupedBlogs[year])
+            .sort((a, b) => Number(b) - Number(a))
+            .map((month) => (
+              <div class="blog-month mb-6">
+                <h3 class="text-xl font-medium text-gray-700 mb-3">{monthNames[Number(month)]}</h3>
+
+                <ul class="space-y-3">
+                  {groupedBlogs[year][month].map((post: any) => (
+                    <li class="blog-post pb-3 mb-1">
+                      <h4 class="text-lg font-medium">
+                        <a href={`/blog/${post.slug}`} class="hover:text-primary transition-colors">
+                          {post.data.title}
                         </a>
-                        {index < post.data.tags.length - 1 && ", "}
-                      </span>
-                    ),
-                  )}
-                </li>
-              </ul>
-              <p class="text-gray-700 text-sm">
-                {post.data.description ??
-                  plainify(
-                    `${post.body?.slice(0, Number(summary_length))} ...`,
-                  )}
-              </p>
-            </div>
-          </div>
-        </article>
+                      </h4>
+
+                      <div class="text-sm text-gray-500 mt-2">
+                        <span class="flex items-center mr-4">
+                          <i class="ti ti-calendar-month mr-1 h-4 w-4" />
+                          {dateFormat(post.data.date)}
+                        </span>
+
+                        <span class="flex items-center flex-wrap mt-2">
+                          <i class="ti ti-hash mr-1 h-4 w-4" />
+                          {post.data.tags.map(
+                            (tag: string, index: number) => (
+                              <span>
+                                <a href={`/blog/t/${slugify(tag)}`} class="hover:text-primary">
+                                  {humanize(tag)}
+                                </a>
+                                {index < post.data.tags.length - 1 && ", "}
+                              </span>
+                            ),
+                          )}
+                        </span>
+                      </div>
+
+                      <p class="text-gray-600 text-sm mt-2">
+                        {post.data.description ??
+                          plainify(
+                            `${post.body?.slice(0, Number(summary_length))} ...`,
+                          )}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+        </div>
       ))}
     </div>
   ) : (

@@ -1,4 +1,4 @@
-import SidebarLayout from "@/components/ui/SidebarLayout";
+import SidebarLayout from "@/components/core/SidebarLayout";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 import { createEffect } from "solid-js";
 import FileList from "./components/FileList";

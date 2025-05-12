@@ -1,7 +1,7 @@
-import createModal from "@/components/ui/Modal";
-import Tooltip from "@/components/ui/Tooltip";
+import createModal from "@/components/core/Modal";
+import Tooltip from "@/components/core/Tooltip";
 import convert from "convert";
-import { Ollama, type ModelResponse } from "ollama";
+import { Ollama, type ModelResponse } from "ollama/browser";
 import { createResource, For, Show } from "solid-js";
 import {
   db,
@@ -12,7 +12,7 @@ import {
 } from "../utils/db";
 import { createChatTitleMutation } from "../utils/ai";
 import { createMutation } from "@/lib/solidjs/mutation";
-import Switch from "@/components/ui/Switch";
+import Switch from "@/components/core/Switch";
 
 /**
  * This function fetches the models from the Ollama server

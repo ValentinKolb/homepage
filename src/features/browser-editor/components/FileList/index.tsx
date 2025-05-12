@@ -1,4 +1,4 @@
-import ContextMenu from "@/components/ui/ContextMenu";
+import ContextMenu from "@/components/core/ContextMenu";
 import { createClickOutside } from "@/lib/solidjs/click-outside";
 import { getIconForFileType } from "@/lib/utils/fileicons";
 import { createSignal, For, Show } from "solid-js";

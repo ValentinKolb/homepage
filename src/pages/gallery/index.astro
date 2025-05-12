@@ -11,7 +11,8 @@ const galleries = await getCollection("gallery");
 
 // Function to get the first image from each gallery folder
 async function getPreviewImages() {
-  const previewImages = {};
+  // Define explicit type with index signature
+  const previewImages: Record<string, string> = {};
 
   for (const gallery of galleries) {
     const publicPath = gallery.data.folderPath;

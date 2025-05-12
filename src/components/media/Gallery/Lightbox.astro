@@ -92,26 +92,29 @@ const { images } = Astro.props;
     
     // Store all images in an array
     const images = Array.from(document.querySelectorAll(".lightbox-thumbnail")).map((thumbnail) => {
-      const index = parseInt(thumbnail.getAttribute("data-index") || "0");
+      const imgElement = thumbnail.querySelector("img");
+      if (!imgElement) {
+        return { src: "", alt: "" };
+      }
       return {
-        src: thumbnail.querySelector("img").src,
-        alt: thumbnail.querySelector("img").alt
+        src: imgElement.src,
+        alt: imgElement.alt
       };
     });
     
     let currentIndex = 0;
     
     // Display image in lightbox
-    function showImage(index) {
+    function showImage(index: number): void {
       if (index < 0) index = 0;
       if (index >= images.length) index = images.length - 1;
-      
+
       currentIndex = index;
       
       // Update image
-      if (lightboxImage) {
+      if (lightboxImage && lightboxImage instanceof HTMLImageElement) {
         lightboxImage.src = images[index].src;
-        lightboxImage.alt = images[index].alt;
+        lightboxImage.alt = images[index].alt || '';
       }
       
       // Update counter
@@ -130,7 +133,7 @@ const { images } = Astro.props;
     }
     
     // Open lightbox
-    function openLightbox(index) {
+    function openLightbox(index: number): void {
       if (overlay) {
         overlay.style.display = "flex";
         document.body.style.overflow = "hidden"; // Prevent scrolling
@@ -149,8 +152,9 @@ const { images } = Astro.props;
     // Event listener for thumbnails
     lightboxThumbnails.forEach((thumbnail) => {
       thumbnail.addEventListener("click", () => {
-        const index = parseInt(thumbnail.getAttribute("data-index") || "0");
-        openLightbox(index);
+        const indexAttr = thumbnail.getAttribute("data-index");
+        const thumbnailIndex = indexAttr ? parseInt(indexAttr) : 0;
+        openLightbox(thumbnailIndex);
       });
     });
     

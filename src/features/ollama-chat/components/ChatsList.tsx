@@ -1,4 +1,4 @@
-import Loader from "@/components/ui/Loader";
+import Loader from "@/components/core/Loader";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 import { createAutoAnimate } from "@formkit/auto-animate/solid";
 import { For, Show } from "solid-js";

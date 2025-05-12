@@ -1,8 +1,8 @@
 ---
-import Base from "@/layouts/Base.astro";
-import BlogsList from "@/layouts/BlogsList.astro";
-import { getContentPages } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import Base from "@/components/layout/Base.astro";
+import BlogsList from "@/components/layout/BlogsList.astro";
+import { getContentPages } from "@/lib/content/contentParser.astro";
+import { getTaxonomy } from "@/lib/content/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { humanize } from "@/lib/utils/textConverter";

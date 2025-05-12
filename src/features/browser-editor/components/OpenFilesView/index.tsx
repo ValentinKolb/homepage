@@ -1,5 +1,5 @@
-import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
-import { db, useOpenedFile, type EditorFile } from "../../utils/db";
+import { For, Show } from "solid-js";
+import { db, useOpenedFile } from "../../utils/db";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 import NoFileOpend from "./NoFileOpened";
 import FileOpened from "./FileOpened";

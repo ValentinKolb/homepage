@@ -1,5 +1,5 @@
 import { createMutation } from "@/lib/solidjs/mutation";
-import { Ollama } from "ollama";
+import { Ollama } from "ollama/browser";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import type { Base64Image } from "../components/ImageSelectBtn";

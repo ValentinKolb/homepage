@@ -1,7 +1,7 @@
-import Tooltip from "@/components/ui/Tooltip";
+import Tooltip from "@/components/core/Tooltip";
 import { createFile, db, useOpenedFile } from "../../utils/db";
 import { formatDate, uploadFile } from "../../utils/lib";
-import { createEffect, createSignal, For, Show } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 
 export default function NoFileOpend() {

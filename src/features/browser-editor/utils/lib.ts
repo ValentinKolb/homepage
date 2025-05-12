@@ -1,4 +1,4 @@
-import { createFile, db, type EditorFile, type ITextFile } from "./db";
+import { createFile, type EditorFile } from "./db";
 
 /**
  * This function formats a date.

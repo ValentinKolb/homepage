@@ -1,23 +1,59 @@
 ---
-import Base from "@/layouts/Base.astro";
-import { getContentPages } from "@/lib/contentParser.astro";
+import Base from "@/components/layout/Base.astro";
+import { getContentPages } from "@/lib/content/contentParser.astro";
 import { slugify } from "@/lib/utils/textConverter";
-import { Image } from "astro:assets";
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import Lightbox from "@/components/media/Gallery/Lightbox.astro";
 
 export const prerender = true
 export async function getStaticPaths() {
   const galleries = await getContentPages("gallery");
-  console.log("galleries:", galleries.map(g => g.data.name))
-  return galleries.map((gallery) => ({
-    params: {
-      slug: slugify(gallery.data.name),
-    },
-    props: { gallery },
+
+  // Generate paths for each gallery
+  const paths = await Promise.all(galleries.map(async (gallery) => {
+    const folderPath = gallery.data.folderPath;
+    const systemPath = path.join(process.cwd(), "public", folderPath.replace(/^\//, ""));
+
+    try {
+      // Read all image files in the directory
+      const files = await fs.readdir(systemPath);
+
+      // Filter for jpg files and create image objects
+      const imageFiles = files.filter(file => file.endsWith('.jpg'));
+      const images = imageFiles.map(file => ({
+        src: `${folderPath}/${file}`,
+        alt: file.replace('.jpg', '').replace(/^img-/, 'Bild ')
+      }));
+
+      return {
+        params: {
+          slug: slugify(gallery.data.name),
+        },
+        props: {
+          gallery,
+          images
+        },
+      };
+    } catch (error) {
+      console.error(`Error reading gallery directory ${systemPath}:`, error);
+      return {
+        params: {
+          slug: slugify(gallery.data.name),
+        },
+        props: {
+          gallery,
+          images: []
+        },
+      };
+    }
   }));
+
+  return paths;
 }
 
-const { gallery } = Astro.props;
-const { name, description, images } = gallery.data;
+const { gallery, images } = Astro.props;
+const { name, description } = gallery.data;
 ---
 
 <Base title={name}>
@@ -26,81 +62,8 @@ const { name, description, images } = gallery.data;
       <h1 class="text-3xl font-bold mb-8">{name}</h1>
       {description && <p class="mb-8 text-gray-400">{description}</p>}
 
-      <!-- Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {images.map((image, index) => (
-          <>
-            <!-- Thumbnail -->
-            <a
-              href={`#lightbox-${index}`}
-              class="block aspect-square overflow-hidden rounded-lg"
-            >
-              <Image
-                src={image.thumb || image.src}
-                alt={image.alt || name}
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                loading="lazy"
-                inferSize={true}
-              />
-            </a>
-
-            <!-- Lightbox -->
-            <div
-              id={`lightbox-${index}`}
-              class="hidden target:flex fixed inset-0 z-50 bg-black/90 justify-center items-center"
-              role="dialog"
-              aria-modal="true"
-            >
-              <div class="relative w-full h-full flex items-center justify-center p-4">
-                <!-- Navigation Buttons Container -->
-                <div class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
-                  <div class="w-16 flex justify-start pointer-events-auto">
-                    {index > 0 && (
-                      <a
-                        href={`#lightbox-${index - 1}`}
-                        class="text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
-                        aria-label="Vorheriges Bild"
-                      >
-                        <i class="ti ti-arrow-left"/>
-                      </a>
-                    )}
-                  </div>
-                  <div class="w-16 flex justify-end pointer-events-auto">
-                    {index < images.length - 1 && (
-                      <a
-                        href={`#lightbox-${index + 1}`}
-                        class="text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
-                        aria-label="Nächstes Bild"
-                      >
-                        <i class="ti ti-arrow-right"/>
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                <!-- Image Container -->
-                <div class="relative max-w-[95vw] max-h-[95vh] flex items-center justify-center">
-                  <Image
-                    src={image.src}
-                    alt={image.alt || name}
-                    class="max-w-full max-h-[95vh] object-contain"
-                    inferSize={true}
-                  />
-                </div>
-
-                <!-- Close Button -->
-                <a
-                  href="#"
-                  class="absolute top-4 right-4 text-white bg-gray-700/50 backdrop-blur-sm rounded-full p-2 hover:bg-gray-600 transition-colors"
-                  aria-label="Schließen"
-                >
-                  <i class="ti ti-close"/>
-                </a>
-              </div>
-            </div>
-          </>
-        ))}
-      </div>
+      <!-- Lightbox Galerie mit Astro-Bildoptimierung -->
+      <Lightbox images={images} />
     </div>
   </section>
 </Base>

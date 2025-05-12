@@ -29,3 +29,5 @@ pnpm-debug.log*
 # legacy
 
 ./hugo
+
+**/.claude/settings.local.json

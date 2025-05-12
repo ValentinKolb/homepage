@@ -1,0 +1,202 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  images: Array<{
+    src: string;
+    alt?: string;
+    width?: number;
+    height?: number;
+  }>;
+}
+
+const { images } = Astro.props;
+---
+
+<div class="gallery-lightbox">
+  <!-- Grid View -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    {
+      images.map((image, index) => (
+        <button
+          class="lightbox-thumbnail block aspect-square overflow-hidden rounded-lg"
+          data-index={index}
+        >
+          <Image
+            src={image.src}
+            width={400}
+            height={400}
+            alt={image.alt || `Gallery image ${index + 1}`}
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        </button>
+      ))
+    }
+  </div>
+
+  <!-- Lightbox Overlay -->
+  <div id="lightbox-overlay" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex-col justify-center items-center">
+    <!-- Navigation Buttons Container -->
+    <div class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none z-[60]">
+      <div class="w-16 flex justify-start pointer-events-auto">
+        <button
+          id="prev-button"
+          class="text-white bg-gray-700/50 backdrop-blur-sm w-10 h-10 rounded-full hover:bg-gray-600 transition-colors flex items-center justify-center"
+          aria-label="Previous image"
+        >
+          <i class="ti ti-arrow-left text-xl"></i>
+        </button>
+      </div>
+      <div class="w-16 flex justify-end pointer-events-auto">
+        <button
+          id="next-button"
+          class="text-white bg-gray-700/50 backdrop-blur-sm w-10 h-10 rounded-full hover:bg-gray-600 transition-colors flex items-center justify-center"
+          aria-label="Next image"
+        >
+          <i class="ti ti-arrow-right text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Image Container -->
+    <div class="relative max-w-[95vw] max-h-[80vh] flex items-center justify-center">
+      <img id="lightbox-image" src="" alt="" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+
+    <!-- Counter -->
+    <div class="absolute bottom-6 left-0 right-0 text-center text-white z-[60]">
+      <span id="image-counter" class="px-3 py-1 bg-gray-800/70 backdrop-blur-sm rounded-full text-sm"></span>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      id="close-button"
+      class="absolute top-4 right-4 text-white bg-gray-700/50 backdrop-blur-sm w-10 h-10 rounded-full hover:bg-gray-600 transition-colors flex items-center justify-center z-[60]"
+      aria-label="Close"
+    >
+      <i class="ti ti-x text-xl"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const overlay = document.getElementById("lightbox-overlay");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const prevButton = document.getElementById("prev-button");
+    const nextButton = document.getElementById("next-button");
+    const closeButton = document.getElementById("close-button");
+    const imageCounter = document.getElementById("image-counter");
+    const lightboxThumbnails = document.querySelectorAll(".lightbox-thumbnail");
+    
+    // Store all images in an array
+    const images = Array.from(document.querySelectorAll(".lightbox-thumbnail")).map((thumbnail) => {
+      const index = parseInt(thumbnail.getAttribute("data-index") || "0");
+      return {
+        src: thumbnail.querySelector("img").src,
+        alt: thumbnail.querySelector("img").alt
+      };
+    });
+    
+    let currentIndex = 0;
+    
+    // Display image in lightbox
+    function showImage(index) {
+      if (index < 0) index = 0;
+      if (index >= images.length) index = images.length - 1;
+      
+      currentIndex = index;
+      
+      // Update image
+      if (lightboxImage) {
+        lightboxImage.src = images[index].src;
+        lightboxImage.alt = images[index].alt;
+      }
+      
+      // Update counter
+      if (imageCounter) {
+        imageCounter.textContent = `${index + 1} / ${images.length}`;
+      }
+      
+      // Enable/disable navigation buttons
+      if (prevButton) {
+        prevButton.style.visibility = index > 0 ? "visible" : "hidden";
+      }
+      
+      if (nextButton) {
+        nextButton.style.visibility = index < images.length - 1 ? "visible" : "hidden";
+      }
+    }
+    
+    // Open lightbox
+    function openLightbox(index) {
+      if (overlay) {
+        overlay.style.display = "flex";
+        document.body.style.overflow = "hidden"; // Prevent scrolling
+        showImage(index);
+      }
+    }
+    
+    // Close lightbox
+    function closeLightbox() {
+      if (overlay) {
+        overlay.style.display = "none";
+        document.body.style.overflow = ""; // Re-enable scrolling
+      }
+    }
+    
+    // Event listener for thumbnails
+    lightboxThumbnails.forEach((thumbnail) => {
+      thumbnail.addEventListener("click", () => {
+        const index = parseInt(thumbnail.getAttribute("data-index") || "0");
+        openLightbox(index);
+      });
+    });
+    
+    // Event listener for previous button
+    if (prevButton) {
+      prevButton.addEventListener("click", () => {
+        showImage(currentIndex - 1);
+      });
+    }
+    
+    // Event listener for next button
+    if (nextButton) {
+      nextButton.addEventListener("click", () => {
+        showImage(currentIndex + 1);
+      });
+    }
+    
+    // Event listener for close button
+    if (closeButton) {
+      closeButton.addEventListener("click", closeLightbox);
+    }
+    
+    // Close when clicking the background
+    if (overlay) {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+          closeLightbox();
+        }
+      });
+    }
+    
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (overlay && overlay.style.display === "flex") {
+        switch (e.key) {
+          case "ArrowLeft":
+            showImage(currentIndex - 1);
+            break;
+          case "ArrowRight":
+            showImage(currentIndex + 1);
+            break;
+          case "Escape":
+            closeLightbox();
+            break;
+        }
+      }
+    });
+  });
+</script>

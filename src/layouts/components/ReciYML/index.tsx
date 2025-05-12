@@ -1,8 +1,8 @@
-import { createSignal, createMemo, Show, For } from "solid-js";
 import type { ReciYML as ReciYMLType } from "@/components/ReciYML/types";
-import RenderStep from "./RenderStep";
+import { createMemo, createSignal, Show } from "solid-js";
+import { Tab, Tabs } from "../ui/Tabs";
 import RenderShoppingList from "./RenderShoppingList";
-import { Tabs, Tab } from "../ui/Tabs";
+import RenderStep from "./RenderStep";
 
 export default function ReciYML({ recipe }: { recipe: ReciYMLType }) {
   const [amount, setAmount] = createSignal(recipe.amount || 1);
@@ -22,7 +22,7 @@ export default function ReciYML({ recipe }: { recipe: ReciYMLType }) {
               <Show when={recipe.unit}> ({recipe.unit}) </Show>
             </span>
             <input
-              class="w-full border-0 bg-transparent p-0 text-gray-800 focus:ring-0"
+              class="w-full appearance-none border-0 bg-transparent p-0 text-gray-800 ring-0 outline-0"
               type="number"
               inputMode="numeric"
               aria-roledescription="Number field"
@@ -37,7 +37,7 @@ export default function ReciYML({ recipe }: { recipe: ReciYMLType }) {
           <div class="flex items-center justify-end gap-x-1.5">
             <button
               type="button"
-              class="inline-flex size-6 items-center justify-center gap-x-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none active:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+              class="inline-flex size-6 items-center justify-center gap-x-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-xs hover:bg-gray-50 focus:bg-gray-50 focus:outline-hidden active:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Decrease"
               onClick={() => setAmount(Math.max(1, amount() - 1))}
               data-hs-input-number-decrement=""
@@ -47,7 +47,7 @@ export default function ReciYML({ recipe }: { recipe: ReciYMLType }) {
             </button>
             <button
               type="button"
-              class="inline-flex size-6 items-center justify-center gap-x-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none active:border-gray-300 disabled:opacity-50"
+              class="inline-flex size-6 items-center justify-center gap-x-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-xs hover:bg-gray-50 focus:bg-gray-50 focus:outline-hidden active:border-gray-300 disabled:opacity-50"
               aria-label="Increase"
               onClick={() => setAmount(amount() + 1)}
               data-hs-input-number-increment=""

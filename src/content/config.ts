@@ -10,9 +10,8 @@ const blogsCollection = defineCollection({
     description: z.string().optional(),
     date: z.date(),
     image: z.string().optional(),
-    categories: z.array(z.string()).default(["others"]),
     tags: z.array(z.string()).default(["others"]),
-    draft: z.boolean().optional().default(false),
+    draft: z.boolean().default(false),
     recipe: ReciYMLSchema.optional(),
   }),
 });
@@ -32,18 +31,11 @@ const pagesCollection = defineCollection({
 
 // Gallery collection schema
 const galleryCollection = defineCollection({
-  type: "data",
   schema: z.object({
     name: z.string(),
     description: z.string().optional(),
     blogPost: z.string().optional(),
-    images: z.array(
-      z.object({
-        src: z.string(),
-        thumb: z.string().optional(),
-        alt: z.string().optional(),
-      }),
-    ),
+    folderPath: z.string(), // Path to the image folder
   }),
 });
 

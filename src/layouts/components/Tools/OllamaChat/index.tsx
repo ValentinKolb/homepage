@@ -1,10 +1,11 @@
 import SidebarLayout from "@/components/ui/SidebarLayout";
-import ChatsList from "./ChatsList";
-import { db, useChatQueryParam } from "./db";
-import { createEffect, Show } from "solid-js";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
-import Chat from "./Chat";
-import Help from "./Help";
+import { createEffect, Show } from "solid-js";
+import Chat from "./components/Chat";
+import ChatsList from "./components/ChatsList";
+import { db, useChatQueryParam } from "./utils/db";
+import Help from "./components/Help";
+import { onMount } from "nanostores";
 
 const OllamaChat = () => {
   const [chatParam] = useChatQueryParam();
@@ -12,7 +13,7 @@ const OllamaChat = () => {
   const chat = createLiveQuery(() => db.chats.get(chatParam() || -1));
 
   return (
-    <div class="flex flex-1 overflow-hidden bg-gray-100">
+    <div class="flex flex-1 overflow-hidden dark:bg-black">
       <SidebarLayout sidebar={<ChatsList />}>
         <Show
           when={chatParam() && chat?.id}
@@ -22,7 +23,7 @@ const OllamaChat = () => {
             </div>
           }
         >
-          <div class="flex h-full w-full flex-col gap-1">
+          <div class="flex h-full w-full">
             <Chat chat={chat!} />
           </div>
         </Show>

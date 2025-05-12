@@ -21,7 +21,7 @@ const projects = await getCollection("projects");
   <section class="py-8">
     <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map(({ data: project }) => (
-        <div class="bg-white paper border-0 rounded-lg shadow group p-4 flex flex-col gap-4">
+        <div class="paper border-0 rounded-lg shadow-sm group p-4 flex flex-col gap-4">
           <!-- Bildbereich -->
           {project.logo && (
           <div class="overflow-hidden relative w-32 h-32 mx-auto bg-gray-100 rounded-md flex items-center justify-center">
@@ -33,7 +33,7 @@ const projects = await getCollection("projects");
           </div>
           )}
           <!-- Inhalt -->
-          <div class="flex-grow">
+          <div class="grow">
             <h2 class="text-xl font-bold mb-2 text-center ">
               {project.name}
             </h2>

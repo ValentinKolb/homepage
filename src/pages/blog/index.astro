@@ -1,74 +1,51 @@
 ---
-import Pagination from "@/components/Pagination.astro";
-import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import SearchBar from "@/layouts/SearchBar";
 import BlogsList from "@/layouts/BlogsList.astro";
-import { getContentPages } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { getContentPages } from "@/lib/content/contentParser.astro";
+import { getTaxonomy } from "@/lib/content/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
-import { humanize } from "@/lib/utils/textConverter";
+import { humanize, slugify } from "@/lib/utils/textConverter";
 
-const categories = await getTaxonomy("blogs", "categories");
 const tags = await getTaxonomy("blogs", "tags");
 
 const blogs = await getContentPages("blogs");
 const sortedBlogs = sortByDate(blogs);
-const totalBlogs = Math.ceil(blogs.length / config.settings.pagination);
-const currentBlogs = sortedBlogs.slice(0, config.settings.pagination);
-
-const searchList = blogs.map((item: any) => ({
-  slug: item.slug,
-  data: item.data,
-  content: item.body,
-}));
 ---
 
-<Base title={"Blogs"}>
-  <!-- Kategorien Sektion -->
-  <section class="py-8">
-    <div class="container mx-auto">
-      <h2 class="text-2xl font-semibold text-primary mb-4">Kategorien</h2>
-      <ul class="flex flex-wrap gap-4">
-        {
-          categories.map((category) => (
-            <li>
-              <a href={`/blog/c/${category}`} class="btn-simple p-2 text-sm">
-                <i class="ti ti-category" />
-                {humanize(category || "")}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+<Base title={"Blog"}>
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <header class="mb-12">
+        <h1 class="text-4xl font-bold mb-6">Blog</h1>
+        <p class="text-lg text-gray-700 dark:text-gray-300">
+          Gedanken, Projekte und Experimente aus meinem Leben als Entwickler und Hobbykoch.
+        </p>
+      </header>
 
-  <!-- Tags Sektion -->
-  <section class="py-8">
-    <div class="container mx-auto">
-      <h2 class="text-2xl font-semibold text-primary mb-4">Tags</h2>
-      <ul class="flex flex-wrap gap-4">
-        {
-          tags.map((tag) => (
-            <li>
-              <a href={`/blog/t/${tag}`} class="btn-simple p-2 text-sm">
-                <i class="ti ti-hash" />
-                {humanize(tag || "")}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+      <!-- Tags -->
+      <div class="mb-12 pb-8 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-semibold text-primary mb-4">Nach Themen filtern</h2>
+        <ul class="flex flex-wrap gap-2">
+          {
+            tags.map((tag) => (
+              <li>
+                <a
+                  href={`/blog/t/${slugify(tag)}`}
+                  class="inline-block px-3 py-1 text-sm rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                >
+                  <i class="ti ti-hash text-xs" />
+                  {humanize(tag || "")}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
 
-  <!-- Aktuelle Blogs Sektion -->
-  <section class="py-8">
-    <div class="container mx-auto">
-      <h2 class="text-2xl font-semibold text-primary mb-4">Aktuelle Blogs</h2>
-      <BlogsList blogs={currentBlogs} className="mb-16" />
-      <Pagination currentPage={1} totalPages={totalBlogs} />
+      <!-- Alle Blogs -->
+      <div>
+        <BlogsList blogs={sortedBlogs} />
+      </div>
     </div>
-  </section>
+  </div>
 </Base>

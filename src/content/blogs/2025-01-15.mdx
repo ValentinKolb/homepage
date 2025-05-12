@@ -1,12 +1,12 @@
 ---
 title: "Tech Stack"
 description: "Die Technik hinter meinem Blog - Stand 2025"
-tags: ["Technik", "Blog"]
-categories: ["Informatik"]
+tags: ["Informatik", "Webentwicklung", "Astro", "Tailwind", "MDX"]
 date: 2025-01-15
 image: /images/blogs/2025-01-15/banner.jpg
 ---
-import  TicTacToe  from '@/components/TicTacToe'
+
+import TicTacToe from "@/components/TicTacToe";
 
 In diesem Blogpost möchte ich beschreiben, welche Technologien ich für meinen Blog verwende – und warum ich mich für genau diese entschieden habe.
 
@@ -19,10 +19,11 @@ Aber ich bin neugierig – und wollte mehr Flexibilität. Also habe ich mich auf
 ## Meine Anforderungen – Warum nicht einfach nur bloggen?
 
 Für mich soll mein Blog mehr können als nur Text anzeigen. Ich wollte, dass er vier zentrale Dinge erfüllt:
-1.	Einfaches Veröffentlichen von Texten – also das klassische Bloggen
-2.	Schöne Darstellung meiner Fotografien
-3.	Übersichtliches Speichern und Anzeigen meiner Rezepte
-4.	Spielwiese für meine Technik-Experimente
+
+1. Einfaches Veröffentlichen von Texten – also das klassische Bloggen
+2. Schöne Darstellung meiner Fotografien
+3. Übersichtliches Speichern und Anzeigen meiner Rezepte
+4. Spielwiese für meine Technik-Experimente
 
 Warum sind mir diese Punkte besonders wichtig für mich – und welche Technik habe ich für sie gefunden?
 
@@ -36,6 +37,7 @@ Markdown ist wie eine Geheimschrift für Texte.
 Statt auf einen Button zu klicken, schreibt man einfach `**dieses Wort**`, und es wird **fett**. Oder man setzt eine Raute `#` davor, und es wird automatisch eine Überschrift.
 
 Warum nutze ich das?
+
 - Markdown ist super einfach zu lernen.
 - Ich kann meine Texte in jedem beliebigen Editor schreiben, sogar auf meinem Handy.
 - Ich behalte komplette Kontrolle über das Format, ohne dass ein Programm dazwischen funkt.
@@ -57,9 +59,10 @@ Das sieht in Markdown erstmal simpel aus – wird aber auf der Webseite schön f
 Doch ich gehe noch einen Schritt weiter und benutze MDX, eine Erweiterung von Markdown.
 
 #### MDX ist wie Markdown auf Steroiden.
+
 [MDX](https://mdxjs.com/) erlaubt mir, kleine Programme oder interaktive Elemente direkt in meinen Blog einzubauen. Zum Beispiel kann ich ein von mir programmiertes Tic-Tac-Toe-Spiel mitten in diesen Text einfügen:
 
-<TicTacToe client:load/>
+<TicTacToe client:load />
 
 ### 2. Fotografien – Wie speichere ich meine Bilder?
 
@@ -70,10 +73,11 @@ Die Herausforderung dabei: Bilder sind riesig!
 Ein hochauflösendes Foto kann mehrere Megabyte groß sein – wenn ich viele davon in meinen Blog packe, dauert es ewig, bis die Seite geladen ist. Das wäre so, als müsste man bei jedem Besuch meines Blogs einen dicken Bildband per Post geliefert bekommen.
 
 Meine Lösung:
+
 1.  Ich vor-optimiere meine Bilder für das Internet wie in diesem [Blogpost](https://valentin-kolb.blog/blog/2024-11-23) beschrieben.
-2.	Ich speichere meine Bilder auf einem externen Server.
-3.	Mein Blog lädt die Bilder erst dann, wenn sie wirklich gebraucht werden und optimiert diese.
-4.	Die Bilder werden automatisch komprimiert, damit sie schneller laden.
+2.  Ich speichere meine Bilder auf einem externen Server.
+3.  Mein Blog lädt die Bilder erst dann, wenn sie wirklich gebraucht werden und optimiert diese.
+4.  Die Bilder werden automatisch komprimiert, damit sie schneller laden.
 
 Diese Technik sorgt dafür, dass mein Blog weiterhin flott bleibt, auch wenn ich viele Fotos verwende.
 
@@ -88,14 +92,16 @@ Das war der Punkt, an dem ich entschied: Ich brauche eine bessere Lösung.
 Ich wollte meine Rezepte klar strukturiert, leicht lesbar und flexibel speichern. Also habe ich ein eigenes Rezept-Format entwickelt: [ReciYML](https://github.com/ValentinKolb/reciyml).
 
 Dieses System speichert Rezepte in kleinen Bausteinen. Ein Brotrezept könnte z. B. so unterteilt werden:
-1.	Vorteig ansetzen
-2.	Hauptteig mischen
-3.	Backen
+
+1. Vorteig ansetzen
+2. Hauptteig mischen
+3. Backen
 
 Jeder Schritt enthält genaue Anweisungen, Zeitangaben und Zutaten. Falls ein Schritt zu umfachreich wird, kann ich ihn einfach weiter unterteilen.
 Dieses Bedürfnis nach Ordnung und Klarheit kommt aus meiner eigenen Erfahrung: Wenn ich einen langen Backtag habe, brauche ich einen klaren Plan, den ich Schritt für Schritt abarbeiten kann. Ich kann es mir nicht leisten, alle zehn Minuten wieder durch lange Fließtexte zu scrollen, nur um herauszufinden, was ich bereits erledigt habe und was als Nächstes ansteht. Ein strukturiertes Rezept hilft mir, den Überblick zu behalten und effizient zu arbeiten.
 
 Außerdem habe ich noch zwei Komfort-Features eingebaut:
+
 - Alle Zutaten der einzelnen Schritte werden automatisch zu einer einzelnen Einkaufsliste zusammengefasst
 - Die Mengen passen sich dynamisch an, wenn man die Gesamtmenge verändert
 
@@ -108,6 +114,7 @@ Jetzt kommen wir zum Herzstück meines Blogs: Das System, das alles zusammenhäl
 Anfangs habe ich das Blog-System [Hugo](https://gohugo.io/) genutzt. Hugo ist bekannt dafür, dass es rasend schnell ist – perfekt, wenn man einfach nur Texte anzeigen möchte.
 
 Aber: Ich wollte mehr:
+
 - Kleine interaktive Programme einbauen
 - Rezepte mit dynamischer Mengenumrechnung erstellen
 - Inhalte flexibler gestalten
@@ -125,6 +132,7 @@ Hier sind noch ein paar verständliche Erklärungen zu Tailwind CSS und ReactJS,
 #### Tailwind CSS – Styling, aber effizient
 
 Beim Erstellen eines Blogs (oder einer Webseite allgemein) muss man sich überlegen, wie alles aussehen soll:
+
 - Welche Farben benutze ich?
 - Wie groß sind die Abstände zwischen den Elementen?
 - Welche Schriftarten verwende ich?
@@ -149,7 +157,7 @@ Ohne Tailwind müsste ich extra eine CSS-Datei anlegen und dort schreiben:
 Mit Tailwind kann ich das direkt im HTML-Code erledigen:
 
 ```html
-<p class="text-xl text-blue-500 m-2">Mein schöner Text</p>
+<p class="m-2 text-xl text-blue-500">Mein schöner Text</p>
 ```
 
 Das spart Zeit und macht es extrem einfach, schnell Änderungen vorzunehmen. Ich kann Tailwind also wärmstens empfehlen – es ist unglaublich praktisch und flexibel.
@@ -163,10 +171,12 @@ Mein Blog ist nicht nur eine Sammlung von Texten – ich möchte auch kleine Pro
 An dieser Stelle erleichert mir [ReactJS](https://reactjs.org/) das Leben.
 
 ReactJS ist wie ein magisches Buch:
+
 - Jedes Element kann interaktiv sein.
 - Ich kann bestimmte Teile meines Blogs so gestalten, dass sie sich „verhalten“ wie eine kleine App.
 
 Zum Beispiel:
+
 - Ein interaktives Tic-Tac-Toe-Spiel, das man direkt im Blog spielen kann.
 - Ein Mengenrechner für meine Rezepte, der automatisch die Zutatenmengen anpasst.
 
@@ -223,6 +233,7 @@ Das Beste daran? Es passiert alles automatisch!
 ### Zusammengefasst
 
 Sobald ich einen neuen Blogpost speichere und hochlade, läuft dieser ganze Prozess von alleine ab:
+
 1. Mein Blog erkennt die Änderung
 1. Die neue Version wird vorbereitet
 1. Alles wird in einen sicheren Container verpackt

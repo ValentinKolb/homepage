@@ -5,12 +5,10 @@ import { defineConfig } from "astro/config";
 import config from "./src/config/config.json";
 import node from "@astrojs/node";
 import solidJs from "@astrojs/solid-js";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  experimental: {
-    svg: true,
-  },
-  output: "server",
+  output: "server", // use SSR for all routes as default
   adapter: node({
     mode: "standalone",
   }),
@@ -18,7 +16,7 @@ export default defineConfig({
     "/authors/valentin-kolb": "/about",
   },
   vite: {
-    // plugins: [tailwindcss()], todo v4
+    plugins: [tailwindcss()],
   },
   site: config.site.base_url,
   base: config.site.base_path ? config.site.base_path : "/",

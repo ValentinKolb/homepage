@@ -1,11 +1,11 @@
 ---
-import Base from "@/layouts/Base.astro";
+import Base from "@/components/layout/Base.astro";
 import { Image } from "astro:assets";
 ---
 
 <Base>
   <!-- Hero-Abschnitt mit Split-Layout -->
-  <section class="min-h-[80vh] flex items-center bg-white">
+  <section class="min-h-[80vh] flex items-center">
     <div class="container mx-auto">
       <div class="grid md:grid-cols-2 gap-12 items-center">
         <!-- Linke Spalte: Text -->
@@ -22,18 +22,8 @@ import { Image } from "astro:assets";
             Projekte.
           </p>
           <div class="flex gap-4 pt-4">
-            <a
-              href="/projects"
-              class="inline-block px-6 py-3 rounded-lg shadow-md hover:translate-y-[-2px] hover:shadow-lg transition-all duration-300"
-            >
-              Meine Projekte
-            </a>
-            <a
-              href="/blog"
-              class="inline-block px-6 py-3 rounded-lg shadow-md hover:translate-y-[-2px] hover:shadow-lg transition-all duration-300"
-            >
-              Blog entdecken
-            </a>
+            <a href="/projects" class="btn-simple"> Meine Projekte </a>
+            <a href="/blog" class="btn-simple"> Blog entdecken </a>
           </div>
         </div>
 

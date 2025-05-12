@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
@@ -10,59 +9,54 @@ const { blogs } = Astro.props;
 
 {
   blogs ? (
-    <div class="space-y-6">
+    <div class="space-y-8">
       {blogs.map((post: any) => (
-        <article class="bg-white rounded-lg paper border-0 overflow-hidden">
-          <div class="flex flex-col md:flex-row">
-            {post.data.image && (
-              <a href={`/blog/${post.slug}`} class="md:w-48 shrink-0">
-                <Image
-                  src={post.data.image}
-                  alt={post.data.title}
-                  width={200}
-                  height={200}
-                  class="w-full h-48 md:h-full object-cover"
-                />
+        <article class="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0">
+          <div>
+            <h3 class="text-xl md:text-2xl font-bold mb-2">
+              <a
+                href={`/blog/${post.slug}`}
+                class="hover:text-primary transition-colors duration-300"
+              >
+                {post.data.title}
               </a>
-            )}
-            <div class="p-4 flex-1">
-              <h3 class="text-xl font-semibold mb-2">
-                <a
-                  href={`/blog/${post.slug}`}
-                  class="hover:text-primary transition-colors duration-300"
-                >
-                  {post.data.title}
-                </a>
-              </h3>
-              <ul class="flex flex-wrap items-center text-sm text-gray-500 mb-3">
-                <li class="flex items-center mr-4">
-                  <i class="ti ti-calendar-month mr-1 h-4 w-4 flex-shrink-0" />
-                  {dateFormat(post.data.date)}
-                </li>
-                <li class="flex items-center">
-                  <i class="ti ti-category mr-1 h-4 w-4 flex-shrink-0" />
-                  {post.data.categories.map(
-                    (category: string, index: number) => (
+            </h3>
+            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
+              <span class="flex items-center mr-4">
+                <i class="ti ti-calendar-month mr-1 h-4 w-4 shrink-0" />
+                {dateFormat(post.data.date)}
+              </span>
+              {post.data.tags && (
+                <span class="flex items-center flex-wrap">
+                  <i class="ti ti-hash mr-1 h-4 w-4 shrink-0" />
+                  {post.data.tags.map(
+                    (tag: string, index: number) => (
                       <span class="mr-1">
                         <a
-                          href={`/blog/c/${slugify(category)}`}
+                          href={`/blog/t/${slugify(tag)}`}
                           class="hover:text-primary"
                         >
-                          {humanize(category)}
+                          {humanize(tag)}
                         </a>
-                        {index < post.data.categories.length - 1 && ", "}
+                        {index < post.data.tags.length - 1 && ", "}
                       </span>
                     ),
                   )}
-                </li>
-              </ul>
-              <p class="text-gray-700 text-sm">
-                {post.data.description ??
-                  plainify(
-                    `${post.body?.slice(0, Number(summary_length))} ...`,
-                  )}
-              </p>
+                </span>
+              )}
             </div>
+            <p class="text-gray-700 dark:text-gray-300 text-base">
+              {post.data.description ??
+                plainify(
+                  `${post.body?.slice(0, Number(summary_length))} ...`,
+                )}
+            </p>
+            <a
+              href={`/blog/${post.slug}`}
+              class="inline-block mt-3 text-primary font-medium text-sm hover:underline"
+            >
+              Weiterlesen →
+            </a>
           </div>
         </article>
       ))}

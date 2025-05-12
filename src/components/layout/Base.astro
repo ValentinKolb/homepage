@@ -1,0 +1,129 @@
+---
+import TwSizeIndicator from "@/components/layout/TwSizeIndicator.astro";
+import config from "@/config/config.json";
+import { plainify } from "@/lib/utils/textConverter";
+import Footer from "@/components/layout/Footer.astro";
+import Header from "@/components/layout/Header.astro";
+import "@/styles/global.css";
+import type { ColorTheme } from "@/lib/client/color-theme";
+
+// types for frontmatters
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+  fixedPage?: boolean;
+}
+
+// distructure frontmatters
+const { title, meta_title, description, image, noindex, canonical, fixedPage } =
+  Astro.props;
+
+// get theme from cookie
+let theme = "light";
+if (Astro.cookies.has("theme")) {
+  theme = Astro.cookies.get("theme")?.value ?? theme;
+}
+---
+
+<html lang="de" class={theme}>
+  <head>
+    <!-- Inline script to set theme early and prevent flash -->
+    <script is:inline src="/scripts/theme-init.js"></script>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href={config.site.favicon} />
+    <!-- theme meta -->
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#fff"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#000"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--rss feed-->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Valentin Kolb RSS Feed"
+      href={new URL("rss.xml", Astro.site)}
+    />
+
+    <!-- responsive meta -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=5"
+    />
+
+    <!-- title -->
+    <title>
+      {plainify(meta_title ? meta_title : title ? title : config.site.title)}
+    </title>
+
+    <!-- canonical url -->
+    {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
+
+    <!-- meta-description -->
+    <meta
+      name="description"
+      content={plainify(
+        description ? description : config.metadata.meta_description,
+      )}
+    />
+
+    <!-- author from config.json -->
+    <meta name="author" content={config.metadata.meta_author} />
+
+    <!-- og-title -->
+    <meta
+      property="og:title"
+      content={plainify(
+        meta_title ? meta_title : title ? title : config.site.title,
+      )}
+    />
+
+    <!-- og-description -->
+    <meta
+      property="og:description"
+      content={plainify(
+        description ? description : config.metadata.meta_description,
+      )}
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content={`${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`}
+    />
+
+    <!-- og-image -->
+    <meta
+      property="og:image"
+      content={`${config.site.base_url}${
+        image ? image : config.metadata.meta_image
+      }`}
+    />
+  </head>
+  <body
+    class={`${fixedPage && "max-h-[100vh] overflow-hidden"}
+
+    bg-white dark:bg-black text-black dark:text-white antialiased
+    flex flex-col min-h-[100vh]`}
+  >
+    <TwSizeIndicator />
+    <Header />
+    <main id="main-content" class="min-h-[60vh] flex flex-col grow">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

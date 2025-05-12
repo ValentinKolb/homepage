@@ -25,7 +25,6 @@ const { Content } = await blog.render();
 const {
   title,
   meta_title,
-  categories,
   description,
   image,
   date,
@@ -46,17 +45,20 @@ const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
 >
   <acticle class="article flex flex-col gap-6">
     {/* title */}
-    <h1 class="article-header" set:html={markdownify(title)} />
+    <h1
+      class="m-0 font-bold text-center text-3xl transition-[font-size] duration-500 ease-in-out lg:text-5xl"
+      set:html={markdownify(title)}
+    />
 
     <section
-      class="flex flex-row gap-4 justify-center items-center flex-wrap text-sm text-gray-400"
+      class="flex flex-row gap-4 justify-center items-center flex-wrap text-sm"
     >
       <span class="flex flex-row gap-2 items-center">
-        <i class="ti ti-calendar-month h-4 w-4 flex-shrink-0"></i>
+        <i class="ti ti-calendar-month h-4 w-4 shrink-0"></i>
         <span>{dateFormat(date)}</span>
       </span>
 
-      <span class="text-sm text-gray-400">&#x2022</span>
+      <span class="text-sm">&#x2022</span>
 
       <span>{readingTime} min Lesezeit</span>
     </section>
@@ -78,38 +80,25 @@ const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
     {recipe && <ReciYML recipe={recipe} client:load />}
 
     {/* blog content */}
-    <section class="text-left w-full m-0">
+    <section class="prose dark:prose-invert text-left max-w-none m-0">
       <Content />
     </section>
 
-    {/* footer actions (cathegories, tags, share, ...) */}
+    {/* footer actions (tags, share, ...) */}
     <section class="flex flex-row gap-4 justify-center items-center flex-wrap">
-      {
-        categories.map((category: string, i: number) => (
-          <a
-            href={`/blog/c/${slugify(category)}`}
-            class="font-medium underline text-sm hover:text-gray-400"
-          >
-            {humanize(category)}
-            {i !== blog.data.categories.length - 1 && ","}
-          </a>
-        ))
-      }
-
-      <span class="text-sm text-gray-400">&#x2022</span>
 
       {
         tags.map((tag: string) => (
           <a
             href={`/blog/t/${slugify(tag)}`}
-            class="font-medium text-sm hover:text-gray-400"
+            class="font-medium text-sm hover-text"
           >
             #{humanize(tag)}
           </a>
         ))
       }
 
-      <span class="text-sm text-gray-400">&#x2022</span>
+      <span class="text-sm">&#x2022</span>
 
       {/* share buttons */}
       <a
@@ -118,9 +107,7 @@ const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
         target="_blank"
         rel="noreferrer noopener"
       >
-        <i
-          class="ti ti-brand-bluesky text-gray-700 cursor-pointer hover:text-gray-400"
-        ></i>
+        <i class="ti ti-brand-bluesky cursor-pointer hover-text"></i>
       </a>
     </section>
   </acticle>

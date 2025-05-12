@@ -1,8 +1,8 @@
 ---
-import OllamaChat from "@/components/Tools/OllamaChat";
-import Base from "@/layouts/Base.astro";
+import OllamaChat from "@/features/ollama-chat";
+import Base from "@/components/layout/Base.astro";
 ---
 
-<Base title={"Chat"} fixedPage={true}>
+<Base title={"AI Chat"} fixedPage={true}>
   <OllamaChat client:only />
 </Base>

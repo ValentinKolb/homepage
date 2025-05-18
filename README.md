@@ -5,6 +5,10 @@ A modern personal website built with Astro.js featuring a photo gallery, blog wi
 ![Docker Image Version](https://img.shields.io/docker/v/valentinkolb/homepage?sort=semver&label=docker)
 ![License](https://img.shields.io/github/license/valentinkolb/homepage)
 
+## Link
+
+https://valentin-kolb.blog
+
 ## Technologies
 
 - **Framework**: [Astro](https://astro.build/)

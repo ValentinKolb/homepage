@@ -31,3 +31,17 @@ button,
 [role="button"] {
   cursor: pointer;
 }
+
+/*
+  Deactivate automatic quotes for blockquotes
+*/
+
+.prose blockquote {
+  quotes: none;
+  font-weight: 400;
+}
+
+.prose blockquote::before,
+.prose blockquote::after {
+  content: none;
+}

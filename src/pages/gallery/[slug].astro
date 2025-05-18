@@ -2,68 +2,81 @@
 import Base from "@/components/layout/Base.astro";
 import { getContentPages } from "@/lib/content/contentParser.astro";
 import { slugify } from "@/lib/utils/textConverter";
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import fs from "node:fs/promises";
+import path from "node:path";
 import Lightbox from "@/components/media/Gallery/Lightbox.astro";
 
-export const prerender = true
+export const prerender = true;
+
 export async function getStaticPaths() {
   const galleries = await getContentPages("gallery");
 
   // Generate paths for each gallery
-  const paths = await Promise.all(galleries.map(async (gallery) => {
-    const folderPath = gallery.data.folderPath;
-    const systemPath = path.join(process.cwd(), "public", folderPath.replace(/^\//, ""));
+  const paths = await Promise.all(
+    galleries.map(async (gallery) => {
+      const folderPath = gallery.data.folderPath;
+      const systemPath = path.join(
+        process.cwd(),
+        "public",
+        folderPath.replace(/^\//, ""),
+      );
 
-    try {
-      // Read all image files in the directory
-      const files = await fs.readdir(systemPath);
+      try {
+        // Read all image files in the directory
+        const files = await fs.readdir(systemPath);
 
-      // Filter for jpg files and create image objects
-      const imageFiles = files.filter(file => file.endsWith('.jpg'));
-      const images = imageFiles.map(file => ({
-        src: `${folderPath}/${file}`,
-        alt: file.replace('.jpg', '').replace(/^img-/, 'Bild ')
-      }));
+        // Filter for jpg files and create image objects
+        const imageFiles = files.filter((file) => file.endsWith(".jpg"));
+        const images = imageFiles.map((file) => ({
+          src: `${folderPath}/${file}`,
+          alt: file.replace(".jpg", "").replace(/^img-/, "Bild "),
+        }));
 
-      return {
-        params: {
-          slug: slugify(gallery.data.name),
-        },
-        props: {
-          gallery,
-          images
-        },
-      };
-    } catch (error) {
-      console.error(`Error reading gallery directory ${systemPath}:`, error);
-      return {
-        params: {
-          slug: slugify(gallery.data.name),
-        },
-        props: {
-          gallery,
-          images: []
-        },
-      };
-    }
-  }));
+        return {
+          params: {
+            slug: slugify(gallery.data.name),
+          },
+          props: {
+            gallery,
+            images,
+          },
+        };
+      } catch (error) {
+        console.error(`Error reading gallery directory ${systemPath}:`, error);
+        return {
+          params: {
+            slug: slugify(gallery.data.name),
+          },
+          props: {
+            gallery,
+            images: [],
+          },
+        };
+      }
+    }),
+  );
 
   return paths;
 }
 
 const { gallery, images } = Astro.props;
 const { name, description } = gallery.data;
+
+const infos = [gallery.data.description, gallery.data.date].filter(Boolean);
 ---
 
 <Base title={name}>
   <section class="py-16">
     <div class="container mx-auto">
       <h1 class="text-3xl font-bold mb-8">{name}</h1>
-      {description && <p class="mb-8 text-gray-400">{description}</p>}
 
-      <!-- Lightbox Galerie mit Astro-Bildoptimierung -->
-      <Lightbox images={images} />
+      {
+        infos.length > 0 && (
+          <p class="mb-8 text-gray-400">{infos.join(" • ")}</p>
+        )
+      }
+      <!-- gallery with lightbox and Astro image optimazation -->
+      <Lightbox images={images} random={true} />
     </div>
   </section>
 </Base>

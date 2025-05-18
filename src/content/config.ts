@@ -33,6 +33,8 @@ const pagesCollection = defineCollection({
 const galleryCollection = defineCollection({
   schema: z.object({
     name: z.string(),
+    topicGallery: z.boolean().optional(),
+    date: z.string().optional(),
     description: z.string().optional(),
     blogPost: z.string().optional(),
     folderPath: z.string(), // Path to the image folder

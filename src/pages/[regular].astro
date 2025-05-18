@@ -4,6 +4,7 @@ import Default from "@/components/layout/Default.astro";
 import { getContentPages } from "@/lib/content/contentParser.astro";
 
 export const prerender = true;
+
 export async function getStaticPaths() {
   const pages = await getContentPages("pages");
 

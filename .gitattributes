@@ -1,0 +1,34 @@
+# Default behavior to automatically normalize line endings
+* text=auto
+
+# Source code files under MIT License
+*.js    linguist-language=JavaScript
+*.jsx   linguist-language=JavaScript
+*.ts    linguist-language=TypeScript
+*.tsx   linguist-language=TypeScript
+*.astro linguist-language=Astro
+*.mjs   linguist-language=JavaScript
+*.cjs   linguist-language=JavaScript
+*.json  linguist-language=JSON
+*.css   linguist-language=CSS
+*.scss  linguist-language=SCSS
+*.html  linguist-language=HTML
+*.md    linguist-language=Markdown
+
+# Configuration files
+*.yml   linguist-language=YAML
+*.yaml  linguist-language=YAML
+*.toml  linguist-language=TOML
+*.config.* linguist-language=JavaScript
+
+# Images under CC BY-NC 4.0
+public/images/**     linguist-documentation
+*.jpg               linguist-documentation
+*.jpeg              linguist-documentation
+*.png               linguist-documentation
+*.gif               linguist-documentation
+*.svg               linguist-documentation
+*.webp              linguist-documentation
+
+# Blog content under CC BY-NC 4.0
+src/content/blogs/** linguist-documentation

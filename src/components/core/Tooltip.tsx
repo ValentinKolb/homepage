@@ -1,7 +1,7 @@
 import type { ParentProps, JSX } from "solid-js";
 import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { useFloating, autoUpdate, offset } from "floating-ui-solid";
+import { createFloating, autoUpdate, offset } from "floating-ui-solid";
 
 export interface TooltipProps extends ParentProps {
   /** The label to show as the tooltip. Can be a string or a component. */
@@ -19,7 +19,7 @@ export default function Tooltip(props: TooltipProps) {
   const [isOpen, setIsOpen] = createSignal(false);
 
   // Setup Floating UI
-  const { refs, floatingStyles } = useFloating({
+  const { refs, floatingStyles } = createFloating({
     placement: "top",
     whileElementsMounted: autoUpdate, // Update position on scroll/resize
     isOpen: isOpen,

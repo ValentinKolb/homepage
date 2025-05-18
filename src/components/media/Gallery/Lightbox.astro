@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import { shuffleArray } from "@/lib/content/shuffle.astro";
 
 interface Props {
   images: Array<{
@@ -8,26 +9,35 @@ interface Props {
     width?: number;
     height?: number;
   }>;
+  random?: boolean;
 }
 
-const { images } = Astro.props;
+const { images, random = false } = Astro.props;
+
+// Display images (shuffled or original)
+const displayImages = random ? shuffleArray(images) : images;
 ---
 
 <div class="gallery-lightbox">
   <!-- Grid View -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
     {
-      images.map((image, index) => (
+      displayImages.map((image, index) => (
         <button
-          class="lightbox-thumbnail block aspect-square overflow-hidden rounded-lg"
+          class="lightbox-thumbnail block aspect-square overflow-hidden rounded-lg relative"
           data-index={index}
         >
+          {/* Placeholder overlay - visible until image loads */}
+          <div class="image-placeholder absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-900 z-10", aria-label={`Placeholder ${index + 1}`}>
+          <i class="ti ti-photo text-gray-400 dark:text-gray-600  text-2xl "></i>
+          </div>
+
           <Image
             src={image.src}
             width={400}
             height={400}
             alt={image.alt || `Gallery image ${index + 1}`}
-            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300 relative z-0"
             loading="lazy"
           />
         </button>
@@ -36,9 +46,14 @@ const { images } = Astro.props;
   </div>
 
   <!-- Lightbox Overlay -->
-  <div id="lightbox-overlay" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex-col justify-center items-center">
+  <div
+    id="lightbox-overlay"
+    class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex-col justify-center items-center"
+  >
     <!-- Navigation Buttons Container -->
-    <div class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none z-[60]">
+    <div
+      class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none z-[60]"
+    >
       <div class="w-16 flex justify-start pointer-events-auto">
         <button
           id="prev-button"
@@ -60,13 +75,31 @@ const { images } = Astro.props;
     </div>
 
     <!-- Image Container -->
-    <div class="relative max-w-[95vw] max-h-[80vh] flex items-center justify-center">
-      <img id="lightbox-image" src="" alt="" class="max-w-full max-h-[80vh] object-contain" />
+    <div
+      class="relative max-w-[95vw] max-h-[80vh] flex items-center justify-center"
+    >
+      {/* Lightbox image placeholder */}
+      <div
+        id="lightbox-placeholder"
+        class="absolute inset-0 flex items-center justify-center text-xl font-medium bg-gray-700 text-white z-10"
+      >
+        Loading image...
+      </div>
+
+      <img
+        id="lightbox-image"
+        src=""
+        alt=""
+        class="max-w-full max-h-[80vh] object-contain z-0"
+      />
     </div>
 
     <!-- Counter -->
     <div class="absolute bottom-6 left-0 right-0 text-center text-white z-[60]">
-      <span id="image-counter" class="px-3 py-1 bg-gray-800/70 backdrop-blur-sm rounded-full text-sm"></span>
+      <span
+        id="image-counter"
+        class="px-3 py-1 bg-gray-800/70 backdrop-blur-sm rounded-full text-sm"
+      ></span>
     </div>
 
     <!-- Close Button -->
@@ -80,76 +113,124 @@ const { images } = Astro.props;
   </div>
 </div>
 
+<style>
+  /* Styles for the image placeholder */
+  .image-placeholder {
+    transition: opacity 0.3s ease-out;
+  }
+
+  /* When image is loaded, the placeholder will be hidden */
+  .image-loaded .image-placeholder {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    // Get all the necessary DOM elements
     const overlay = document.getElementById("lightbox-overlay");
     const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxPlaceholder = document.getElementById("lightbox-placeholder");
     const prevButton = document.getElementById("prev-button");
     const nextButton = document.getElementById("next-button");
     const closeButton = document.getElementById("close-button");
     const imageCounter = document.getElementById("image-counter");
     const lightboxThumbnails = document.querySelectorAll(".lightbox-thumbnail");
-    
-    // Store all images in an array
-    const images = Array.from(document.querySelectorAll(".lightbox-thumbnail")).map((thumbnail) => {
+
+    // Set up image loading handlers for thumbnails
+    lightboxThumbnails.forEach((thumbnail) => {
+      const img = thumbnail.querySelector("img");
+      if (img) {
+        // If the image is already loaded (from cache)
+        if (img.complete) {
+          thumbnail.classList.add("image-loaded");
+        } else {
+          // Add event listener for when the image loads
+          img.addEventListener("load", () => {
+            thumbnail.classList.add("image-loaded");
+          });
+        }
+      }
+    });
+
+    // Create an array of all the images from the thumbnails
+    const images = Array.from(
+      document.querySelectorAll(".lightbox-thumbnail"),
+    ).map((thumbnail) => {
       const imgElement = thumbnail.querySelector("img");
       if (!imgElement) {
         return { src: "", alt: "" };
       }
       return {
         src: imgElement.src,
-        alt: imgElement.alt
+        alt: imgElement.alt,
       };
     });
-    
+
     let currentIndex = 0;
-    
+
     // Display image in lightbox
-    function showImage(index: number): void {
+    function showImage(index: number) {
+      // Ensure index is within bounds
       if (index < 0) index = 0;
       if (index >= images.length) index = images.length - 1;
 
       currentIndex = index;
-      
-      // Update image
+
+      // Show placeholder while loading
+      if (lightboxPlaceholder) {
+        lightboxPlaceholder.textContent = `Bild ${index + 1}`;
+        lightboxPlaceholder.style.opacity = "1";
+      }
+
+      // Update the lightbox image
       if (lightboxImage && lightboxImage instanceof HTMLImageElement) {
         lightboxImage.src = images[index].src;
-        lightboxImage.alt = images[index].alt || '';
+        lightboxImage.alt = images[index].alt || "";
+
+        // Hide placeholder once image is loaded
+        lightboxImage.onload = function () {
+          if (lightboxPlaceholder) {
+            lightboxPlaceholder.style.opacity = "0";
+          }
+        };
       }
-      
-      // Update counter
+
+      // Update the counter
       if (imageCounter) {
         imageCounter.textContent = `${index + 1} / ${images.length}`;
       }
-      
-      // Enable/disable navigation buttons
+
+      // Show/hide navigation buttons
       if (prevButton) {
         prevButton.style.visibility = index > 0 ? "visible" : "hidden";
       }
-      
+
       if (nextButton) {
-        nextButton.style.visibility = index < images.length - 1 ? "visible" : "hidden";
+        nextButton.style.visibility =
+          index < images.length - 1 ? "visible" : "hidden";
       }
     }
-    
-    // Open lightbox
-    function openLightbox(index: number): void {
+
+    // Open the lightbox
+    function openLightbox(index: number) {
       if (overlay) {
         overlay.style.display = "flex";
         document.body.style.overflow = "hidden"; // Prevent scrolling
         showImage(index);
       }
     }
-    
-    // Close lightbox
+
+    // Close the lightbox
     function closeLightbox() {
       if (overlay) {
         overlay.style.display = "none";
         document.body.style.overflow = ""; // Re-enable scrolling
       }
     }
-    
-    // Event listener for thumbnails
+
+    // Add click event listeners to thumbnails
     lightboxThumbnails.forEach((thumbnail) => {
       thumbnail.addEventListener("click", () => {
         const indexAttr = thumbnail.getAttribute("data-index");
@@ -157,26 +238,26 @@ const { images } = Astro.props;
         openLightbox(thumbnailIndex);
       });
     });
-    
-    // Event listener for previous button
+
+    // Add click event listener for previous button
     if (prevButton) {
       prevButton.addEventListener("click", () => {
         showImage(currentIndex - 1);
       });
     }
-    
-    // Event listener for next button
+
+    // Add click event listener for next button
     if (nextButton) {
       nextButton.addEventListener("click", () => {
         showImage(currentIndex + 1);
       });
     }
-    
-    // Event listener for close button
+
+    // Add click event listener for close button
     if (closeButton) {
       closeButton.addEventListener("click", closeLightbox);
     }
-    
+
     // Close when clicking the background
     if (overlay) {
       overlay.addEventListener("click", (e) => {
@@ -185,7 +266,7 @@ const { images } = Astro.props;
         }
       });
     }
-    
+
     // Keyboard navigation
     document.addEventListener("keydown", (e) => {
       if (overlay && overlay.style.display === "flex") {

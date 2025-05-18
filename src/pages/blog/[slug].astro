@@ -9,6 +9,7 @@ import config from "@/config/config.json";
 import calculateReadingTime from "reading-time";
 
 export const prerender = true;
+
 export async function getStaticPaths() {
   const blogs = await getContentPages("blogs");
 
@@ -22,15 +23,7 @@ export async function getStaticPaths() {
 
 const { blog } = Astro.props;
 const { Content } = await blog.render();
-const {
-  title,
-  meta_title,
-  description,
-  image,
-  date,
-  tags,
-  recipe,
-} = blog.data;
+const { title, meta_title, description, image, date, tags, recipe } = blog.data;
 
 const { base_url } = config.site;
 
@@ -86,7 +79,6 @@ const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
 
     {/* footer actions (tags, share, ...) */}
     <section class="flex flex-row gap-4 justify-center items-center flex-wrap">
-
       {
         tags.map((tag: string) => (
           <a

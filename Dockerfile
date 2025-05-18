@@ -1,30 +1,51 @@
-FROM node:18-alpine AS base
+# Base image
+FROM oven/bun:1.2.13 AS base
 WORKDIR /app
 
-# Kopiere nur package.json und yarn.lock
-COPY package*.json yarn.lock ./
+# Production dependencies
+FROM base AS deps
+COPY package.json bun.lockb* .npmrc* ./
+RUN bun install --frozen-lockfile --production
 
-# Produktionsabhängigkeiten installieren
-FROM base AS prod-deps
-RUN yarn install --frozen-lockfile --production
+# Development dependencies for build
+FROM deps AS build-deps
+RUN bun install --frozen-lockfile
 
-# Entwicklungsabhängigkeiten installieren
-FROM base AS build-deps
-RUN yarn install --frozen-lockfile
+# Image optimization
+FROM dpokidov/imagemagick:latest AS image-optimizer
+WORKDIR /app
+COPY scripts/convert-images.sh ./scripts/
+COPY public/images ./public/images
+RUN chmod +x ./scripts/convert-images.sh && \
+  bash ./scripts/convert-images.sh public/images
 
-# Build des Projekts
-FROM build-deps AS build
+# Build the application
+FROM build-deps AS builder
+# Copy all source files
 COPY . .
-RUN yarn build
+# Remove existing images directory
+RUN rm -rf ./public/images
+# Copy optimized images
+COPY --from=image-optimizer /app/public/images ./public/images
+# Build the application
+RUN bun run build
 
-# Finales Image für Runtime
-FROM base AS runtime
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
+# Final production image
+FROM base AS runner
+WORKDIR /app
 
-# Umgebungsvariablen setzen
+# Set production environment
+ENV NODE_ENV=production
 ENV HOST="::"
 ENV PORT=4321
 
+# Copy runtime necessities
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/public ./public
+
+# Expose the port
 EXPOSE 4321
-CMD ["node", "./dist/server/entry.mjs"]
+
+# Start the application
+CMD ["bun", "run", "./dist/server/entry.mjs"]

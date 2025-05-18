@@ -1,7 +1,7 @@
 import type { ParentProps, JSX } from "solid-js";
 import { createSignal, onCleanup, onMount, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { useFloating, offset } from "floating-ui-solid";
+import { createFloating, offset } from "floating-ui-solid";
 
 type ContextMenuItem = {
   label: string | JSX.Element;
@@ -29,7 +29,7 @@ export default function ContextMenu(props: ContextMenuProps) {
   const [cursorPosition, setCursorPosition] = createSignal({ x: 0, y: 0 });
 
   // Setup Floating UI
-  const { refs, floatingStyles } = useFloating({
+  const { refs, floatingStyles } = createFloating({
     placement: "bottom-start",
     isOpen: isOpen,
     middleware: () => [offset(0)],

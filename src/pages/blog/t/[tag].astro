@@ -8,6 +8,7 @@ import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { humanize } from "@/lib/utils/textConverter";
 
 export const prerender = true;
+
 export async function getStaticPaths() {
   const tags = await getTaxonomy("blogs", "tags");
 

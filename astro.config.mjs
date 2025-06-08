@@ -6,6 +6,8 @@ import config from "./src/config/config.json";
 import node from "@astrojs/node";
 import solidJs from "@astrojs/solid-js";
 import tailwindcss from "@tailwindcss/vite";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 export default defineConfig({
   output: "server", // use SSR for all routes as default
@@ -31,5 +33,14 @@ export default defineConfig({
       theme: "github-dark-default",
       wrap: true,
     },
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [
+      [
+        rehypeKatex,
+        {
+          // Katex plugin options
+        },
+      ],
+    ],
   },
 });

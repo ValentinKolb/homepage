@@ -38,6 +38,8 @@
     "nanostores": "^0.11.3",
     "ofetch": "^1.4.1",
     "ollama": "^0.5.12",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "solid-floating-ui": "npm:solid-floating-ui@latest",
     "solid-js": "^1.9.4",
     "tiny-markdown-editor": "^0.1.31",

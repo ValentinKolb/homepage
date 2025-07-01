@@ -10,11 +10,13 @@
 @import "./custom.css";
 
 @theme {
-  --font-display: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto",
-    "Helvetica", "Arial", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji",
+  --font-display:
+    "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica",
+    "Arial", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
 
   --color-dark: #0d1117;
+  --color-selection: oklch(87.2% 0.01 258.338);
 }
 
 @layer base {
@@ -44,4 +46,13 @@ button,
 .prose blockquote::before,
 .prose blockquote::after {
   content: none;
+}
+
+/* Custom text selection color */
+::selection {
+  background-color: var(--color-selection);
+}
+
+::-moz-selection {
+  background-color: var(--color-selection);
 }

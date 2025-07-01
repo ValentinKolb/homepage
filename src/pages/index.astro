@@ -1,9 +1,21 @@
 ---
 import Base from "@/components/layout/Base.astro";
 import { Image } from "astro:assets";
+
+const content = Array.from({ length: 100000 }, () =>
+  Math.random() < 0.5 ? "1" : "0",
+).join(" ");
 ---
 
 <Base>
+  <!-- Matrix Background -->
+  <div
+    id="matrix-bg"
+    class={`fixed inset-0 -z-10`}
+    style={`--matrix-content: "${content}"`}
+  >
+  </div>
+
   <!-- Hero-Abschnitt mit Split-Layout -->
   <section class="min-h-[80vh] flex items-center">
     <div class="container mx-auto">
@@ -17,8 +29,8 @@ import { Image } from "astro:assets";
             >
           </h1>
           <p class="text-lg text-gray-600 leading-relaxed max-w-prose">
-            Als Informatiker und Dozent teile ich hier meine Leidenschaft für
-            Code, Fotografie und das perfekte Brot. Entdecke meine Gedanken und
+            Als Informatiker teile ich hier meine Leidenschaft für Code,
+            Fotografie und das perfekte Brot. Entdecke meine Gedanken und
             Projekte.
           </p>
           <div class="flex gap-4 pt-4">
@@ -86,4 +98,48 @@ import { Image } from "astro:assets";
       transform: translateY(0);
     }
   }
+
+  /* Matrix Background */
+  #matrix-bg {
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 2px;
+    color: #333;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    #matrix-bg {
+      color: #ccc;
+    }
+  }
+
+  #matrix-bg::before {
+    content: var(--matrix-content);
+    position: absolute;
+    inset: 0;
+    padding: 20px;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    mask: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      black 10px,
+      transparent 100px
+    );
+  }
 </style>
+
+<script>
+  const matrixBg = document.getElementById("matrix-bg") as HTMLElement;
+  document.addEventListener("mousemove", (e) => {
+    const mouseX = (e.clientX / window.innerWidth) * 100;
+    const mouseY = (e.clientY / window.innerHeight) * 100;
+    matrixBg.style.setProperty("--mouse-x", mouseX + "%");
+    matrixBg.style.setProperty("--mouse-y", mouseY + "%");
+  });
+</script>

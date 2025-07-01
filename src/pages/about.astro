@@ -14,7 +14,7 @@ const { title, meta_title, description, image, skills, jobs } = about!.data;
   image={image}
 >
   <!-- Hero Section -->
-  <section class="py-16 bg-gray-50">
+  <section class="py-16 bg-gray-50 dark:bg-transparent">
     <div
       class="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
     >
@@ -35,8 +35,10 @@ const { title, meta_title, description, image, skills, jobs } = about!.data;
 
       <!-- Description -->
       <div class="md:col-span-8">
-        <h1 class="text-3xl font-bold mb-4">{title}</h1>
-        <p class="text-lg text-gray-600 leading-relaxed">{description}</p>
+        <h1 class="text-3xl font-bold mb-4 dark:text-white">{title}</h1>
+        <p class="text-lg text-gray-600 dark:text-slate-300 leading-relaxed">
+          {description}
+        </p>
       </div>
     </div>
   </section>
@@ -44,58 +46,52 @@ const { title, meta_title, description, image, skills, jobs } = about!.data;
   <!-- Skills Section -->
   <section class="py-16">
     <div class="container mx-auto">
-      <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-        <i class="ti ti-code h-6 w-6 text-blue-500"></i> Kompetenzen
+      <h2
+        class="text-2xl font-bold mb-8 flex items-center gap-2 dark:text-white"
+      >
+        <i class="ti ti-code h-6 w-6 text-blue-500 dark:text-slate-400"></i> Kompetenzen
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Programmiersprachen -->
-        <div>
-          <h3 class="text-xl font-semibold mb-4">
-            {skills.programming_languages.title}
-          </h3>
-          <ul class="list-disc list-inside text-gray-600">
-            {
-              skills.programming_languages.items.map((skill) => (
-                <li>{skill}</li>
-              ))
-            }
-          </ul>
-        </div>
-
-        <!-- Software & Tools -->
-        <div>
-          <h3 class="text-xl font-semibold mb-4">
-            {skills.software_tools.title}
-          </h3>
-          <ul class="list-disc list-inside text-gray-600">
-            {skills.software_tools.items.map((tool) => <li>{tool}</li>)}
-          </ul>
-        </div>
-
-        <!-- Interessen -->
-        <div>
-          <h3 class="text-xl font-semibold mb-4">{skills.interests.title}</h3>
-          <ul class="list-disc list-inside text-gray-600">
-            {skills.interests.items.map((interest) => <li>{interest}</li>)}
-          </ul>
-        </div>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8"
+      >
+        {
+          skills.map((skillCategory) => (
+            <div>
+              <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                {skillCategory.title}
+              </h3>
+              <ul class="list-disc list-inside text-gray-600 dark:text-slate-300">
+                {skillCategory.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
 
   <!-- Experience Section -->
-  <section class="py-16 bg-gray-50">
+  <section class="py-16 bg-gray-50 dark:bg-transparent">
     <div class="container mx-auto">
-      <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-        <i class="ti ti-briefcase h-6 w-6 text-green-500"></i> Berufserfahrung
+      <h2
+        class="text-2xl font-bold mb-8 flex items-center gap-2 dark:text-white"
+      >
+        <i class="ti ti-briefcase h-6 w-6 text-green-500 dark:text-slate-400"
+        ></i> Berufserfahrung
       </h2>
       <div class="space-y-8">
         {
           jobs.items.map((job) => (
-            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <h3 class="text-lg font-bold">{job.role}</h3>
-              <p class="text-gray-500 text-sm">{job.company}</p>
-              <p class="text-gray-600 mt-2">{job.description}</p>
+            <div class="paper px-5 py-4">
+              <h3 class="text-lg font-bold dark:text-white">{job.role}</h3>
+              <p class="text-gray-500 dark:text-slate-400 text-sm">
+                {job.company}
+              </p>
+              <p class="text-gray-600 dark:text-slate-300 mt-2">
+                {job.description}
+              </p>
             </div>
           ))
         }

@@ -59,20 +59,12 @@ const aboutCollection = defineCollection({
     meta_title: z.string().optional(),
     description: z.string(),
     image: z.string(), // Pfad zum Bild
-    skills: z.object({
-      programming_languages: z.object({
+    skills: z.array(
+      z.object({
         title: z.string(),
-        items: z.array(z.string()), // Liste von Programmiersprachen
+        items: z.array(z.string()),
       }),
-      software_tools: z.object({
-        title: z.string(),
-        items: z.array(z.string()), // Liste von Tools
-      }),
-      interests: z.object({
-        title: z.string(),
-        items: z.array(z.string()), // Liste von Interessen
-      }),
-    }),
+    ),
     jobs: z.object({
       title: z.string(),
       items: z.array(

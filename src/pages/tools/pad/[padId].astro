@@ -1,0 +1,69 @@
+---
+import { ClientRouter } from "astro:transitions";
+import Base from "@/components/layout/Base.astro";
+import {
+  deserializeSearchParams,
+  serializeSearchParams,
+} from "@/lib/utils/search-params";
+import type { MenuItems } from "@/components/layout/defaultMenu";
+import PadView from "@/features/pad/pad-editor";
+import { nanoid } from "nanoid";
+
+let { padId } = Astro.params as { padId: string };
+
+// only allow "good" ids
+if ((!padId || padId.length < 21) && padId !== "howto") {
+  return Astro.redirect(`/tools/pad/${nanoid(21)}`);
+}
+
+const searchParams = deserializeSearchParams<{
+  view: "editor" | "split" | "preview";
+}>(Astro.url.searchParams);
+
+const { view = "split" } = searchParams;
+
+const menu = {
+  nav: [
+    {
+      name: "Alle Pads",
+      iconClass: "ti-layout-grid",
+      url: "/tools/pad",
+    },
+    {
+      name: "Neues Pad",
+      iconClass: "ti-plus",
+      url: `/tools/pad/new`,
+    },
+    {
+      name: "How To",
+      iconClass: "ti-help",
+      url: `/tools/pad/howto`,
+    },
+  ],
+  tools: [
+    view !== "split" && {
+      name: "Split Ansicht",
+      iconClass: "ti-eye-edit",
+      url: `/tools/pad/${padId}?${serializeSearchParams({ view: "split" }, Astro.url.searchParams)}`,
+      description: "Den Editor und die Markdown Vorschau gleichzeitig anzeigen",
+    },
+    view !== "editor" && {
+      name: "Editor Ansicht",
+      iconClass: "ti-pencil",
+      url: `/tools/pad/${padId}?${serializeSearchParams({ view: "editor" }, Astro.url.searchParams)}`,
+      description: "Den Markdown Editor im Vollbildmodus anzeigen",
+    },
+    view !== "preview" && {
+      name: "Markdown Ansicht",
+      iconClass: "ti-eye",
+      url: `/tools/pad/${padId}?${serializeSearchParams({ view: "preview" }, Astro.url.searchParams)}`,
+      description: "Das gerenderte Markdown im Vollbildmodus anzeigen",
+    },
+  ].filter(Boolean) as MenuItems["tools"],
+};
+---
+
+<ClientRouter />
+<Base title={"Pad"} fixedPage={true} menuOverwrites={menu} transition:persist>
+  <PadView padId={padId} client:only view={view} />
+</Base>

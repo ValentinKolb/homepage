@@ -47,6 +47,7 @@ const LANGAGE_TO_ICON = {
   svelte: "ti-brand-svelte",
   "terraform,tf,hcl": "ti-brand-terraform",
   "typescript,ts,tsx,mts,cts": "ti-brand-typescript",
+  code: "ti-code",
 };
 
 /**

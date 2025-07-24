@@ -31,3 +31,4 @@ pnpm-debug.log*
 ./hugo
 
 **/.claude/settings.local.json
+.claude

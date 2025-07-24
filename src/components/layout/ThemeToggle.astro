@@ -8,7 +8,11 @@ if (Astro.cookies.has("theme")) {
 ---
 
 <script>
-  import { getColorTheme, setColorTheme } from "@/lib/client/color-theme";
+  import {
+    getColorTheme,
+    setColorTheme,
+    onThemeChange,
+  } from "@/lib/client/color-theme";
 
   class ThemeToggle extends HTMLElement {
     connectedCallback() {
@@ -21,6 +25,11 @@ if (Astro.cookies.has("theme")) {
 
       // Update icon and text to match initial state
       this.updateUI(initialTheme);
+
+      // Listen for theme changes from other tabs/components
+      onThemeChange((newTheme) => {
+        this.updateUI(newTheme);
+      });
 
       button?.addEventListener("click", () => {
         // Get current theme and toggle it

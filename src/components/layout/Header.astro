@@ -1,12 +1,23 @@
 ---
 import { Image } from "astro:assets";
-import menu from "./menu.json";
+import defaultMenu, { type MenuItems } from "./defaultMenu";
 import config from "@/config/config.json";
 import { markdownify } from "@/lib/utils/textConverter";
 import ThemeToggle from "@/components/layout/ThemeToggle.astro";
+
+// types for frontmatters
+export interface Props {
+  menuOverwrites?: Partial<MenuItems>;
+}
+
+// distructure frontmatters
+const { menuOverwrites } = Astro.props;
+
+// override menu items with menuOverwrites
+const menu = { ...defaultMenu, ...menuOverwrites };
 ---
 
-<header>
+<header class="print:hidden">
   <nav class="mx-auto flex items-center justify-between px-4 py-2 md:py-5">
     {/* logo */}
     <a href="/" class="flex items-center">
@@ -23,6 +34,13 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro";
     <div class="hidden gap-2 md:flex">
       {
         menu.nav.map((nav) => (
+        nav.iconClass ?
+        <a
+          class="text-md font-semibold px-2 text-center group-hover/dropdown:text-gray-400 cursor-pointer"
+           href={nav.url}
+        >
+          <i aria-label={nav.name} class={`ti ${nav.iconClass}`} />
+        </a> :
           <a
             href={nav.url}
             class="text-md font-semibold px-2 text-center hover:text-gray-400"
@@ -33,31 +51,49 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro";
       }
 
       {/* dropdown */}
-      <div class="group/dropdown relative">
+      <div class={`group/dropdown relative ${!menu.tools.length && 'hidden'}`}>
         <a
           class="text-md font-semibold px-2 text-center group-hover/dropdown:text-gray-400"
         >
-          Tools
+          {
+            menuOverwrites?.tools ? (
+              <>
+                <i
+                  aria-label="settings"
+                  class="ti ti-settings group-hover/dropdown:hidden"
+                />
+                <i
+                  aria-label="dropdown"
+                  class="ti ti-chevron-down hidden group-hover/dropdown:inline"
+                />
+              </>
+            ) : (
+              "Tools"
+            )
+          }
         </a>
 
-        <div class="absolute z-10 hidden group-hover/dropdown:block">
-          <div
-            class="bg-white dark:bg-black/30 backdrop-blur-md p-2 rounded-lg w-[300px] ring dark:ring-gray-800 ring-gray-300 ring-inset mt-3 -ml-[250px]"
-          >
-            <div class="flex flex-col gap-2">
-              {
-                menu.tools.map((tool) => (
-                  <a href={tool.url} class="p-2 cursor-pointer group/link">
-                    <div class="text-sm font-semibold mb-1 group-hover/link:underline">
-                      {tool.name}
-                    </div>
-                    <div class="text-xs text-gray-400">{tool.description}</div>
-                  </a>
-                ))
-              }
+        {/* dropdown content */}
+            <div class="absolute z-10 hidden group-hover/dropdown:block right-0">
+              <div class="bg-white dark:bg-black/30 backdrop-blur-md p-2 rounded-lg w-[300px] ring dark:ring-gray-800 ring-gray-300 ring-inset mt-3 -ml-[250px]">
+                <div class="flex flex-col gap-2">
+                  {menu.tools.map((t) => {
+                    if (t === "Divider") {
+                      return <hr class="w-full border-gray-200 rounded-full" />;
+                    }
+                    return (
+                      <a href={t.url} class="p-2 cursor-pointer group/link">
+                        <div class="text-sm mb-1">
+                          {t.iconClass && <i class={`ti ${t.iconClass}`} />}
+                          <span class="font-semibold group-hover/link:underline">{t.name}</span>
+                        </div>
+                        <div class="text-xs text-gray-400">{t.description}</div>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -71,10 +107,7 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro";
       <i class="ti ti-menu-2 text-xl text-black dark:text-white"></i>
 
       {/* bg overlay */}
-      <div
-        class="fixed inset-0 z-30 hidden bg-black/50 backdrop-blur-xs peer-checked:block"
-      >
-      </div>
+      <div class="fixed inset-0 z-30 hidden bg-black/50 backdrop-blur-xs peer-checked:block" />
 
       {/* offcanvas menu */}
       <div
@@ -93,22 +126,30 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro";
           }
 
           <div class="relative flex items-center mt-auto">
-            <hr class="w-full border-gray-400 rounded-full" />
-            <span
-              class="absolute left-1/2 -translate-x-1/2 bg-white dark:bg-black px-4 text-xs text-gray-400"
-            >
-              Tools
-            </span>
+            {
+              menu.tools.length > 0 &&
+              <hr class="w-full border-gray-400 rounded-full" />
+              <span
+                class="absolute left-1/2 -translate-x-1/2 bg-white dark:bg-black px-4 text-xs text-gray-400"
+              >
+                {menuOverwrites?.tools ? "Aktionen" : "Tools"}
+              </span>
+            }
           </div>
           {
-            menu.tools.map((tool) => (
-              <a href={tool.url} class="p-2 cursor-pointer group/link">
-                <div class="text-sm font-semibold mb-1 group-hover/link:underline">
-                  {tool.name}
-                </div>
-                <div class="text-xs text-gray-400">{tool.description}</div>
-              </a>
-            ))
+            menu.tools && menu.tools.map((tool) => {
+              if (tool === "Divider") {
+                return <hr class="w-full border-gray-200 rounded-full" />;
+              }
+              return (
+                <a href={tool.url} class="p-2 cursor-pointer group/link">
+                  <div class="text-sm font-semibold mb-1 group-hover/link:underline">
+                    {tool.name}
+                  </div>
+                  <div class="text-xs text-gray-400">{tool.description}</div>
+                </a>
+              );
+            })
           }
           <div>
             <hr class="w-full border-gray-200 rounded-full" />

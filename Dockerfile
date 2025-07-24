@@ -4,12 +4,12 @@ WORKDIR /app
 
 # Production dependencies
 FROM base AS deps
-COPY package.json bun.lockb* .npmrc* ./
-RUN bun install --frozen-lockfile --production
+COPY package.json .npmrc ./
+RUN bun install --production
 
 # Development dependencies for build
 FROM deps AS build-deps
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Image optimization
 FROM dpokidov/imagemagick:latest AS image-optimizer

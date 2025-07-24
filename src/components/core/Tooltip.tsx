@@ -1,11 +1,18 @@
 import type { ParentProps, JSX } from "solid-js";
 import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { createFloating, autoUpdate, offset } from "floating-ui-solid";
+import {
+  createFloating,
+  autoUpdate,
+  offset,
+  type Placement,
+} from "floating-ui-solid";
 
 export interface TooltipProps extends ParentProps {
-  /** The label to show as the tooltip. Can be a string or a component. */
   label: string | JSX.Element;
+  placement?: Placement;
+  class?: string;
+  offset?: number;
 }
 
 /**
@@ -20,10 +27,10 @@ export default function Tooltip(props: TooltipProps) {
 
   // Setup Floating UI
   const { refs, floatingStyles } = createFloating({
-    placement: "top",
+    placement: props.placement || "top",
     whileElementsMounted: autoUpdate, // Update position on scroll/resize
     isOpen: isOpen,
-    middleware: () => [offset(5)],
+    middleware: () => [offset(props.offset || 5)],
   });
 
   // Event handlers
@@ -40,7 +47,7 @@ export default function Tooltip(props: TooltipProps) {
         ref={refs.setReference}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        class="inline-flex"
+        class={props.class || "inline-flex"}
       >
         {props.children}
       </div>

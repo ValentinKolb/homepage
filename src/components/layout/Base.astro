@@ -5,6 +5,8 @@ import TwSizeIndicator from "@/components/layout/TwSizeIndicator.astro";
 import config from "@/config/config.json";
 import { plainify } from "@/lib/utils/textConverter";
 import "@/styles/global.css";
+import "@fontsource-variable/fira-code";
+import type { MenuItems } from "./defaultMenu";
 
 // types for frontmatters
 export interface Props {
@@ -15,11 +17,19 @@ export interface Props {
   noindex?: boolean;
   canonical?: string;
   fixedPage?: boolean;
+  menuOverwrites?: Partial<MenuItems>;
 }
 
 // distructure frontmatters
-const { title, meta_title, description, image, canonical, fixedPage } =
-  Astro.props;
+const {
+  title,
+  meta_title,
+  description,
+  image,
+  canonical,
+  fixedPage,
+  menuOverwrites,
+} = Astro.props;
 
 // get theme from cookie
 let theme = "light";
@@ -30,9 +40,6 @@ if (Astro.cookies.has("theme")) {
 
 <html lang="de" class={theme}>
   <head>
-    <!-- Inline script to set theme early and prevent flash -->
-    <script is:inline src="/scripts/theme-init.js"></script>
-
     <!-- favicon -->
     <link rel="shortcut icon" href={config.site.favicon} />
     <!-- theme meta -->
@@ -113,16 +120,18 @@ if (Astro.cookies.has("theme")) {
     />
   </head>
   <body
-    class={`${fixedPage && "max-h-[100vh] overflow-hidden"}
-
+    class={`${fixedPage && "max-h-[100vh] overflow-hidden "}
     bg-white dark:bg-black text-black dark:text-white antialiased
     flex flex-col min-h-[100vh]`}
   >
     <TwSizeIndicator />
-    <Header />
+    <Header menuOverwrites={menuOverwrites} />
     <main id="main-content" class="min-h-[60vh] flex flex-col grow">
-      <slot />
+      <slot>
+        {/* fallback content */}
+        <div class="h-full w-full flex-1"></div>
+      </slot>
     </main>
-    <Footer />
+    <Footer menuOverwrites={menuOverwrites} />
   </body>
 </html>

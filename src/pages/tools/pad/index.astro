@@ -1,0 +1,24 @@
+---
+import Base from "@/components/layout/Base.astro";
+import PadIndex from "@/features/pad";
+
+const menu = {
+  nav: [
+    {
+      name: "Neues Pad",
+      iconClass: "ti-plus",
+      url: `/tools/pad/new`,
+    },
+    {
+      name: "How To",
+      iconClass: "ti-help",
+      url: `/tools/pad/howto`,
+    },
+  ],
+  tools: [],
+};
+---
+
+<Base title={"Pads"} menuOverwrites={menu}>
+  <PadIndex client:only />
+</Base>

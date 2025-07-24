@@ -3,22 +3,48 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
 import config from "./src/config/config.json";
-import node from "@astrojs/node";
 import solidJs from "@astrojs/solid-js";
 import tailwindcss from "@tailwindcss/vite";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+import bun from "@hedystia/astro-bun";
+import wasm from "vite-plugin-wasm";
+
+const PYODIDE_EXCLUDE = [
+  "!**/*.{md,html}",
+  "!**/*.d.ts",
+  "!**/*.whl",
+  "!**/node_modules",
+];
+
+export function viteStaticCopyPyodide() {
+  const pyodideDir = dirname(fileURLToPath(import.meta.resolve("pyodide")));
+  return viteStaticCopy({
+    targets: [
+      {
+        src: [join(pyodideDir, "*")].concat(PYODIDE_EXCLUDE),
+        dest: "assets",
+      },
+    ],
+  });
+}
 
 export default defineConfig({
   output: "server", // use SSR for all routes as default
-  adapter: node({
-    mode: "standalone",
-  }),
+  adapter: bun(),
   redirects: {
     "/authors/valentin-kolb": "/about",
   },
   vite: {
-    plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ["@codemirror/state", "@codemirror/view"],
+      exclude: ["pyodide"],
+    },
+    plugins: [tailwindcss(), viteStaticCopyPyodide(), wasm()],
+    assetsInclude: ["**/*.wasm", "**/*.md"],
   },
   site: config.site.base_url,
   base: config.site.base_path ? config.site.base_path : "/",

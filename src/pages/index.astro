@@ -2,7 +2,7 @@
 import Base from "@/components/layout/Base.astro";
 import { Image } from "astro:assets";
 
-const content = Array.from({ length: 100000 }, () =>
+const content = Array.from({ length: 100_000 }, () =>
   Math.random() < 0.5 ? "1" : "0",
 ).join(" ");
 ---
@@ -13,14 +13,15 @@ const content = Array.from({ length: 100000 }, () =>
     id="matrix-bg"
     class={`fixed inset-0 -z-10`}
     style={`--matrix-content: "${content}"`}
+    aria-hidden="true"
   >
   </div>
 
-  <!-- Hero-Abschnitt mit Split-Layout -->
+  <!-- Hero section with split layout -->
   <section class="min-h-[80vh] flex items-center">
     <div class="container mx-auto">
       <div class="grid md:grid-cols-2 gap-12 items-center">
-        <!-- Linke Spalte: Text -->
+        <!-- Left column: Text -->
         <div class="space-y-6 fade-in-left">
           <h1 class="text-4xl md:text-5xl font-bold leading-tight">
             Wilkommen <span
@@ -39,7 +40,7 @@ const content = Array.from({ length: 100000 }, () =>
           </div>
         </div>
 
-        <!-- Rechte Spalte: Bild -->
+        <!-- Right column: Image -->
         <div class="relative fade-in-right">
           <div
             class="aspect-square rounded-md overflow-hidden shadow-2xl transform transition-transform duration-500"
@@ -59,7 +60,7 @@ const content = Array.from({ length: 100000 }, () =>
 </Base>
 
 <style>
-  /* Einblend-Animationen */
+  /* Fade-in animations */
   .fade-in-left {
     opacity: 0;
     transform: translateX(-20px);
@@ -106,6 +107,14 @@ const content = Array.from({ length: 100000 }, () =>
     line-height: 20px;
     letter-spacing: 2px;
     color: #333;
+    content-visibility: auto;
+  }
+
+  /* Disable matrix effect for reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    #matrix-bg::before {
+      display: none;
+    }
   }
 
   @media (prefers-color-scheme: dark) {
@@ -131,15 +140,30 @@ const content = Array.from({ length: 100000 }, () =>
       black 10px,
       transparent 100px
     );
+    opacity: var(--matrix-opacity, 1);
+    transition: opacity 0.1s ease-in;
   }
 </style>
 
 <script>
-  const matrixBg = document.getElementById("matrix-bg") as HTMLElement;
-  document.addEventListener("mousemove", (e) => {
-    const mouseX = (e.clientX / window.innerWidth) * 100;
-    const mouseY = (e.clientY / window.innerHeight) * 100;
-    matrixBg.style.setProperty("--mouse-x", mouseX + "%");
-    matrixBg.style.setProperty("--mouse-y", mouseY + "%");
-  });
+  // Skip matrix effect for  reduced motion
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (!prefersReducedMotion) {
+    const matrixBg = document.getElementById("matrix-bg") as HTMLElement;
+
+    document.addEventListener("mousemove", (e) => {
+      const mouseX = (e.clientX / window.innerWidth) * 100;
+      const mouseY = (e.clientY / window.innerHeight) * 100;
+      matrixBg.style.setProperty("--mouse-x", mouseX + "%");
+      matrixBg.style.setProperty("--mouse-y", mouseY + "%");
+      matrixBg.style.setProperty("--matrix-opacity", "1");
+    });
+
+    document.documentElement.addEventListener("mouseleave", () => {
+      matrixBg.style.setProperty("--matrix-opacity", "0");
+    });
+  }
 </script>

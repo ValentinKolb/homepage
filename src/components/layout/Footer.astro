@@ -1,12 +1,23 @@
 ---
 import config from "@/config/config.json";
-import menu from "./menu.json";
+import defaultMenu, { type MenuItems } from "./defaultMenu";
 import { markdownify } from "@/lib/utils/textConverter";
 import ThemeToggle from "@/components/layout/ThemeToggle.astro";
+
+// types for frontmatters
+export interface Props {
+  menuOverwrites?: Partial<MenuItems>;
+}
+
+// distructure frontmatters
+const { menuOverwrites } = Astro.props;
+
+// override menu items with menuOverwrites
+const menu = { ...defaultMenu, ...menuOverwrites };
 ---
 
 <footer
-  class="hidden md:flex bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-0 py-2 text-xs"
+  class="print:hidden hidden md:flex bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-0 py-2 text-xs"
 >
   <div class="container mx-auto text-center">
     <ul class="flex justify-center space-x-6">

@@ -43,7 +43,11 @@ const Switch: Component<SwitchProps> = (props) => {
       <span
         class={`${props.value ? "text-green-600" : "text-gray-500 dark:text-gray-400"} text-xs`}
       >
-        {props.value ? "Aktiviert" : "Deaktiviert"}
+        {props.label
+          ? props.label + (props.value ? " aktiviert" : " deaktiviert")
+          : props.value
+            ? "Aktiviert"
+            : "Deaktiviert"}
       </span>
     </div>
   );

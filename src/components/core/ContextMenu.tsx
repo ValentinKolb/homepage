@@ -1,7 +1,13 @@
 import type { ParentProps, JSX } from "solid-js";
-import { createSignal, onCleanup, onMount, Show } from "solid-js";
+import { createSignal, onCleanup, onMount, Show, createMemo } from "solid-js";
 import { Portal } from "solid-js/web";
 import { createFloating, offset } from "floating-ui-solid";
+import { nanoid } from "nanoid";
+
+// Global state for managing open context menus
+const [globalOpenMenuId, setGlobalOpenMenuId] = createSignal<string | null>(
+  null,
+);
 
 type ContextMenuItem = {
   label: string | JSX.Element;
@@ -12,9 +18,11 @@ type ContextMenuItem = {
 export type ContextMenuProps = {
   /** The label to show as the tooltip. Can be a string or a component. */
   children: JSX.Element;
-  class?: string;
+  class?: string | ((isOpen: boolean) => string);
   items: ContextMenuItem[] | ContextMenuItem[][];
   ref?: ((el: HTMLDivElement) => void) | undefined;
+  onStateChange?: (isOpen: boolean) => void;
+  id?: string;
 } & ParentProps;
 
 /**
@@ -25,8 +33,16 @@ export type ContextMenuProps = {
  * Uses Floating UI for positioning.
  */
 export default function ContextMenu(props: ContextMenuProps) {
-  const [isOpen, setIsOpen] = createSignal(false);
+  const menuId = props.id || `context-menu-${nanoid()}`;
   const [cursorPosition, setCursorPosition] = createSignal({ x: 0, y: 0 });
+
+  // Check if this menu is the globally open one
+  const isOpen = () => globalOpenMenuId() === menuId;
+
+  // Compute class with memo for performance
+  const computedClass = createMemo(() =>
+    typeof props.class === "function" ? props.class(isOpen()) : props.class,
+  );
 
   // Setup Floating UI
   const { refs, floatingStyles } = createFloating({
@@ -39,11 +55,15 @@ export default function ContextMenu(props: ContextMenuProps) {
     e.preventDefault();
     e.stopPropagation();
     setCursorPosition({ x: e.clientX, y: e.clientY });
-    setIsOpen(true);
+    setGlobalOpenMenuId(menuId);
+    props.onStateChange?.(true);
   };
 
   const handleClickOutside = () => {
-    setIsOpen(false);
+    if (isOpen()) {
+      setGlobalOpenMenuId(null);
+      props.onStateChange?.(false);
+    }
   };
 
   onMount(() => {
@@ -56,19 +76,19 @@ export default function ContextMenu(props: ContextMenuProps) {
   });
 
   // menu styles
-  const menuClasses = `z-50 rounded-lg bg-black/30 backdrop-blur-sm ring dark:ring-gray-800
+  const menuClasses = `z-50 rounded-lg bg-black/50 backdrop-blur-sm ring dark:ring-gray-800
     ring-gray-300 ring-inset text-xs text-white whitespace-normal break-words overflow-hidden
     [&>.menu-section:not(:last-child)]:border-b dark:[&>.menu-section:not(:last-child)]:border-gray-800
     `;
 
   // menu item styles
   const menuItemClasses =
-    "cursor-pointer m-1 px-2 py-1 rounded-md hover:bg-white hover:text-black dark:hover:text-white dark:hover:bg-gray-800";
+    "cursor-pointer m-1 px-2 py-1 rounded-md hover:bg-white hover:text-black dark:hover:text-white dark:hover:bg-dark dark:hover:ring-inset dark:hover:ring-1 dark:hover:ring-white";
 
   return (
     <>
       <div
-        class={props.class}
+        class={computedClass()}
         ref={(r) => {
           refs.setReference(r);
           props.ref?.(r);

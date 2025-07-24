@@ -2,7 +2,7 @@
 title: "Über mich"
 meta_title: "About me"
 description: |
-  Ich bin Valentin Kolb, Informatikstudent an der Universität Ulm, wo ich auch in der Lehre tätig bin – ein Job, der mir unglaublich viel Spaß macht. Neben meinem Studium und der Lehre engagiere ich mich in der Fachschaft, Studierendenvertretung und arbeite in zwei weiteren Jobs. Dieser Blog ist mein Raum, um meine Gedanken zu sortieren und zu teilen – sei es über spannende Informatikprojekte, Erfahrungen aus Studium und Lehre oder das Brotbackens. Perfektion ist dabei nicht mein Ziel, sondern der Weg: Ich möchte nicht alles bis ins Letzte polieren, sondern den Spaß am Schreiben bewahren.
+  Ich bin Valentin Kolb, Informatikstudent an der Universität Ulm, wo ich auch in der Lehre tätig bin – ein Job, der mir unglaublich viel Spaß macht. Neben meinem Studium und der Lehre engagiere ich mich in der Fachschaft, Studierendenvertretung und arbeite in zwei weiteren Jobs. Dieser Blog eine Plattform auf der ich meine Gedanken und Ideen teile – sei es zu spannenden Informatikprojekten, Erfahrungen aus der Arbeit an der Uni oder zum Brotbacken. Viel Spaß beim Stöbern und Lesen!
 
 image: "/images/authors/valentin-kolb.jpg"
 
@@ -59,7 +59,7 @@ jobs:
       company: "Verfasste Studierendenschaft Ulm (2021 - heute)"
       description: "Linux & Windows Enterprise Management und Systemadministration. Entwicklung und Betrieb einer Event-Management-Plattform (Go Backend, React Frontend) für 5.000+ Nutzer in Produktion. Server Administration, Support für andere Studierende und deren IT-Projekte."
     - role: "IT-Leitung & Softwareentwicklung"
-      company: "Online Antiquitätenhändler (2019 - heute)"
+      company: "Online Antiquitätenhändler (2020 - heute)"
       description: "IT-Management für 50+ Mitarbeitende (größter Online-Antiquitätenhändler Europas). macOS Enterprise Administration, Full-Stack Entwicklung mit Python/React für interne Business-Tools, Docker, Netzwerkadministration, Proxmox HA High Performance Computing."
     - role: "Softwareentwickler"
       company: "Freiberuflich"

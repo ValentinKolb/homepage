@@ -2,7 +2,6 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, envField } from "astro/config";
-import config from "./src/config/config";
 import solidJs from "@astrojs/solid-js";
 import tailwindcss from "@tailwindcss/vite";
 import remarkMath from "remark-math";
@@ -34,7 +33,7 @@ export default defineConfig({
       format: "es",
     },
   },
-  site: config.BASE_URL,
+  site: "https://valentin-kolb.blog",
   base: "/",
   trailingSlash: "never",
   integrations: [sitemap(), mdx(), solidJs({ devtools: true })],

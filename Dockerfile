@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Production dependencies
 FROM base AS deps
-COPY package.json .npmrc ./
+COPY package.json bun.lock .npmrc ./
 RUN bun install --production
 
 # Development dependencies for build
@@ -13,9 +13,12 @@ RUN bun install
 
 # Build the application
 FROM build-deps AS builder
+
 # Copy all source files
-COPY . .
-COPY astro.config.mjs .
+COPY src ./src
+COPY public ./public
+COPY scripts ./scripts
+COPY tsconfig.json astro.config.mjs .prettierrc ./
 # Build the application
 RUN bun run build
 

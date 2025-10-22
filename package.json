@@ -51,6 +51,7 @@
     "dompurify": "^3.2.6",
     "emoji-js": "^3.8.1",
     "fflate": "^0.8.2",
+    "floating-ui-solid": "^1.0.63",
     "fuse.js": "^7.1.0",
     "github-slugger": "^2.0.0",
     "highlight.js": "^11.11.1",

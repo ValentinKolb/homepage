@@ -15,6 +15,7 @@ RUN bun install
 FROM build-deps AS builder
 # Copy all source files
 COPY . .
+COPY astro.config.mjs .
 # Build the application
 RUN bun run build
 

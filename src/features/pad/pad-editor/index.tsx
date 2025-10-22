@@ -1,52 +1,58 @@
-import MarkdownPreview from "@/components/core/MarkdownPreview";
-import { createEffect } from "solid-js";
-import { createPadStore, type MarkdownPad, padTitle } from "../util";
+import { createEffect, createResource, Match, Switch } from "solid-js";
+import { createPadStore, loadPadDoc, padTitle } from "../util";
 import Editor from "./editor";
 
-import howto from "./howto.md?raw";
-import { createStore } from "solid-js/store";
-import { nanoid } from "nanoid";
-
-console.log(howto);
-
+import { withMinLoadTime } from "@/lib/utils/timing";
 /**
- * Main pad editor component with view modes (editor/split/preview)
+ * Main pad editor component
  */
 const PadView = ({
-  view,
-  padId,
+  urlParam,
+  username,
 }: {
-  padId: string;
-  view: "editor" | "split" | "preview";
+  urlParam: string;
+  username: string | undefined;
 }) => {
   // Get or create pad with localStorage persistence
-  console.log(padId);
-  const [padValue, setPadValue] =
-    padId !== "howto"
-      ? createPadStore(padId)
-      : createStore<MarkdownPad>({
-          content: howto,
-          created: new Date(),
-          updated: new Date(),
-          id: nanoid(),
-        });
+  const [padValue, setPadValue] = createPadStore(urlParam);
+  const isHowTo = urlParam === "howto";
 
   // Update window title when pad changes
   createEffect(() => {
-    document.title = padTitle(padValue);
+    document.title = isHowTo ? "HowTo Pad" : padTitle(padValue);
   });
 
+  const [localData] = createResource(async () =>
+    withMinLoadTime(async () => loadPadDoc(padValue), 200),
+  );
+
   return (
-    <div class="flex h-full w-full flex-1 flex-row overflow-hidden">
-      {(view === "editor" || view === "split") && (
-        <Editor pad={padValue} setPad={setPadValue} />
-      )}
-      {(view === "preview" || view === "split") && (
-        <div class="flex-1 overflow-y-auto p-2">
-          <MarkdownPreview content={() => padValue.content} />
+    <Switch>
+      <Match when={localData.error}>
+        <div class="paper m-auto max-w-xl p-4 shadow shadow-red-500">
+          <h3 class="mb-2 font-bold">Fehler</h3>
+          <p class="mb-2">
+            Etwas ist schief gelaufen: Das Dokument konnte nicht geladen werden.
+          </p>
+          <i>{localData.error.message}</i>
         </div>
-      )}
-    </div>
+      </Match>
+      <Match when={localData.loading}>
+        <div class="text-dimmed m-auto flex max-w-xl items-center gap-2">
+          <i class="ti ti-loader animate-spin"></i>
+          <span class="text-sm">Das Dokument wird geladen...</span>
+        </div>
+      </Match>
+      <Match when={localData.state === "ready"}>
+        <Editor
+          pad={padValue}
+          setPad={setPadValue}
+          localData={localData()!}
+          username={username}
+          howto={urlParam === "howto"}
+        />
+      </Match>
+    </Switch>
   );
 };
 

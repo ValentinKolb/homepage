@@ -1,0 +1,93 @@
+---
+import Base from "@/components/astro/Base.astro";
+
+const $ = Astro.url.searchParams;
+const redirectUrl = decodeURIComponent($.get("redirectUrl") || "");
+const redirectLabel = decodeURIComponent($.get("redirectLabel") || "OK");
+const hasSession = Astro.locals.auth !== undefined;
+
+const presets: any = {
+  INTERNAL_SERVER_ERROR: {
+    icon: "ti-firetruck",
+    label: "Uuups",
+    description:
+      "Auf dem Server ist etwas schief gelaufen. Bitte versuche es später nochmal.",
+  },
+  BAD_REQUEST: {
+    icon: "ti-alert-circle",
+    label: "Ungültig",
+    description:
+      "Was du versucht zu tun geht irgendwie nicht. Probier es am besten gleich nochmal!",
+  },
+  NOT_FOUND: {
+    icon: "ti-error-404 text-6xl",
+    label: "Nicht gefunden",
+    description:
+      "Was auch immer du suchst, es gibt keine passende Seite. Möge es dir gelingen, etwas anderes zu finden!",
+  },
+  UNAUTHORIZED: {
+    icon: "ti-lock",
+    label: "Neeee",
+    description: hasSession
+      ? "Du hast keine Berechtigung für diese Aktion. Falls du das eigentlich haben solltest, melde dich bitte bei mir."
+      : "Du hast keine Berechtigung für diese Aktion. Versuche es mal mit anmelden. Falls das nichts hilft, melde dich bitte bei mir.",
+  },
+  FORBIDDEN: {
+    icon: "ti-lock",
+    label: "Nicht erlaubt",
+    description: "Na na na. Das ist verboten! Bitte lass es!",
+  },
+  UNKNOWN: {
+    icon: "ti-mood-sad",
+    label: "Uuuuups",
+    description:
+      "Du hast die Fehlerseite gefunden. Falls du weiterhin hier landest, melde dich bitte bei mir.",
+  },
+};
+
+const code = decodeURIComponent($.get("code") || "UNKNOWN");
+const label = decodeURIComponent($.get("label") || presets[code]?.label || "");
+const description = decodeURIComponent(
+  $.get("description") || presets[code]?.description || "",
+);
+const icon = presets[code]?.icon || "ti-mood-sad";
+---
+
+<Base title={label}>
+  <section
+    class="max-w-md flex flex-col container flex-1 gap-6 items-center justify-center"
+  >
+    <h1 class={`text-4xl text-red-500 flex items-center gap-2`}>
+      <i class={`ti ${icon}`}></i>
+      {label && <span class="font-semibold ">{label}</span>}
+    </h1>
+
+    {description && <p class="text-dimmed text-center">{description}</p>}
+
+    {
+      !hasSession && code === "UNAUTHORIZED" && (
+        <a
+          href="/account"
+          class="hover:shadow-xs shadow-blue-500 btn-subtle text-sm px-2 "
+        >
+          Anmelden
+          <i class="ti ti-arrow-right" />
+        </a>
+      )
+    }
+
+    {
+      redirectUrl && (
+        <>
+          <a
+            href={redirectUrl}
+            class="hover:shadow-xs shadow-blue-500 btn-subtle text-sm px-2 "
+          >
+            {redirectLabel}
+            <i class="ti ti-arrow-right" />
+          </a>
+        </>
+      )
+    }
+  </section>
+</Base>

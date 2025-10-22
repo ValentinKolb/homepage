@@ -1,0 +1,212 @@
+---
+import Base from "@/components/astro/Base.astro";
+import { ErrorPage, parsePagination } from "@/lib/utils/api";
+import { actions } from "astro:actions";
+import ShopSettings from "./_lib/settings";
+import Navigation from "./_navigation.astro";
+import SearchBar from "@/components/solidjs/SearchBar";
+import PaginationControls from "@/components/astro/PaginationControls.astro";
+import {
+  AddUserButton,
+  RemoveUserButton,
+  TopUpUserButton,
+} from "./_lib/user-btns";
+import { euro } from "./_lib/util";
+
+const { shopId } = Astro.params;
+if (!shopId) return ErrorPage({ code: "BAD_REQUEST" });
+
+const search = Astro.url.searchParams.get("search") ?? "";
+const pagination = parsePagination(Astro.request, { perPage: 10, page: 1 });
+
+// Get auth
+const auth = Astro.locals.auth;
+if (!auth) return ErrorPage({ code: "UNAUTHORIZED" });
+
+// Get shop
+const { data: shop, error: shopErr } = await Astro.callAction(
+  actions.shop.get,
+  { shopId },
+);
+if (shopErr) return ErrorPage({ error: shopErr });
+if (
+  shop.userPermission === null ||
+  (shop.userPermission !== "manage" && shop.userPermission !== "admin")
+)
+  return ErrorPage({ code: "FORBIDDEN" });
+
+// Get users
+const { data: users, error: usersErr } = await Astro.callAction(
+  actions.shop.users.list,
+  { shopId, search, ...pagination },
+);
+if (usersErr) return ErrorPage({ error: usersErr });
+---
+
+<Base title={shop.name}>
+  <div
+    class="container flex flex-col mx-auto max-w-6xl px-4 py-4 lg:py-12 gap-4"
+  >
+    <Navigation shop={shop} />
+
+    <div
+      class="paper flex flex-col gap-4 p-4"
+      transition:name="general-settings"
+    >
+      <div class="flex items-center gap-2">
+        <i class="ti ti-adjustments text-green-500"></i>
+        <h2 class="text-lg font-bold">Allgemein</h2>
+      </div>
+
+      <ShopSettings shop={shop} client:load />
+    </div>
+
+    <div class="paper flex flex-col gap-4 p-4" transition:name="users">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-users-group text-green-500"></i>
+        <h2 class="text-lg font-bold">Nutzende</h2>
+      </div>
+
+      <div class="flex w-full flex-row gap-2">
+        <SearchBar
+          icon="ti ti-user-search"
+          placeholder="Nach Personen suchen ..."
+          client:load
+          subtle
+          search={search}
+        />
+        <AddUserButton client:load shopId={shop.id} />
+      </div>
+
+      {/* List */}
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        {/* Table Header */}
+        <li
+          class="hidden sm:grid grid-cols-12 gap-3 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700"
+        >
+          <div class="col-span-4">Person</div>
+          <div class="col-span-4">Guthaben</div>
+          <div class="col-span-2">Rechte</div>
+          <div class="col-span-2 text-right">Aktionen</div>
+        </li>
+
+        {
+          users.data.map((user) => {
+            return (
+              <li class=" rounded hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors p-4 grid sm:grid-cols-12 gap-4 sm:gap-3 items-center">
+                {/* User with Avatar */}
+                <div class="flex items-start gap-3 sm:col-span-4 col-span-full min-w-0 overflow-hidden">
+                  <div class="flex-shrink-0">
+                    {user.imgSrc ? (
+                      <img
+                        src={user.imgSrc}
+                        alt={user.username || user.userId}
+                        class="h-14 w-14 sm:h-10 sm:w-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div class="h-14 w-14 sm:h-10 sm:w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <i class="ti ti-user text-gray-500 dark:text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                  <div class="flex flex-col min-w-0 flex-1">
+                    <span class="text-sm font-medium truncate">
+                      {user.username || user.userId}
+                    </span>
+                    {user.username && (
+                      <span class="text-xs text-gray-500 truncate mt-0.5">
+                        {user.userId === auth.userId ? "(Du) " : ""}
+                        {user.userId}
+                      </span>
+                    )}
+                    {/* Balance and Role on mobile - indented with username */}
+                    <div class="sm:hidden flex items-center gap-2 mt-0.5">
+                      <div class="text-xs font-mono">
+                        {user.userBalance !== null ? (
+                          <span
+                            class={
+                              user.userBalance <= 0
+                                ? "text-red-600"
+                                : "text-green-600"
+                            }
+                          >
+                            {euro(user.userBalance)}
+                          </span>
+                        ) : (
+                          <span class="text-gray-400">—</span>
+                        )}
+                      </div>
+                      <span class="text-xs text-gray-500">•</span>
+                      <span class={`text-xs text-gray-500 capitalize `}>
+                        {user.userPermission}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Balance - desktop only */}
+                <div class="hidden sm:block sm:col-span-4 text-sm font-mono">
+                  {user.userBalance !== null ? (
+                    <span
+                      class={
+                        user.userBalance <= 0
+                          ? "text-red-600"
+                          : "text-green-600"
+                      }
+                    >
+                      {euro(user.userBalance)}
+                    </span>
+                  ) : (
+                    <span class="text-gray-400">—</span>
+                  )}
+                </div>
+
+                {/* Permission - desktop only */}
+                <div class="hidden sm:block sm:col-span-2">
+                  <span class={`text-sm text-gray-500 capitalize`}>
+                    {user.userPermission}
+                  </span>
+                </div>
+
+                {/* Actions */}
+                <div class="sm:col-span-2 flex gap-2 justify-end col-span-full">
+                  {user.userId !== auth.userId && (
+                    <RemoveUserButton
+                      userId={user.userId}
+                      shopId={shopId}
+                      client:load
+                    />
+                  )}
+
+                  <TopUpUserButton
+                    userId={user.userId}
+                    username={user.username}
+                    shopId={shopId}
+                    client:load
+                  />
+                </div>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      {/* Empty State */}
+      {
+        users.data.length === 0 && (
+          <div class="text-center py-12 flex flex-col gap-6 text-dimmed">
+            <i class="ti ti-users-off text-xl" />
+            <p class="text-sm">Keine Nutzer vorhanden</p>
+          </div>
+        )
+      }
+
+      {/* Pagination */}
+      <PaginationControls
+        currentPage={users.page}
+        totalItems={users.total}
+        perPage={users.perPage}
+      />
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,69 @@
+---
+import Base from "@/components/astro/Base.astro";
+import { parsePagination } from "@/lib/utils/api";
+import CreateShopButton from "./_solid";
+import { actions } from "astro:actions";
+import type { Shop } from "@/actions/shop/types";
+import { ErrorPage } from "@/lib/utils/api";
+import PaginationControls from "@/components/astro/PaginationControls.astro";
+
+const auth = Astro.locals.auth;
+if (!auth)
+  return ErrorPage({
+    code: "UNAUTHORIZED",
+    description: "Du musst eingeloggt sein, um diese Seite zu nutzen.",
+  });
+
+const pagination = parsePagination(Astro.request, { page: 1, perPage: 100 });
+const { data: shops, error } = await Astro.callAction(
+  actions.shop.list,
+  pagination,
+);
+if (error) {
+  return ErrorPage({
+    description: "Beim laden der Kiosks ist ein Fehler aufgetreten.",
+  });
+}
+---
+
+<Base title="Shops">
+  <div
+    class="container mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 lg:py-12"
+  >
+    <header>
+      <h1 class="truncate text-2xl font-bold sm:text-4xl">Kiosks</h1>
+    </header>
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+      <CreateShopButton client:load />
+      {
+        shops.data.map((shop: Shop) => (
+          <a
+            href={`/tools/shop/${shop.id}`}
+            class="paper items-start flex flex-col gap-4 p-4 cursor-pointer group relative"
+          >
+            <div class="absolute top-2 right-2 z-10 text-xs opacity-0 transition-all ease-in group-hover:text-blue-500 group-hover:opacity-100 dark:group-hover:text-gray-200">
+              <i class="ti ti-arrow-up-right mr-1" />
+            </div>
+
+            <h2 class="text-lg font-bold">
+              <i class="ti ti-building-store inline-block text-teal-500" />
+              {shop.name}
+            </h2>
+            <p class="text-sm text-gray-500">
+              {shop.description?.slice(0, 100)}{" "}
+              {(shop.description?.length ?? 0) > 100 ? "..." : ""}
+            </p>
+          </a>
+        ))
+      }
+    </section>
+
+    {/* Pagination */}
+    <PaginationControls
+      currentPage={shops.page}
+      totalItems={shops.total}
+      perPage={shops.perPage}
+    />
+  </div>
+</Base>

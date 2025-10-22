@@ -1,86 +1,13 @@
-import { getRandomTextColor, jitter } from "@/lib/client/random";
+import { createSharedDoc, createSharedStore } from "@/lib/sse/client";
+import { common } from "@/lib/utils/crypto";
+import { getRandomTextColor } from "@/lib/utils/random";
 import { getTextFromDoc, LoroExtensions } from "loro-codemirror";
-import { EphemeralStore, VersionVector } from "loro-crdt";
+import { UndoManager } from "loro-crdt";
 import { nanoid } from "nanoid";
 import { createSignal, onCleanup } from "solid-js";
-import superjson from "superjson";
-import {
-  createPadSettings,
-  getDocFromPad,
-  type MarkdownPad,
-  padStorageId,
-} from "../util";
+import { savePadDoc, type MarkdownPad } from "../util";
 
-/**
- * Creates SSE-based network synchronization for real-time collaboration.
- *
- * @param pad - The markdown pad to sync
- * @param senderId - Unique ID to identify this client and filter own messages
- * @returns Object with sendMsg, onMessage, and onConnect functions
- */
-const createSSENetworkSync = (pad: MarkdownPad, senderId: string) => {
-  const roomId = padStorageId(pad);
-  const apiPath = `/api/pad?roomId=${encodeURIComponent(roomId)}`;
-  const eventSource = new EventSource(apiPath);
-
-  onCleanup(() => eventSource.close());
-
-  const sendMsg = (data: SyncMessage) => {
-    fetch(apiPath, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: superjson.stringify({ ...data, senderId }),
-    }).catch((err) => console.error("Failed to send message:", err));
-  };
-
-  const onMessage = (callback: (message: SyncMessage) => void) => {
-    eventSource.onmessage = (event) => {
-      const message = superjson.parse<SyncMessage>(event.data);
-      // Skip messages from ourselves to prevent loops
-      if (message.senderId === senderId) return;
-      callback(message);
-    };
-  };
-
-  const onConnect = (callback: () => void) => {
-    eventSource.onopen = () => {
-      callback();
-    };
-  };
-
-  return {
-    onConnect,
-    sendMsg,
-    onMessage,
-  };
-};
-
-type SyncMessage =
-  | {
-      type: "request-snapshot";
-      version: VersionVector;
-      senderId?: string;
-    }
-  | {
-      type: "send-snapshot";
-      snapshot: Uint8Array;
-      senderId?: string;
-    }
-  | {
-      type: "update";
-      update: Uint8Array;
-      senderId?: string;
-    }
-  | {
-      type: "cursor-update";
-      update: Uint8Array;
-      senderId?: string;
-    }
-  | {
-      type: "user-update";
-      update: Uint8Array;
-      senderId?: string;
-    };
+type UserState = { name: string; id: string; color: string; self?: boolean };
 
 /**
  * Creates a collaborative pad manager with real-time sync and user presence.
@@ -89,119 +16,80 @@ type SyncMessage =
  * @param setPad - Function to update the pad state
  * @returns Object with users signal and loro extension
  */
-export const createPadManager = (
-  pad: MarkdownPad,
-  setPad: (pad: Partial<MarkdownPad>) => void,
-) => {
-  const [settings, setSettings] = createPadSettings();
-
-  const { sendMsg, onMessage, onConnect } = createSSENetworkSync(
-    pad,
-    settings.publicUserId!,
-  );
-
-  // make sure user id is set
-  if (settings.publicUserId === undefined) {
-    setSettings({ publicUserId: nanoid(64) });
-  }
+export const createPadManager = (opts: {
+  pad: MarkdownPad;
+  setPad: (pad: Partial<MarkdownPad>) => void;
+  localData?: Uint8Array;
+  username?: string;
+}) => {
+  const { pad, setPad, localData } = opts;
+  const username = opts.username ?? `Guest ${common.readableId(3, 2, 3)}`;
+  const color = getRandomTextColor();
+  const selfId = nanoid(64);
 
   // solid signal with all online users
-  const [users, setUsers] = createSignal<string[]>([]);
+  const currentUser = () =>
+    ({
+      id: selfId,
+      name: username,
+      color,
+      self: true,
+    }) as UserState;
 
-  // userstore with ttl five seconds
-  const ephemeralUserStore = new EphemeralStore<{
-    [userId: string]: string;
-  }>(5000);
+  const [users, setUsers] = createSignal<UserState[]>([currentUser()]);
 
-  // local user update
-  ephemeralUserStore.subscribeLocalUpdates((update) => {
-    sendMsg({ type: "user-update", update });
-  });
-
-  // sync ephemeral user store with solid signal
-  ephemeralUserStore.subscribe(() => {
-    setUsers(
-      Object.values(ephemeralUserStore.getAllStates())
-        .filter((u) => !!u)
-        .sort((u1, u2) => u1!.localeCompare(u2!)) as string[],
-    );
-  });
-
-  // update user every two seconds (since the ttl is five seconds)
-  const cncl = setInterval(
-    () => {
-      ephemeralUserStore.set(`user-${settings.publicUserId}`, settings.name);
+  const loroDoc = createSharedDoc({
+    id: pad.id,
+    initialData: localData,
+    onChange: async () => {
+      setPad({
+        content: getTextFromDoc(loroDoc).toString() ?? "",
+        updated: new Date(),
+      });
+      await savePadDoc(pad, loroDoc);
     },
-    jitter(2000, 100), // avoid overlapping updates (maybe?)
-  );
-  onCleanup(() => {
-    clearInterval(cncl);
   });
 
-  // loro doc
-  const doc = getDocFromPad(pad);
+  const undoManager = new UndoManager(loroDoc, {});
 
-  // ephemeral store for multi cursor view
-  const ephemeralCursorStore = new EphemeralStore(1000);
-
-  // on create send inital sync message to network
-  // @see https://loro.dev/docs/tutorial/sync
-  onConnect(() =>
-    sendMsg({
-      type: "request-snapshot",
-      version: doc.oplogVersion(),
-    }),
-  );
-
-  // persist all doc changes to local storage
-  doc.subscribe(() => {
-    setPad({
-      doc,
-      content: getTextFromDoc(doc).toString() ?? "",
-      updated: new Date(),
-    });
+  const ephemeralCursorStore = createSharedStore({
+    id: `cursor-${pad.id}`,
+    timeout: 1000,
   });
 
-  // local doc update -> send to network
-  doc.subscribeLocalUpdates((update) => {
-    sendMsg({ type: "update", update });
+  const ephemeralUserStore = createSharedStore<{
+    [userId: string]: UserState;
+  }>({
+    id: `users-${pad.id}`,
+    timeout: 5000,
+    onChange: () => {
+      setUsers(
+        Object.values(ephemeralUserStore.getAllStates())
+          .filter((u) => !!u)
+          .map((u) => ({ ...u, self: u.id === selfId }))
+          .sort((u1, u2) => u1!.name.localeCompare(u2!.name)) as UserState[],
+      );
+    },
   });
 
-  // handle local cursor movement -> send to network
-  ephemeralCursorStore.subscribeLocalUpdates((update) => {
-    sendMsg({ type: "cursor-update", update });
-  });
-
-  // subscribe to network messages and apply locally
-  onMessage((msg) => {
-    switch (msg.type) {
-      case "request-snapshot":
-        sendMsg({
-          type: "send-snapshot",
-          snapshot: doc.export({ mode: "update", from: msg.version }),
-        });
-        break;
-      case "send-snapshot":
-        doc.import(msg.snapshot);
-        break;
-      case "update":
-        doc.import(msg.update);
-        break;
-      case "cursor-update":
-        ephemeralCursorStore.apply(msg.update);
-        break;
-      case "user-update":
-        ephemeralUserStore.apply(msg.update);
-        break;
-    }
-  });
+  const cncl = setInterval(() => {
+    ephemeralUserStore.set(`user-${selfId}`, currentUser());
+  }, 4000);
+  onCleanup(() => clearInterval(cncl));
 
   return {
     users,
     loroExtention: () =>
-      LoroExtensions(doc, {
-        ephemeral: ephemeralCursorStore,
-        user: { name: settings.name, colorClassName: getRandomTextColor() },
-      }),
+      LoroExtensions(
+        loroDoc,
+        {
+          ephemeral: ephemeralCursorStore,
+          user: {
+            name: username ?? `Guest ${common.readableId(3, 2, 3)}`,
+            colorClassName: color,
+          },
+        },
+        undoManager,
+      ),
   };
 };

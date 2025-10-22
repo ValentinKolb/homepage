@@ -1,0 +1,103 @@
+---
+const { class: className } = Astro.props;
+const hasSession = Astro.locals.auth !== undefined;
+---
+
+<script>
+  import { actions } from "astro:actions";
+  import { asymmetric } from "@/lib/utils/crypto";
+  import {
+    retrieveAccount,
+    type StoredAccount,
+  } from "@/pages/account/_lib/util";
+
+  class AccountIndicator extends HTMLElement {
+    connectedCallback() {
+      this.querySelector("button")?.addEventListener("click", () =>
+        this.handleClick(),
+      );
+    }
+
+    updateUI(hasSession: boolean) {
+      const icon = this.querySelector("i")!;
+      const text = this.querySelector("span")!;
+
+      if (hasSession) {
+        this.dataset.hasSession = "true";
+        icon.className = "ti ti-check";
+        text.textContent = "Logged In";
+        setTimeout(() => {
+          icon.className = "ti ti-user";
+          text.textContent = "Account";
+        }, 1000);
+      } else {
+        icon.className = "ti ti-login";
+        text.textContent = "Login";
+        this.dataset.hasSession = "false";
+      }
+    }
+
+    async handleClick() {
+      const hasSession = this.dataset.hasSession === "true";
+      const account = retrieveAccount();
+
+      try {
+        this.querySelector("button")!.disabled = true;
+
+        // Local account data exists -> perform login
+        if (!hasSession && account) return await this.performLogin(account);
+
+        // Either already logged in or no account at all -> redirect to account page
+        window.location.href = "/account";
+      } finally {
+        this.querySelector("button")!.disabled = false;
+      }
+    }
+
+    async performLogin({ privateKey, accountId }: StoredAccount) {
+      try {
+        // Generate login challenge
+        const { nonce, timestamp, signature } = await asymmetric.sign({
+          privateKey,
+          message: accountId,
+        });
+
+        // Create session, will set cookie automatically
+        await actions.auth.session.create.orThrow({
+          userId: accountId,
+          nonce,
+          timestamp,
+          signature,
+        });
+
+        // Reload the page to ensure the session is updated
+        window.location.reload();
+      } catch (error) {
+        console.error("Auto-login failed:", error);
+        window.location.href = "/account";
+      }
+    }
+  }
+
+  customElements.define("account-indicator", AccountIndicator);
+</script>
+
+<account-indicator data-has-session={hasSession}>
+  <button
+    class={`${className} !no-underline group flex flex-row items-center gap-1`}
+  >
+    {
+      hasSession ? (
+        <>
+          <i class="ti ti-user" />
+          <span class="group-hover:underline">Account</span>
+        </>
+      ) : (
+        <a href="/account">
+          <i class="ti ti-login" />
+          <span class="group-hover:underline">Login</span>
+        </a>
+      )
+    }
+  </button>
+</account-indicator>

@@ -5,6 +5,12 @@ import {
   type CollectionKey,
 } from "astro:content";
 
+/**
+ * Get all published content pages from a collection
+ * Filters out drafts and entries starting with "-"
+ * @param collectionName - Name of the content collection
+ * @returns Array of published collection entries
+ */
 export const getContentPages = async <C extends CollectionKey>(
   collectionName: C,
 ): Promise<CollectionEntry<C>[]> => {

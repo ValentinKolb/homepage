@@ -1,0 +1,11 @@
+---
+import Base from "@/components/astro/Base.astro";
+import LoggedOut from "./_logged-out.astro";
+import LoggedIn from "./_logged-in.astro";
+
+const hasSession = Astro.locals.auth !== undefined;
+---
+
+<Base title={"Account"}>
+  {hasSession ? <LoggedIn /> : <LoggedOut />}
+</Base>

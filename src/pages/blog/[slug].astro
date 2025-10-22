@@ -1,11 +1,12 @@
 ---
-import Base from "@/components/layout/Base.astro";
+import Base from "@/components/astro/Base.astro";
 import { getContentPages } from "@/lib/content/contentParser.astro";
 import { Image } from "astro:assets";
-import ReciYML from "@/components/data/ReciYML";
-import { dateFormat } from "@/lib/utils/dateFormat";
-import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
-import config from "@/config/config.json";
+import ReciYML from "@/components/solidjs/ReciYML";
+import { dateFormat } from "@/lib/utils/dates";
+import { markdownToHtml } from "@/lib/utils/markdown";
+import { humanize, slugify } from "@/lib/utils/text";
+import config from "@/config/config";
 import calculateReadingTime from "reading-time";
 
 export const prerender = true;
@@ -25,8 +26,6 @@ const { blog } = Astro.props;
 const { Content } = await blog.render();
 const { title, meta_title, description, image, date, tags, recipe } = blog.data;
 
-const { base_url } = config.site;
-
 const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
 ---
 
@@ -40,7 +39,7 @@ const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
     {/* title */}
     <h1
       class="m-0 font-bold text-center text-3xl transition-[font-size] duration-500 ease-in-out lg:text-5xl"
-      set:html={markdownify(title)}
+      set:html={markdownToHtml(title)}
     />
 
     <section
@@ -92,14 +91,16 @@ const readingTime = Math.round(calculateReadingTime(blog.body).minutes);
 
       <span class="text-sm">&#x2022</span>
 
-      {/* share buttons */}
+      {/* share on mastodon button */}
       <a
-        aria-label="bluesky share button"
-        href={` https://bsky.app/intent/compose?text=${base_url}/${blog.slug}`}
+        aria-label="mastodon share button"
+        href={`https://mastodon.social/share?text=${encodeURIComponent(
+          `${config.BASE_URL}/blog/${blog.slug}`,
+        )}`}
         target="_blank"
         rel="noreferrer noopener"
       >
-        <i class="ti ti-brand-bluesky cursor-pointer hover-text"></i>
+        <i class="ti ti-brand-mastodon cursor-pointer hover-text"></i>
       </a>
     </section>
   </acticle>

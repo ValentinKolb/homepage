@@ -1,10 +1,10 @@
 ---
-import Base from "@/components/layout/Base.astro";
-import BlogsList from "@/components/layout/BlogsList.astro";
+import Base from "@/components/astro/Base.astro";
+import BlogsList from "@/components/astro/BlogsList.astro";
 import { getContentPages } from "@/lib/content/contentParser.astro";
 import { getTaxonomy } from "@/lib/content/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
-import { humanize, slugify } from "@/lib/utils/textConverter";
+import { sortByDate } from "@/lib/utils/sorter";
+import { humanize, slugify } from "@/lib/utils/text";
 
 const tags = await getTaxonomy("blogs", "tags");
 

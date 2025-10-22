@@ -1,0 +1,128 @@
+---
+import { actions } from "astro:actions";
+import CopyAccountInfo from "./_lib/copy-account-info";
+import DeleteAccountBtn from "./_lib/delete-account-btn";
+import EditAccount from "./_lib/edit-account";
+import LogoutBtn from "./_lib/logout-btn";
+import CreateTotpBtn from "./_lib/create-totp-btn";
+import RemoveTOTPBtn from "./_lib/remove-totp-btn";
+import { parsePagination } from "@/lib/utils/api";
+import PaginationControls from "@/components/astro/PaginationControls.astro";
+import { dateFormat } from "@/lib/utils/dates";
+
+const userId = Astro.locals.auth?.userId;
+if (!userId) {
+  Astro.redirect("/account");
+}
+
+const { data: user, error: usrError } = await Astro.callAction(
+  actions.auth.user.get,
+  {
+    userId: userId as string,
+  },
+);
+if (usrError) return Astro.redirect("/500");
+
+const pagination = parsePagination(Astro.request, { perPage: 100, page: 1 });
+const { data: totps, error: totpErr } = await Astro.callAction(
+  actions.auth.totp.list,
+  pagination,
+);
+if (totpErr) return Astro.redirect("/500");
+---
+
+<div class="container mx-auto flex max-w-4xl flex-col gap-8 px-4 py-4 lg:py-12">
+  <header>
+    <h1 class="mb-6 text-4xl font-bold">
+      <span class="mr-2 inline-block text-4xl"> 👋 </span>
+      <span class="hidden md:inline-block">Hallo {" "}</span>
+      <span id="username">
+        {user.username}
+      </span>
+    </h1>
+    <p class="text-dimmed text-sm">
+      Verwalte hier deinen Account und deine Anmeldedaten.
+    </p>
+  </header>
+
+  {/* User Settings */}
+  <EditAccount client:load username={user.username} imgSrc={user.imgSrc} />
+
+  {/* Account Info */}
+  <div class="flex flex-col gap-2">
+    <section class="paper flex flex-col gap-2 p-6 shadow-green-500">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-cloud text-green-500"></i>
+        <h2 class="text-lg font-bold">
+          <span class="hidden sm:inline-block">Account-</span>Status
+        </h2>
+      </div>
+
+      <p class="text-dimmed text-sm">
+        Dein Account ist eingerichtet und du kannst alle Funktionen nutzen.
+        Deine Account Daten werden automatisch synchronisiert.
+      </p>
+
+      {/* Account Details */}
+      <div class="mt-4">
+        <CopyAccountInfo client:only />
+      </div>
+    </section>
+
+    <div class="flex flex-row gap-2">
+      <LogoutBtn client:load />
+      <DeleteAccountBtn client:load />
+    </div>
+  </div>
+
+  {/* TOTP */}
+  <div class="flex flex-col gap-2">
+    <section class="paper flex flex-col gap-2 p-6 shadow-blue-500">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-password-mobile-phone text-blue-500"></i>
+        <h2 class="text-lg font-bold">TOTP</h2>
+      </div>
+
+      <p class="text-dimmed text-sm">
+        Mit TOTP-Codes kannst du dich sicher auf anderen Geräten
+        authentifizieren, ohne dort deinen Account-Schlüssel zu hinterlegen.
+        Perfekt für öffentliche Geräte wie Kiosk-Terminals.
+      </p>
+
+      {
+        totps.total !== 0 && (
+          <>
+            <h3 class="font-bold mt-4">Registrierte Token</h3>
+            <ul class="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-y sm:divide-y-0 divide-gray-200 dark:divide-gray-700">
+              {totps.data.map((totp) => (
+                <li class="flex flex-col gap-2 sm:border sm:border-gray-200 sm:dark:border-0 sm:dark:bg-gray-900 sm:rounded-md p-4">
+                  <div class="flex flex-row gap-2 items-start justify-between">
+                    <h3 class="font-semibold">{totp.label}</h3>
+                    <RemoveTOTPBtn
+                      client:load
+                      label={totp.label}
+                      totpId={totp.id}
+                    />
+                  </div>
+                  <p class="text-xs text-dimmed mt-auto">
+                    Erstellt am {dateFormat(totp.created_at)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+      {/* Pagination */}
+      <PaginationControls
+        currentPage={totps.page}
+        totalItems={totps.total}
+        perPage={totps.perPage}
+      />
+    </section>
+
+    <div class="flex flex-row gap-2">
+      <CreateTotpBtn client:load />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+---
+import { Image } from "astro:assets";
+import config from "@/config/config";
+---
+
+<a href="/" class="navbar-brand block">
+  <Image
+    width={150}
+    height={150}
+    alt={config.LOGO.ALT}
+    src={config.LOGO.SRC}
+    class="h-auto w-8 md:w-12"
+  />
+  }
+</a>

@@ -1,0 +1,165 @@
+---
+import { actions } from "astro:actions";
+import Base from "@/components/astro/Base.astro";
+import { ErrorPage, parsePagination } from "@/lib/utils/api";
+import { euro, transaction } from "./_lib/util";
+import { dateFormat, dateTimeFormat } from "@/lib/utils/dates";
+import PaginationControls from "@/components/astro/PaginationControls.astro";
+import Navigation from "./_navigation.astro";
+
+const { shopId } = Astro.params;
+if (!shopId) return ErrorPage({ code: "BAD_REQUEST" });
+
+const pagination = parsePagination(Astro.request, { perPage: 100, page: 1 });
+
+// Get auth
+const auth = Astro.locals.auth;
+if (!auth) return ErrorPage({ code: "UNAUTHORIZED" });
+
+// Get shop
+const { data: shop, error: shopErr } = await Astro.callAction(
+  actions.shop.get,
+  { shopId },
+);
+if (shopErr) return ErrorPage({ error: shopErr });
+
+// Get transactions
+const { data: transactions, error: transactionsErr } = await Astro.callAction(
+  actions.shop.transactions.list,
+  { shopId, ...pagination },
+);
+if (transactionsErr) return ErrorPage({ error: transactionsErr });
+---
+
+<Base title={shop.name}>
+  <div
+    class="container flex flex-col mx-auto max-w-6xl px-4 py-4 lg:py-12 gap-2 sm:gap-6"
+  >
+    <Navigation shop={shop} />
+
+    {/* List */}
+
+    {
+      transactions.total !== 0 ? (
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          {/* Table Header */}
+          <li class="hidden sm:grid grid-cols-12 gap-3 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+            <div class="col-span-2">Typ</div>
+            <div class="col-span-2">Person</div>
+            <div class="col-span-2">Betrag</div>
+            <div class="col-span-4">Artikel</div>
+            <div class="col-span-2">Zeitpunkt</div>
+          </li>
+
+          {transactions.data.map((t) => {
+            const isCredit = t.amountCents < 0;
+            const isZero = t.amountCents === 0;
+            const trans = transaction(t.type);
+            const itemOut = t.itemAmount < 0;
+
+            return (
+              <li class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors p-4 grid sm:grid-cols-12 gap-2 md:gap-4 items-center">
+                {/* Desktop Layout - Hidden on Mobile */}
+                <div class="hidden md:flex items-center gap-2 col-span-2">
+                  <i class={`ti ${trans.icon} text-md ${trans.color}`} />
+                  <span class="text-sm font-medium capitalize">
+                    {trans.name}
+                  </span>
+                </div>
+                <div class="hidden md:block col-span-2 text-sm text-gray-500 truncate">
+                  {t.username}
+                </div>
+                <div
+                  class={`hidden md:block col-span-2 text-sm font-mono ${isZero ? "text-dimmed" : isCredit ? "text-green-600" : "text-red-600"}`}
+                >
+                  {isZero
+                    ? "-"
+                    : `${isCredit ? "" : "-"}${euro(Math.abs(t.amountCents))}`}
+                </div>
+                <div class="hidden text-gray-500 md:block col-span-4 text-sm  truncate">
+                  {t.itemName ? (
+                    <>
+                      <i
+                        class={`  ti  ${itemOut ? "ti-package-export " : "ti-package-import "}`}
+                      />
+                      {Math.abs(t.itemAmount) >= 2 && (
+                        <span class=" ml-1">({Math.abs(t.itemAmount)}x)</span>
+                      )}
+                      <span class=" ml-1">{t.itemName}</span>
+                    </>
+                  ) : (
+                    <span>—</span>
+                  )}
+                </div>
+                <div class="hidden md:block col-span-2 text-sm text-gray-500">
+                  {dateTimeFormat(t.createdAt)}
+                </div>
+
+                {/* Mobile Layout - Hidden on Desktop */}
+                <div class="md:hidden col-span-full overflow-hidden space-y-2">
+                  {/* ICON TYP */}
+                  <div class="flex items-center gap-2">
+                    <i class={`ti ${trans.icon} text-md ${trans.color}`} />
+                    <span class="text-sm font-medium capitalize">
+                      {trans.name}
+                    </span>
+
+                    {!isZero && (
+                      <span
+                        class={` ml-auto text-xs font-mono font-medium ${isCredit ? "text-green-600" : "text-red-600"}`}
+                      >
+                        {`${isCredit ? "" : "-"}${euro(Math.abs(t.amountCents))}`}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* USER */}
+                  <div class="text-xs text-gray-500 truncate overflow-hidden ">
+                    {t.username}
+                  </div>
+
+                  {/* ITEM  GELD */}
+                  <div class="flex items-center justify-between gap-2 text-xs text-gray-500 ">
+                    <div class="truncate  ">
+                      {t.itemName ? (
+                        <span>
+                          <i
+                            class={`text-gray-500 text-sm ti ${itemOut ? "ti-package-export" : "ti-package-import"}`}
+                          />
+                          {Math.abs(t.itemAmount) >= 2 && (
+                            <span class="ml-1">
+                              ({Math.abs(t.itemAmount)}x)
+                            </span>
+                          )}
+                          <span class="ml-1">{t.itemName}</span>
+                        </span>
+                      ) : (
+                        <span class="text-gray-400">—</span>
+                      )}
+                    </div>
+
+                    <span class="whitespace-nowrap flex-shrink-0">
+                      {dateFormat(t.createdAt)}
+                    </span>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <div class="text-center py-12 flex flex-col gap-6 text-dimmed">
+          <i class="ti ti-abacus-off text-xl" />
+          <p class="text-sm">Keine Transaktionen vorhanden</p>
+        </div>
+      )
+    }
+
+    {/* Pagination */}
+    <PaginationControls
+      currentPage={transactions.page}
+      totalItems={transactions.total}
+      perPage={transactions.perPage}
+    />
+  </div>
+</Base>

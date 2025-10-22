@@ -1,0 +1,96 @@
+---
+import { actions } from "astro:actions";
+import Base from "@/components/astro/Base.astro";
+import { parsePagination, ErrorPage } from "@/lib/utils/api";
+import SearchBar from "@/components/solidjs/SearchBar";
+import CreateItemBtn from "./_lib/create-item-btn";
+import InventoryItemView from "./_lib/iventory-item-view";
+import Navigation from "./_navigation.astro";
+import PaginationControls from "@/components/astro/PaginationControls.astro";
+
+const { shopId } = Astro.params;
+if (!shopId) return ErrorPage({ code: "BAD_REQUEST" });
+
+// Read URL state on the server
+const search = Astro.url.searchParams.get("search") ?? "";
+const pagination = parsePagination(Astro.request, { perPage: 100, page: 1 });
+
+// Get auth
+const auth = Astro.locals.auth;
+if (!auth) return ErrorPage({ code: "UNAUTHORIZED" });
+
+// Get shop
+const { data: shop, error: shopErr } = await Astro.callAction(
+  actions.shop.get,
+  { shopId },
+);
+if (shopErr) return ErrorPage({ error: shopErr });
+if (!["manage", "admin"].includes(shop.userPermission ?? ""))
+  return ErrorPage({ code: "FORBIDDEN" });
+
+// Get items
+const { data: items, error: itemsErr } = await Astro.callAction(
+  actions.shop.items.list,
+  {
+    shopId,
+    search,
+    ...pagination,
+  },
+);
+if (itemsErr) return ErrorPage({ error: itemsErr });
+---
+
+<Base title={shop.name}>
+  <div
+    class="container flex flex-col gap-4 mx-auto max-w-6xl px-4 py-4 lg:py-12"
+  >
+    <Navigation shop={shop} />
+
+    <div class="flex w-full flex-row gap-2">
+      <SearchBar
+        client:load
+        search={search}
+        transition:name="item-search-panel"
+      />
+      <CreateItemBtn
+        transition:name="create-item-btn"
+        client:load
+        shopId={shop.id}
+      />
+    </div>
+
+    {
+      items.total !== 0 ? (
+        search && <p class="text-dimmed text-xs">Ergebnisse für "{search}"</p>
+      ) : (
+        <>
+          <div class="text-center py-12 flex flex-col gap-6 text-dimmed">
+            <i class="ti ti-box-off text-xl" />
+            <p class="text-sm">
+              {search
+                ? `Kein Ergebnis für "${search}" gefunden`
+                : "Noch keine Artikel erstellt."}
+            </p>
+          </div>
+        </>
+      )
+    }
+
+    <ul class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        items.data.map((i) => (
+          <li transition:name={`item-${i.id}`}>
+            <InventoryItemView client:load item={i} />
+          </li>
+        ))
+      }
+    </ul>
+
+    {/* Pagination */}
+    <PaginationControls
+      currentPage={items.page}
+      totalItems={items.total}
+      perPage={items.perPage}
+    />
+  </div>
+</Base>

@@ -1,4 +1,4 @@
-import Tooltip from "@/components/core/Tooltip";
+import Tooltip from "@/components/solidjs/Tooltip";
 import { createSignal, For } from "solid-js";
 
 const ACCEPTED_FILE_TYPES = ".png,.jpg,.jpeg";

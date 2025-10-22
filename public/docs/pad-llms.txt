@@ -1,0 +1,379 @@
+# Pad Kit API Documentation for AI Assistants
+
+## Overview
+
+Pad is a real-time collaborative markdown editor with advanced features including:
+- **Smart Markdown Rendering**: Interactive elements like tables, formulas (KaTeX), diagrams (Mermaid), and info blocks that can be clicked to edit
+- **Code Execution**: JavaScript code blocks can be executed directly in the browser with the Kit API
+- **Real-time Collaboration**: Multiple users can edit the same document simultaneously using CRDT technology
+- **End-to-End Encryption**: Pads are stored encrypted on the server - only users with the pad link have the decryption key
+- **Local-First Architecture**: All code execution, databases, and file operations happen locally in each user's browser
+
+This document provides comprehensive documentation for the Kit API, which enables users to run JavaScript code within their pads with powerful utilities for data processing, file operations, and database queries. Additionally, SQL code blocks can be executed directly, using the current or default memory database. When helping users, please refer to this documentation to provide accurate assistance with Kit API programming.
+
+## Important Context for Users
+- **Local Execution**: All code runs locally in the user's browser
+- **Data Privacy**: Databases and files are stored locally on each user's device, NOT shared between users
+- **Persistence**: `memory://` databases are temporary (cleared on reload), while `opfs://` databases persist locally
+- **Collaboration**: Only the markdown text is synchronized between users, NOT code execution results or databases
+- **Pad Storage**: The pad content itself is stored encrypted on the server using end-to-end encryption. The server cannot read the content because only users with the pad link have the decryption key
+- **Security**: The pad ID in the URL serves as both the room identifier and the encryption key. When communicating with the server, the frontend hashes the pad ID before sending it to the server.
+
+## Kit API Reference
+
+### kit.dialog - User Interaction
+
+```javascript
+// Text input dialog
+const name = await kit.dialog.prompt(message, defaultValue?);
+// Returns: string | null (null if cancelled)
+
+// Number input dialog
+const age = await kit.dialog.promptNumber(message, defaultValue?);
+// Returns: number | null (null if cancelled)
+
+// Alert dialog
+await kit.dialog.alert(message);
+// Returns: void
+
+// Confirmation dialog
+const confirmed = await kit.dialog.confirm(message);
+// Returns: boolean (true = OK, false = Cancel)
+```
+
+### kit.file - File Operations
+
+```javascript
+// Open file picker dialog
+const file = await kit.file.open();
+// Returns: File object
+
+// Open folder picker (multiple files)
+const files = await kit.file.openFolder();
+// Returns: File[] array
+
+// Fetch file from URL
+const file = await kit.file.fetch(url, filename?);
+// Returns: File object
+// Example: await kit.file.fetch('/docs/example.csv')
+
+// Queue file for download (downloaded when script ends)
+kit.file.save(data, filename, mimeType?);
+// data: string | Blob | ArrayBuffer
+// Multiple saves are automatically bundled into a ZIP
+```
+
+### kit.db - SQL Database
+
+```javascript
+// Connect to database
+await kit.db.use(uri);
+// URI formats:
+// - 'memory://name' - Temporary database (cleared on reload)
+// - 'opfs://name' - Persistent local database
+
+// Execute SQL query
+const results = await kit.db.exec(sql, params?);
+// Returns: array of objects for SELECT queries
+// Example: await kit.db.exec('SELECT * FROM users WHERE age > ?', [18])
+// Note: Only the last statement's result is returned for multi-statement queries
+
+// Import array of objects into table (auto-creates table if not exists)
+await kit.db.importData(tableName, dataArray);
+// Automatically detects column types
+
+// Get database schema, this is useful for you to understand the structure of your database
+// Ask the user to provide the schema if it's not available to you yet
+const schema = await kit.db.schema();
+// Returns: array of {name, type, sql}
+
+// Export database as binary
+const data = await kit.db.dump();
+// Returns: Uint8Array
+
+// Import database from binary (overwrite existing data)
+await kit.db.load(data);
+
+// Delete database permanently
+await kit.db.destroy(uri);
+
+// Get connection info
+const info = kit.db.info();
+// Returns: string describing current connection
+```
+
+### kit.store - Key-Value Storage
+
+```javascript
+// Set value (persistent storage)
+await kit.store.set(key, value);
+// Value can be any devalue serializable type
+
+// Get value
+const value = await kit.store.get(key);
+// Returns: stored value or undefined
+
+// Delete key
+await kit.store.delete(key);
+
+// List all keys (with optional prefix)
+const keys = await kit.store.list(prefix?);
+// Returns: string[]
+
+// Clear all stored data
+await kit.store.clear();
+```
+
+### kit.sheet - CSV/Excel Operations
+
+```javascript
+// Parse CSV file
+const data = await kit.sheet.fromCsv(file);
+// Returns: array of objects with headers as keys
+
+// Read Excel sheet
+const data = await kit.sheet.fromExcel(sheetName, file);
+// Returns: same as fromCsv
+
+// Get Excel sheet names
+const sheets = await kit.sheet.getSheetNames(file);
+// Returns: string[]
+
+// Convert array to CSV string
+const csv = kit.sheet.toCsv(dataArray);
+// Returns: CSV string with headers
+```
+
+### kit.date - Date Operations (internally Day.js)
+
+kit.date functions return a new Day.js rather than a js Date.
+So all Day.js methods can be applied to the returned object.
+
+The following Day.js plugins are available:
+- customParseFormat
+- relativeTime
+- isBetween
+- weekOfYear
+- dayOfYear
+- quarterOfYear
+- duration
+
+```javascript
+// Create date
+const date = kit.date.new('2024-01-01');
+// Accepts: ISO string, Date object, timestamp
+
+// Current date/time
+const now = kit.date.now();
+
+// Today at midnight
+const today = kit.date.today();
+
+// From Unix timestamp (seconds)
+const date = kit.date.unix(timestamp);
+
+// Format date (Day.js format string)
+date.format('YYYY-MM-DD HH:mm:ss');
+
+// Manipulate dates (returns new Day.js object)
+date.add(7, 'days');
+date.subtract(1, 'month');
+date.startOf('month');
+date.endOf('year');
+
+// Compare dates
+date.isBefore(otherDate);
+date.isAfter(otherDate);
+date.isSame(otherDate, 'day');
+
+// Difference
+date.diff(otherDate, 'days');
+
+// Convert to SQLite compatible format
+kit.date.toSQL(date);
+// Returns: 'YYYY-MM-DD HH:mm:ss'
+```
+
+### kit.util - Utility Functions
+
+```javascript
+// Sleep/delay execution
+await kit.util.sleep(milliseconds);
+
+// HTTP requests (same as browser fetch)
+const response = await kit.util.fetch(url, options?);
+
+// Random number generator
+const num = kit.util.random(min?, max?, step?);
+// Default: random between 0 and 1
+// With step: rounds to nearest step value
+
+// Shuffle array in place
+kit.util.shuffle(array);
+// Returns: same array (mutated)
+```
+
+### kit.opfs - File System Access
+
+This is mostly used internally but can also be used for custom file operations.
+
+The following directories are used internally:
+- `.kitdb` -> kit.db stores the sqlte databases here
+- `.kitstore` -> kit.store stores the manifest and data-buckets here
+- `.pad` -> the pad itself stores the LORO CRTD snapshots here
+All directories with a dot should not be modified or deleted!
+
+```javascript
+// Write file to OPFS
+await kit.opfs.write(path, data);
+// data: string | ArrayBuffer | Blob
+
+// Read file from OPFS
+const data = await kit.opfs.read(path);
+// Returns: ArrayBuffer
+
+// Delete file/directory
+await kit.opfs.delete(path);
+
+// List directory contents
+const entries = await kit.opfs.list(path);
+// Returns: {name, kind: 'file'|'directory'}[]
+
+// Check if path exists
+const exists = await kit.opfs.exists(path);
+// Returns: boolean
+```
+
+## Console Output Capture
+
+During code execution, console methods are intercepted and outputed to the user in the pad:
+
+```javascript
+console.log(...args);    // Normal output
+console.error(...args);  // Red error text
+console.warn(...args);   // Orange warning text
+console.info(...args);   // Gray info text (mostly used internally by kit)
+console.table(data);     // Formatted table
+console.time(label);     // Start timer
+console.timeEnd(label);  // End timer and show duration
+console.progress(label, percent); // Progress bar (0-100)
+```
+
+## SQL Code Block Execution
+
+SQL code blocks (```sql) can be executed directly in the pad. They automatically use:
+- The currently selected database (if any was selected with `kit.db.use()`)
+- Or a default memory database if none is selected (memory://default)
+
+The SQL execution is equivalent to:
+```javascript
+const res = await kit.db.exec(sql_code);
+if (res) console.table(res);
+else console.info("Success (zero rows returned)");
+```
+
+**Important**: When multiple SQL statements are in one block, only the result of the **last** statement is returned and displayed. If you need to see results from multiple SELECT queries, use separate SQL blocks.
+
+This is particularly useful for:
+- Quick data inspection
+- Creating tables, views, or indexes
+- Running queries without JavaScript wrapper code
+- Setup operations followed by a final SELECT to show results
+
+**Best Practice**: Always use `IF NOT EXISTS` when creating tables or indexes to prevent errors on repeated execution:
+```sql
+CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT);
+CREATE INDEX IF NOT EXISTS idx_name ON users(name);
+```
+
+## Code Execution Rules
+
+1. **Async Support**: All JavaScript code blocks are executed as async functions
+2. **SQL Support**: SQL code blocks are executed directly against the current database
+3. **Auto-finalization**: File downloads happen automatically after execution
+4. **Error Handling**: Errors are caught and displayed to the user
+5. **Interruption**: Code can be interrupted by errors (KIT_INTERRUPT symbol)
+
+## Best Practices for AI Assistance
+
+When helping users with Kit API:
+
+1. **Always use await**: Most Kit API functions are asynchronous
+2. **Handle null returns**: Dialog functions return null when cancelled
+3. **Use memory:// for testing**: Recommend memory databases for experiments or simple data pipelines where the user uploads data and only wants to perform operations after which the modified data is direktly downloaded again
+4. **Use opfs:// for persistence**: Recommend OPFS databases for data that should persist
+5. **Explain opfs storage**: Remind users that databases are NOT shared between users
+6. **File operations**: Multiple saves are automatically bundled into a ZIP
+7. **SQL parameters**: Use parameterized queries if needed to prevent injection
+8. **Error messages**: Kit API logs helpful messages to console
+9. **Data format**: Kit API's accept or return tabular data as an array of objects
+10. **SQL blocks for inspection**: Use SQL code blocks for quick data inspection or table creation instead of wrapping in JavaScript
+11. **IF NOT EXISTS pattern**: Always use `IF NOT EXISTS` in CREATE statements to avoid frustration from repeated execution
+
+## Common Patterns
+
+### Load and Process CSV
+```javascript
+const file = await kit.file.fetch('/docs/example.csv');
+const data = await kit.sheet.fromCsv(file);
+await kit.db.use('memory://temp');
+await kit.db.importData('mydata', data);
+```
+
+Then inspect with SQL blocks:
+```sql
+-- Quick inspection
+SELECT * FROM mydata LIMIT 5;
+```
+```sql
+-- Analysis query
+SELECT COUNT(*) as total, AVG(price) as avg_price FROM mydata;
+```
+
+### Interactive Data Entry
+```javascript
+const name = await kit.dialog.prompt('Enter name:');
+if (name) {
+  await kit.store.set('username', name);
+  console.log(`Saved: ${name}`);
+}
+```
+
+### Export Query Results
+```javascript
+const data = await kit.db.exec('SELECT * FROM orders');
+const csv = kit.sheet.toCsv(data);
+kit.file.save(csv, 'export.csv', 'text/csv');
+```
+
+### Date Calculations
+```javascript
+const start = kit.date.new('2024-01-01');
+const end = kit.date.now();
+const days = end.diff(start, 'days');
+console.log(`Days elapsed: ${days}`);
+```
+
+## Error Handling
+
+Always wrap Kit API calls in try-catch when appropriate:
+
+```javascript
+try {
+  const file = await kit.file.fetch('https://example.com/data.csv');
+  // Process file...
+} catch (error) {
+  console.error('Failed to fetch file:', error);
+}
+```
+
+## Security Notes
+
+- File system access is sandboxed to browser storage
+- No access to user's actual file system without explicit permission
+- Network requests follow browser CORS policies
+- All data stays local unless explicitly shared
+
+## Version Information
+
+This documentation describes Kit API v1.0 for the Pad collaborative markdown editor.

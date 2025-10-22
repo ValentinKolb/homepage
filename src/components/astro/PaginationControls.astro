@@ -1,0 +1,32 @@
+---
+const { currentPage, totalItems, perPage } = Astro.props;
+const totalPages = Math.ceil(totalItems / perPage);
+
+const url = (page: number) => {
+  const url = new URL(Astro.url);
+  url.searchParams.set("page", page.toString());
+  return url.search;
+};
+---
+
+{
+  totalPages > 1 && (
+    <div class="flex justify-center gap-2 mt-6">
+      <a
+        href={url(Math.max(1, currentPage - 1))}
+        class={`btn-subtle px-2 py-1 ${currentPage === 1 ? "opacity-50 pointer-events-none" : ""}`}
+      >
+        <i class="ti ti-chevron-left" />
+      </a>
+      <span class="px-3 py-1 text-sm text-dimmed">
+        Seite {currentPage} von {totalPages}
+      </span>
+      <a
+        href={url(Math.min(totalPages, currentPage + 1))}
+        class={`btn-subtle px-2 py-1 ${currentPage >= totalPages ? "opacity-50 pointer-events-none" : ""}`}
+      >
+        <i class="ti ti-chevron-right" />
+      </a>
+    </div>
+  )
+}

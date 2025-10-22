@@ -1,13 +1,18 @@
 ---
-import Base from "@/components/layout/Base.astro";
-import BlogsList from "@/components/layout/BlogsList.astro";
+import Base from "@/components/astro/Base.astro";
+import BlogsList from "@/components/astro/BlogsList.astro";
 import { getContentPages } from "@/lib/content/contentParser.astro";
 import { getTaxonomy } from "@/lib/content/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
-import taxonomyFilter from "@/lib/utils/taxonomyFilter";
-import { humanize } from "@/lib/utils/textConverter";
+import { sortByDate } from "@/lib/utils/sorter";
+import { humanize, slugify } from "@/lib/utils/text";
 
 export const prerender = true;
+
+const tagFilter = (blogs: any[], name: string, key: any) => {
+  return blogs.filter((blog) =>
+    blog.data[name]?.map((name: string) => slugify(name)).includes(key),
+  );
+};
 
 export async function getStaticPaths() {
   const tags = await getTaxonomy("blogs", "tags");
@@ -22,8 +27,8 @@ export async function getStaticPaths() {
 const { tag } = Astro.params;
 
 const blogs = await getContentPages("blogs");
-const filterByTags = taxonomyFilter(blogs, "tags", tag);
-const sortedBlogs = sortByDate(filterByTags);
+const filteredByTags = tagFilter(blogs, "tags", tag);
+const sortedBlogs = sortByDate(filteredByTags);
 
 const title = humanize(tag || "");
 ---

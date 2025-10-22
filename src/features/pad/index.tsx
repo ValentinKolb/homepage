@@ -1,5 +1,4 @@
-import ContextMenu from "@/components/core/ContextMenu";
-import Tooltip from "@/components/core/Tooltip";
+import ContextMenu from "@/components/solidjs/ContextMenu";
 import {
   createFuzzySearch,
   type SearchResult,
@@ -9,11 +8,12 @@ import {
   deleteFromLocalStore,
   modifyLocalStore,
 } from "@/lib/solidjs/localstorage";
-import { dateTimeFormat } from "@/lib/utils/dateFormat";
-import { extractH1Title } from "@/lib/utils/markdown-util";
+import { dateTimeFormat } from "@/lib/utils/dates";
+import { extractH1Title } from "@/lib/utils/markdown";
 import { createSignal, For, Show } from "solid-js";
 import type { MarkdownPad } from "./util";
-import { PAD_STORAGE, padStorageId } from "./util";
+import { PAD_STORAGE, padStorageId, padTitle } from "./util";
+import { prompts } from "@/lib/client/prompt-lib";
 
 /**
  * Renders a clickable pad card with context menu and optional search match highlights.
@@ -27,16 +27,33 @@ const PadLink = ({
 }) => {
   const padLink = `/tools/pad/${pad.id}`;
 
-  const deleteFn = () => {
-    deleteFromLocalStore(padStorageId(pad), PAD_STORAGE);
+  const deleteFn = async () => {
+    if (
+      await prompts.confirm(
+        `Möchtest du das Pad "${padTitle(pad)}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+        {
+          icon: "ti ti-trash",
+          title: "Pad löschen",
+        },
+      )
+    ) {
+      deleteFromLocalStore(padStorageId(pad), PAD_STORAGE);
+    }
   };
 
-  const renameFn = () => {
-    const newTitle = prompt("Neuer Pad Titel", pad.title);
-    if (!newTitle) return;
+  const renameFn = async () => {
+    const newTitle = await prompts.prompt(
+      "Gebe den neuen Titel für das Pad ein. Wenn kein Titel gesetzt wird, wird der Titel automatisch erstellt.",
+      pad.title,
+      {
+        icon: "ti ti-pencil",
+        title: "Pad umbenennen",
+      },
+    );
+    if (newTitle === null) return;
     modifyLocalStore(
       padStorageId(pad),
-      { ...pad, title: newTitle },
+      { ...pad, title: newTitle || undefined },
       PAD_STORAGE,
     );
   };
@@ -80,9 +97,7 @@ const PadLink = ({
           onClick: deleteFn,
         },
       ]}
-      class={(isOpen) =>
-        `hover-shadow group relative p-2 ${isOpen ? "paper-highlighted" : "paper"}`
-      }
+      class={`group sm:paper relative py-2 sm:p-2`}
     >
       <a href={padLink}>
         <Show
@@ -106,7 +121,7 @@ const PadLink = ({
           </div>
         </Show>
 
-        <h3 class="ellipsis font-bold">
+        <h3 class="ellipsis font-bold group-hover:font-extrabold">
           {pad.title || extractH1Title(pad.content) || "Untitled"}
         </h3>
         <small>{dateTimeFormat(pad.updated)}</small>
@@ -174,14 +189,14 @@ const PadIndex = () => {
   });
 
   return (
-    <div class="flex flex-col items-center gap-4 p-10">
+    <div class="flex flex-col items-center gap-4 p-4 sm:p-10">
       <h2 class="text-2xl font-bold">Pads</h2>
 
       <div class="flex min-w-full flex-row gap-2 md:min-w-[60%] lg:min-w-[40%]">
         <input
           id="pad-search-input"
           type="text"
-          class="input-simple flex-1"
+          class="input-subtle flex-1"
           placeholder="Suchen..."
           value={searchTerm()}
           onInput={(e) => {
@@ -189,15 +204,14 @@ const PadIndex = () => {
           }}
         />
 
-        <Tooltip label="Neues Pad">
-          <a
-            aria-label="create new pad"
-            class="icon-btn aspect-square h-full"
-            href="/tools/pad/new"
-          >
-            <i class={`ti ti-plus`} />
-          </a>
-        </Tooltip>
+        <a
+          aria-label="create new pad"
+          class="btn-subtle group/btn px-3 py-2"
+          href="/tools/pad/new"
+        >
+          <i class={`ti ti-plus group-hover/btn:hidden`} />
+          <i class={`ti ti-thumb-up hidden group-hover/btn:inline`} />
+        </a>
       </div>
 
       <Show
@@ -209,7 +223,7 @@ const PadIndex = () => {
         </p>
       </Show>
 
-      <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <div class="grid w-full grid-cols-1 divide-y divide-gray-200 sm:gap-4 sm:divide-y-0 md:grid-cols-3 lg:grid-cols-5 dark:divide-gray-800">
         <For each={searchResults()}>
           {(result) => (
             <PadLink

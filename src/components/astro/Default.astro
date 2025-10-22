@@ -1,0 +1,16 @@
+---
+import { markdownToHtml } from "@/lib/utils/markdown";
+
+const { data } = Astro.props;
+const { title } = data.data;
+const { Content } = await data.render();
+---
+
+<section class="section">
+  <div class="container">
+    <h1 set:html={markdownToHtml(title)} class="h2 mb-5 font-bold leading-10" />
+    <div class="content">
+      <Content />
+    </div>
+  </div>
+</section>

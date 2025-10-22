@@ -1,6 +1,7 @@
 # build output
 dist/
 .output/
+temp/
 
 # dependencies
 node_modules/
@@ -13,6 +14,7 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
 
 # macOS-specific files
@@ -22,13 +24,9 @@ pnpm-debug.log*
 .astro
 
 # IDEs
-
 .vscode/
 .idea/
 
-# legacy
-
-./hugo
 
 **/.claude/settings.local.json
 .claude

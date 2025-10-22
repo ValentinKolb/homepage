@@ -1,4 +1,4 @@
-import { ReciYMLSchema } from "@/components/data/ReciYML/types";
+import { ReciYMLSchema } from "@/components/solidjs/ReciYML/types";
 import { defineCollection, z } from "astro:content";
 
 // Post collection schema

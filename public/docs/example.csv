@@ -1,0 +1,21 @@
+order_id,customer_name,product,quantity,unit_price,order_date,shipped_date,status
+1001,Maria Schmidt,Laptop Pro X1,2,1299.99,2024-01-15,2024-01-17,delivered
+1002,Thomas Müller,Wireless Mouse,5,29.99,2024-01-16,2024-01-18,delivered
+1003,Anna Weber,USB-C Hub,3,49.99,2024-01-17,2024-01-19,delivered
+1004,Michael Wagner,Mechanical Keyboard,1,159.99,2024-01-18,2024-01-20,delivered
+1005,Laura Becker,Monitor 27" 4K,2,399.99,2024-01-19,2024-01-22,delivered
+1006,Stefan Klein,Webcam HD,4,79.99,2024-01-20,,processing
+1007,Julia Hoffmann,Laptop Stand,2,39.99,2024-01-21,2024-01-23,delivered
+1008,Christian Wolf,SSD 1TB,3,129.99,2024-01-22,2024-01-24,delivered
+1009,Sandra Meyer,Graphics Tablet,1,299.99,2024-01-23,,pending
+1010,Robert Fischer,Noise-Canceling Headphones,2,249.99,2024-01-24,2024-01-26,delivered
+1011,Petra Schulz,Smart Watch,1,199.99,2024-01-25,2024-01-27,delivered
+1012,Andreas Koch,External HDD 4TB,2,119.99,2024-01-26,,processing
+1013,Nicole Bauer,Docking Station,1,189.99,2024-01-27,2024-01-29,delivered
+1014,Markus Richter,RAM 32GB Kit,2,179.99,2024-01-28,2024-01-30,delivered
+1015,Claudia Zimmermann,Ergonomic Chair,1,449.99,2024-01-29,,pending
+1016,Frank Krüger,Surge Protector,5,24.99,2024-01-30,2024-02-01,delivered
+1017,Sabine Herrmann,Blue Light Glasses,3,34.99,2024-01-31,2024-02-02,delivered
+1018,Oliver König,Desk Lamp LED,2,59.99,2024-02-01,,processing
+1019,Martina Walter,Cable Management Kit,4,19.99,2024-02-02,2024-02-04,delivered
+1020,Daniel Lange,Portable Charger,3,44.99,2024-02-03,2024-02-05,delivered

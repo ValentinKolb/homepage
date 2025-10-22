@@ -11,19 +11,55 @@
 }
 
 @utility paper {
-  @apply rounded-lg bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-black dark:shadow-none dark:ring dark:ring-gray-500 dark:ring-inset;
+  @apply rounded bg-white ring ring-gray-200 transition-all duration-200 ring-inset hover:shadow-sm dark:bg-black dark:shadow-none dark:ring-gray-500;
 }
 
 @utility paper-highlighted {
   @apply paper dark:bg-dark bg-gray-100 dark:ring-gray-300;
 }
 
+@utility btn-base {
+  @apply inline-flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-xs transition-all duration-200 hover:translate-y-[-1px] active:scale-95 active:inset-shadow-xs;
+}
+
 @utility btn-simple {
-  @apply paper inline-flex items-center gap-2 px-3 py-2 font-medium hover:translate-y-[-1px] focus:ring-0 dark:focus:ring;
+  @apply btn-base dark:bg-dark bg-white text-gray-700 shadow-sm hover:shadow-md dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100;
+}
+
+@utility btn-primary {
+  @apply btn-base bg-black text-white dark:ring dark:ring-gray-500 dark:ring-inset;
+}
+
+@utility btn-secondary {
+  @apply btn-base bg-gray-200 text-gray-700;
+}
+
+@utility btn-success {
+  @apply btn-base bg-green-500 text-white;
+}
+
+@utility btn-danger {
+  @apply btn-base bg-red-500 text-white;
+}
+
+@utility btn-subtle {
+  @apply btn-base bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300;
+}
+
+@utility input-base {
+  @apply rounded border-0 p-2 text-sm text-gray-500 focus:ring-2 focus:ring-blue-500 focus-visible:outline-none dark:bg-gray-800 dark:text-gray-300;
+}
+
+@utility input-border {
+  @apply input-base ring-2 ring-gray-200 dark:ring-gray-700;
+}
+
+@utility input-subtle {
+  @apply input-base bg-gray-100 dark:bg-gray-800;
 }
 
 @utility input-simple {
-  @apply rounded-lg border-0 border-gray-300 p-2 text-sm text-gray-500 shadow-sm hover:shadow-md focus:shadow-md focus:ring-2 focus:ring-blue-500 focus-visible:outline-none dark:shadow-none dark:ring dark:ring-gray-500 dark:ring-inset;
+  @apply input-base shadow-sm hover:shadow-md focus:shadow-md dark:shadow-none;
 }
 
 @utility icon-btn {
@@ -35,7 +71,7 @@
 }
 
 @utility text-dimmed {
-  @apply text-gray-400 dark:text-gray-300;
+  @apply text-gray-400 dark:text-gray-500;
 }
 
 @utility hover-shadow {
@@ -57,4 +93,31 @@
 
 @utility ellipsis {
   @apply overflow-hidden text-ellipsis whitespace-nowrap;
+}
+
+@utility scrollbar {
+  scrollbar-color: theme(colors.gray.400) transparent;
+  scrollbar-width: 5px;
+  @media (prefers-color-scheme: dark) {
+    scrollbar-color: theme(colors.gray.600) transparent;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 dark:bg-gray-600;
+    border-radius: 100vh;
+    border: none;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500 dark:bg-gray-400;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }

@@ -1,22 +1,12 @@
 ---
-import Base from "@/components/layout/Base.astro";
+import { ErrorPage } from "@/lib/utils/api";
+
+return ErrorPage({
+  code: "NOT_FOUND",
+  description: "Diese Seite ist in deinem Universium leider nicht verfügbar.",
+  redirectUrl: "/",
+  redirectLabel: "Zurück auf Los",
+});
 ---
 
-<Base title={"404"}>
-  <section class="section">
-    <div class="container">
-      <div class="flex h-[40vh] items-center justify-center">
-        <div class="text-center text-gray-400">
-          <h1 class="mb-4 text-3xl">404</h1>
-          <p>Diese Seite ist in deinem Universium leider nicht verfügbar.</p>
-          <p>
-            Wechsle in ein anderes Universum oder gehe zurück auf <a
-              href="/"
-              class="underline">Los</a
-            >.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-</Base>
+<h1>404</h1>

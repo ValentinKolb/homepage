@@ -1,0 +1,138 @@
+---
+import Footer from "@/components/astro/Footer.astro";
+import Header from "@/components/astro/Header.astro";
+import TwSizeIndicator from "@/components/astro/TwSizeIndicator.astro";
+import config from "@/config/config";
+import { plainify } from "@/lib/utils/text";
+import { ClientRouter } from "astro:transitions";
+import "@/styles/global.css";
+import type { MenuItems } from "../../config/default-menu-items";
+
+// types for frontmatters
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+  fixedPage?: boolean;
+  menuOverwrites?: Partial<MenuItems>;
+  hideHeader?: boolean;
+}
+
+// distructure frontmatters
+const {
+  title,
+  meta_title,
+  description,
+  image,
+  canonical,
+  fixedPage,
+  menuOverwrites,
+  hideHeader,
+} = Astro.props;
+
+// get theme from cookie
+let theme = "light";
+if (Astro.cookies.has("theme")) {
+  theme = Astro.cookies.get("theme")?.value ?? theme;
+}
+---
+
+<html lang="de" class={`${theme}`}>
+  <head>
+    <!-- favicon -->
+    <link rel="shortcut icon" href={config.LOGO.FAVICON} />
+    <!-- theme meta -->
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#fff"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#000"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--rss feed-->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Valentin Kolb RSS Feed"
+      href={`${Astro.site}/rss.xml`}
+    />
+
+    <!-- responsive meta -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=5"
+    />
+
+    <!-- title -->
+    <title>
+      {plainify(meta_title ? meta_title : title ? title : config.APP_NAME)}
+    </title>
+
+    <!-- canonical url -->
+    {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
+
+    <!-- meta-description -->
+    <meta
+      name="description"
+      content={plainify(description ? description : config.META.DESCRIPTION)}
+    />
+
+    <!-- author from config -->
+    <meta name="author" content={config.META.AUTHOR} />
+
+    <!-- og-title -->
+    <meta
+      property="og:title"
+      content={plainify(
+        meta_title ? meta_title : title ? title : config.APP_NAME,
+      )}
+    />
+
+    <!-- og-description -->
+    <meta
+      property="og:description"
+      content={plainify(description ? description : config.META.DESCRIPTION)}
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content={`${config.BASE_URL}/${Astro.url.pathname.replace("/", "")}`}
+    />
+
+    <!-- og-image -->
+    <meta
+      property="og:image"
+      content={`${config.BASE_URL}${image ? image : config.LOGO.SRC}`}
+    />
+
+    <!-- client router for view transistions -->
+    <ClientRouter />
+  </head>
+  <body
+    class={`${fixedPage && "max-h-[100vh] overflow-hidden "}
+    bg-white dark:bg-black text-black dark:text-white antialiased
+
+
+    flex flex-col min-h-[100vh]`}
+  >
+    <TwSizeIndicator />
+    {hideHeader ? null : <Header menuOverwrites={menuOverwrites} />}
+    <main id="main-content" class="min-h-[60vh] flex flex-col grow">
+      <slot>
+        {/* fallback content */}
+        <div class="h-full w-full flex-1"></div>
+      </slot>
+    </main>
+    <Footer menuOverwrites={menuOverwrites} />
+  </body>
+</html>

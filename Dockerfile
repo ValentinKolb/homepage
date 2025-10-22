@@ -43,9 +43,14 @@ ENV PORT=4321
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
+# Copy migrations source (Bun can run TypeScript directly)
+COPY --from=builder /app/src/migrations ./src/migrations
+# Copy entrypoint script
+COPY scripts/entrypoint.sh ./scripts/entrypoint.sh
+RUN chmod +x ./scripts/entrypoint.sh
 
 # Expose the port
 EXPOSE 4321
 
-# Start the application
-CMD ["bun", "run", "./dist/server/entry.mjs"]
+# Start the application with migrations
+ENTRYPOINT ["./scripts/entrypoint.sh"]

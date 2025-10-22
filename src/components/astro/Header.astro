@@ -1,0 +1,192 @@
+---
+import { Image } from "astro:assets";
+import defaultMenu, { type MenuItems } from "../../config/default-menu-items";
+import config from "@/config/config";
+import { markdownToHtml } from "@/lib/utils/markdown";
+import ThemeToggle from "@/components/astro/ThemeToggle.astro";
+import AccountIndicator from "./AccountIndicator.astro";
+
+// types for frontmatters
+export interface Props {
+  menuOverwrites?: Partial<MenuItems>;
+}
+
+// distructure frontmatters
+const { menuOverwrites } = Astro.props;
+
+// override menu items with menuOverwrites
+const menu = { ...defaultMenu, ...menuOverwrites };
+---
+
+<header class="print:hidden">
+  <nav class="mx-auto flex items-center justify-between px-4 py-2 md:py-5">
+    {/* logo */}
+    <a href="/" class="flex items-center">
+      <Image
+        width={150}
+        height={150}
+        alt={config.LOGO.ALT}
+        src={config.LOGO.SRC}
+        class="h-auto w-8 md:w-12"
+      />
+    </a>
+
+    {/* desktop nav */}
+    <div class="hidden gap-2 md:flex p-2">
+      {
+        menu.nav.map((nav) => (
+        nav.iconClass ?
+        <a
+          class="text-md font-semibold px-2 text-center group-hover/dropdown:text-gray-400 cursor-pointer"
+           href={nav.url}
+        >
+          <i aria-label={nav.name} class={`ti ${nav.iconClass}`} />
+        </a> :
+          <a
+            href={nav.url}
+            class="text-md font-semibold px-2 text-center hover:text-gray-400"
+          >
+            {nav.name}
+          </a>
+        ))
+      }
+
+      {/* dropdown */}
+      <div class={`group/dropdown relative ${!menu.tools.length && 'hidden'}`}>
+        <a
+          class="text-md font-semibold px-2 text-center group-hover/dropdown:text-gray-400"
+        >
+          {
+            menuOverwrites?.tools ? (
+              <>
+                <i
+                  aria-label="settings"
+                  class="ti ti-settings group-hover/dropdown:hidden"
+                />
+                <i
+                  aria-label="dropdown"
+                  class="ti ti-chevron-down hidden group-hover/dropdown:inline"
+                />
+              </>
+            ) : (
+              "Tools"
+            )
+          }
+        </a>
+
+        {/* dropdown content */}
+            <div class="absolute z-10 hidden group-hover/dropdown:block right-0">
+              <div class="bg-white dark:bg-black/30 backdrop-blur-md p-2 rounded-lg w-[300px] ring dark:ring-gray-800 ring-gray-300 ring-inset mt-3 -ml-[250px]">
+                <div class="flex flex-col gap-2">
+                  {menu.tools.map((t) => {
+                    if (t === "Divider") {
+                      return <hr class="w-full border-gray-200 rounded-full" />;
+                    }
+                    return (
+                      <a href={t.url} class="p-2 cursor-pointer group/link">
+                        <div class="text-sm mb-1">
+                          {t.iconClass && <i class={`ti ${t.iconClass}`} />}
+                          <span class="font-semibold group-hover/link:underline">{t.name}</span>
+                        </div>
+                        <div class="text-xs text-gray-400">{t.description}</div>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+      </div>
+    </div>
+
+    {/* mobil nav */}
+    <label
+      class="md:hidden relative z-40 cursor-pointer p-1"
+      html-for="mobile-menu"
+    >
+      <input class="peer !hidden" type="checkbox" id="mobile-menu" />
+
+      <i class="ti ti-menu-2 text-xl text-black dark:text-white"></i>
+
+      {/* bg overlay */}
+      <div class="fixed inset-0 z-30 hidden bg-black/50 backdrop-blur-xs peer-checked:block" />
+
+      {/* offcanvas menu */}
+      <div
+        class="fixed top-0 right-0 z-40 h-full w-4/5 translate-x-full dark:bg-black bg-white shadow-2xl transition-transform duration-200 peer-checked:translate-x-0"
+      >
+        <menu class="flex flex-col gap-2 p-2 h-full">
+          {
+            menu.nav.map((nav) => (
+              <a
+                href={nav.url}
+                class="p-2 text-black dark:text-white hover:scale-[1.01] transition-all duration-200 font-bold rounded-lg "
+              >
+                {nav.name}
+              </a>
+            ))
+          }
+
+          <div class="relative flex items-center mt-auto">
+            {
+              menu.tools.length > 0 &&
+              <hr class="w-full border-gray-400 rounded-full" />
+              <span
+                class="absolute left-1/2 -translate-x-1/2 bg-white dark:bg-black px-4 text-xs text-gray-400"
+              >
+                {menuOverwrites?.tools ? "Aktionen" : "Tools"}
+              </span>
+            }
+          </div>
+          {
+            menu.tools && menu.tools.map((tool) => {
+              if (tool === "Divider") {
+                return <hr class="w-full border-gray-200 rounded-full" />;
+              }
+              return (
+                <a href={tool.url} class="p-2 cursor-pointer group/link">
+                  <div class="text-sm font-semibold mb-1 group-hover/link:underline">
+                    {tool.name}
+                  </div>
+                  <div class="text-xs text-gray-400">{tool.description}</div>
+                </a>
+              );
+            })
+          }
+          <div>
+            <hr class="w-full border-gray-200 rounded-full" />
+            <ul
+              class="flex justify-center p-2 text-xs text-gray-400 gap-4 flex-wrap"
+            >
+              {/* Footer Menu */}
+              {
+                menu.footer.map((menu) => (
+                  <li>
+                    <a
+                      href={menu.url}
+                      class="hover-text transition hover:underline"
+                    >
+                      {menu.name}
+                    </a>
+                  </li>
+                ))
+              }
+
+              {/* Theme Toggle */}
+              <li>
+                <ThemeToggle class="hover-text transition hover:underline" />
+              </li>
+              <li>
+                <AccountIndicator class="hover-text transition hover:underline" />
+              </li>
+
+              {/* Copyright */}
+              <li>
+                <span set:html={markdownToHtml(config.COPYRIGHT)} />
+              </li>
+            </ul>
+          </div>
+        </menu>
+      </div>
+    </label>
+  </nav>
+</header>

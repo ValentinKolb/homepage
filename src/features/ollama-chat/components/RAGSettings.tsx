@@ -1,4 +1,4 @@
-import createModal from "@/components/core/Modal";
+import createModal from "@/components/solidjs/Modal";
 import { createResource, For, Show, createSignal } from "solid-js";
 import { db, type Chat } from "../utils/db";
 import { fetchModels, ModelDropdown } from "./EditChatModal";

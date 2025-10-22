@@ -1,0 +1,166 @@
+---
+import { actions } from "astro:actions";
+import Base from "@/components/astro/Base.astro";
+import { parsePagination } from "@/lib/utils/api";
+import SearchBar from "@/components/solidjs/SearchBar";
+import ItemView from "./_lib/item-viex";
+import { ErrorPage } from "@/lib/utils/api";
+import Navigation from "./_navigation.astro";
+import PaginationControls from "@/components/astro/PaginationControls.astro";
+
+const { shopId } = Astro.params;
+if (!shopId) {
+  return ErrorPage({
+    code: "BAD_REQUEST",
+  });
+}
+
+// Read URL state on the server
+const search = Astro.url.searchParams.get("search") ?? "";
+const activeTag = Astro.url.searchParams.get("tag") ?? undefined;
+
+const pagination = parsePagination(Astro.request, { perPage: 100, page: 1 });
+
+// Get auth - optional for public kiosk
+const auth = Astro.locals.auth;
+
+// Get shop
+const { data: shop, error: shopErr } = await Astro.callAction(
+  actions.shop.get,
+  { shopId },
+);
+if (shopErr) {
+  console.error(shopErr);
+  return ErrorPage({
+    error: shopErr,
+    description: "Den Kiosk gibt's leider nicht. Bitte überprüfe die URL.",
+  });
+}
+
+// Get tags
+const { data: tags, error: tagsErr } = await Astro.callAction(
+  actions.shop.items.tags,
+  { shopId },
+);
+if (tagsErr) {
+  console.error(tagsErr);
+  return ErrorPage({
+    error: tagsErr,
+    description: "Die Tags konnten nicht geladen werden.",
+  });
+}
+
+/**
+ * Generate a URL for a tag. If the tag is already active, remove it from the URL.
+ */
+const tagUrl = (tag: string) => {
+  const url = new URL(Astro.url);
+  activeTag !== tag
+    ? url.searchParams.set("tag", tag)
+    : url.searchParams.delete("tag");
+  return url.toString();
+};
+
+// Get items
+const { data: items, error: itemsErr } = await Astro.callAction(
+  actions.shop.items.list,
+  {
+    shopId,
+    search,
+    tag: activeTag,
+    ...pagination,
+  },
+);
+if (itemsErr) {
+  return ErrorPage({
+    error: itemsErr,
+    description: "Die Artikel konnten nicht geladen werden.",
+  });
+}
+
+// Get all users for guest checkout
+let users = [] as Array<{ userId: string; username: string }>;
+if (auth === undefined) {
+  const { data: usersData, error: usersErr } = await Astro.callAction(
+    actions.shop.users.list,
+    { shopId },
+  );
+  if (usersErr) return ErrorPage({ error: usersErr });
+  users = usersData.data.map((user) => ({
+    userId: user.userId,
+    username: user.username,
+  }));
+}
+---
+
+<Base title={shop.name} hideHeader={auth === undefined}>
+  <div
+    class="container flex flex-col gap-4 mx-auto max-w-6xl px-4 py-4 lg:py-12"
+  >
+    <Navigation shop={shop} />
+
+    <!-- Search panel and tags -->
+    <SearchBar client:load search={search} transition:name="search-panel" />
+
+    {
+      tags.length !== 0 && (
+        <div class="flex flex-row gap-2 flex-wrap">
+          {tags.map((tag) => (
+            <a
+              aria-label={`Filter by ${tag}`}
+              href={tagUrl(tag)}
+              class={`${tag === activeTag && "text-teal-500 font-bold"} group flex-nowrap text-nowrap flex flex-row gap-1 items-center text-sm cursor-pointer dark:bg-gray-800 dark:text-gray-300 text-gray-500 bg-gray-100 rounded-full px-3 py-1 hover:bg-teal-500 hover:text-white`}
+            >
+              {tag}
+              {tag === activeTag && (
+                <i class="ti ti-x opacity-50 group-hover:opacity-100" />
+              )}
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      items.total !== 0 ? (
+        search && <p class="text-dimmed text-xs">Ergebnisse für "{search}"</p>
+      ) : (
+        <>
+          <div class="text-center py-12 flex flex-col gap-6 text-dimmed">
+            <i class="ti ti-box-off text-xl" />
+            <p class="text-sm">
+              Keine Artikel
+              {search ? ' für "' + search + '" gefunden' : " vorhanden"}
+            </p>
+          </div>
+        </>
+      )
+    }
+
+    <!-- items list -->
+    <ul
+      class={`grid grid-cols-1 gap-2 sm:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 divide-y-2 sm:divide-y-0 dark:divide-y-0 divide-gray-100`}
+    >
+      {
+        items.data.map((i) => (
+          <li transition:name={`item-${i.id}`} class="pb-2 sm:pb-0">
+            <ItemView
+              client:load
+              item={i}
+              userBalance={shop.userBalance}
+              isGuest={auth === undefined}
+              users={users}
+            />
+          </li>
+        ))
+      }
+    </ul>
+
+    {/* Pagination */}
+    <PaginationControls
+      currentPage={items.page}
+      totalItems={items.total}
+      perPage={items.perPage}
+    />
+  </div>
+</Base>

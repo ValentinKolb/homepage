@@ -41,6 +41,13 @@ export interface CreateMutationResult<T, V, C = unknown> {
  */
 export interface MutationOptions<T, V, C = unknown> {
   /**
+   * The initial value of the mutation.
+   * If not provided, the mutation will start with an undefined value.
+   * If provided, the inital value will be returned as the data.
+   */
+  initialData?: T;
+
+  /**
    * The mutation function.
    * It receives the mutation variables and a combined context.
    * **Note:** The context will always include an `abortSignal` property.
@@ -108,7 +115,7 @@ export function createMutation<T, V, C = unknown>(
   options: MutationOptions<T, V, C>,
 ): CreateMutationResult<T, V, C> {
   // Create signals for data, error, and loading state.
-  const [data, setData] = createSignal<T | null>(null);
+  const [data, setData] = createSignal<T | null>(options.initialData ?? null);
   const [error, setError] = createSignal<Error | null>(null);
   const [loading, setLoading] = createSignal<boolean>(false);
 

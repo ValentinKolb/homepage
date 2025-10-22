@@ -11,6 +11,7 @@ A lightweight, type-safe mutation library for SolidJS, inspired by TanStack Quer
 - No context providers or complex setup required
 - Supports retry functionality
 - Lifecycle hooks for fine-grained control
+- Optional initial value for the mutation state
 
 ## Installation
 

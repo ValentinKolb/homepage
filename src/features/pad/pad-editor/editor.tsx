@@ -1,72 +1,34 @@
-import CopyButton from "@/components/core/CopyButton";
-import Tooltip from "@/components/core/Tooltip";
+import CopyButton from "@/components/solidjs/CopyButton";
+import Tooltip from "@/components/solidjs/Tooltip";
 import { downloadFileFromContent } from "@/lib/client/files";
-import { findLanguageByCodeBlockName } from "@/lib/utils/markdown-util";
-import { autocompletion, closeBrackets } from "@codemirror/autocomplete";
-import { indentWithTab } from "@codemirror/commands";
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { bracketMatching } from "@codemirror/language";
-import { EditorView, keymap, lineNumbers } from "@codemirror/view";
-import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
-import { basicSetup } from "codemirror";
+import { createTheme } from "@/lib/solidjs/color-theme";
+import { autocompletion } from "@codemirror/autocomplete";
+import { foldGutter } from "@codemirror/language";
+import { lineNumbers } from "@codemirror/view";
 import { createCodeMirror } from "solid-codemirror";
-import { For, Show } from "solid-js";
+import { For, Show, createEffect, onCleanup, onMount } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
-import {
-  createPadSettings,
-  createTheme,
-  padTitle,
-  type MarkdownPad,
-} from "../util";
+import { padTitle, type MarkdownPad } from "../util";
 import { createPadManager } from "./collab";
+import howtoText from "./howto.md?raw";
 
-/**
- * Custom theme configuration for CodeMirror editor.
- * Provides consistent styling across light/dark themes with transparent backgrounds
- * and custom cursor styling for collaborative editing.
- */
-const themeOverwrites = EditorView.theme({
-  "&": {
-    height: "100%",
-    overflow: "hidden",
-    flex: 1,
-  },
-  "&.cm-editor.cm-focused": {
-    outline: "none",
-  },
-  ".dark &.cm-editor.cm-focused": {
-    outline: "none",
-  },
-  ".cm-scroller": { overflow: "auto", minHeight: "100%" },
-  ".cm-gutters": {
-    backgroundColor: "transparent",
-    border: "none",
-  },
-  ".cm-gutterElement": {
-    color: "oklch(55.1% 0.027 264.364)",
-  },
-  ".cm-foldPlaceholder": {
-    backgroundColor: "transparent",
-    border: "none",
-  },
-  "&:not(.cm-focused) .cm-activeLine": {
-    backgroundColor: "transparent",
-  },
-  "&:not(.cm-focused) .cm-activeLineGutter": {
-    backgroundColor: "transparent",
-  },
-  ".cm-cursor, .loro-cursor": {
-    borderLeftWidth: "2px",
-  },
-  ".loro-cursor::before": {
-    background: "oklch(92.8% 0.006 264.531)",
-    borderRadius: "var(--radius-md)",
-  },
-  ".cm-cursor-primary": {
-    borderLeftWidth: "2px",
-    borderLeftColor: "oklch(62.3% 0.214 259.815)",
-  },
-});
+import {
+  markdownExtension,
+  basicExtensions,
+  codeExtension,
+  customDarkInit,
+  customLightInit,
+  listsExtension,
+  imageExtension,
+  katexExtension,
+  mermaidExtension,
+  searchTheme,
+  tablesExtension,
+  emojiExtension,
+  infoBlocksExtension,
+  linksExtension,
+} from "./extentions";
+import { prompts } from "@/lib/client/prompt-lib";
 
 /**
  * Collaborative markdown editor with real-time synchronization.
@@ -84,97 +46,214 @@ const themeOverwrites = EditorView.theme({
 const Editor = ({
   pad,
   setPad,
+  howto,
+  username,
+  localData,
 }: {
   pad: MarkdownPad;
   setPad: SetStoreFunction<MarkdownPad>;
+  howto: boolean;
+  username: string | undefined;
+  localData?: Uint8Array;
 }) => {
   const colorTheme = createTheme();
-  const [settings, setSettings] = createPadSettings();
 
   // Generate filename from pad title for downloads
-  const filename = () => `${padTitle(pad).replace(/\s+/g, "-")}.md`;
+  const filename = () =>
+    howto ? "HowTo" : `${padTitle(pad).replace(/\s+/g, "-")}.md`;
 
-  const { ref: editorRef, createExtension } = createCodeMirror();
+  const {
+    ref: editorRef,
+    createExtension,
+    editorView,
+  } = createCodeMirror({
+    value: howto ? howtoText : undefined,
+  });
+
+  // Auto-focus editor when it's ready
+  createEffect(() => {
+    const view = editorView();
+    if (view && !view.hasFocus && pad.content.length === 0) {
+      view.focus();
+    }
+  });
 
   // Setup collaborative editing with real-time sync and user presence
-  const { users, loroExtention } = createPadManager(pad, setPad);
+  const { users, loroExtention } = createPadManager({
+    pad,
+    setPad,
+    localData,
+    username,
+  });
 
-  // Enable collaborative editing with Loro CRDT
-  createExtension(loroExtention());
+  // Enable collaborative editing with Loro CRDT (not for howto page)
+  createExtension(() => (howto ? [] : loroExtention()));
 
   // Configure core editor functionality
-  createExtension(basicSetup);
-  createExtension(keymap.of([indentWithTab]));
-  createExtension(lineNumbers());
-  createExtension(bracketMatching());
-  createExtension(closeBrackets());
-  createExtension(EditorView.lineWrapping);
+  createExtension(basicExtensions());
   createExtension(autocompletion());
 
   // Enable markdown syntax highlighting with code block support
-  createExtension(
-    markdown({
-      base: markdownLanguage,
-      codeLanguages: findLanguageByCodeBlockName,
-    }),
+  createExtension(markdownExtension());
+
+  // Custom extensions
+  createExtension(searchTheme());
+
+  // Enable code execution
+  createExtension(() => (pad?.enableCodeExecution ? codeExtension() : []));
+
+  // Enable cuatom formatting extensions
+  createExtension(() => [
+    tablesExtension(),
+    katexExtension(),
+    mermaidExtension(),
+    emojiExtension(),
+    imageExtension(),
+    listsExtension(),
+    infoBlocksExtension(),
+    linksExtension(),
+  ]);
+
+  // Only show gutter if enabled
+  createExtension(() =>
+    pad?.enableGutter ? [lineNumbers(), foldGutter()] : [],
   );
 
   // Apply dynamic theming based on user preference
-  const themeSettings = { settings: { fontFamily: "monospace" } };
-  createExtension(themeOverwrites);
   createExtension(() =>
-    colorTheme() === "dark"
-      ? githubDarkInit(themeSettings)
-      : githubLightInit(themeSettings),
+    colorTheme() === "dark" ? customDarkInit() : customLightInit(),
   );
 
+  const handleSave = (e: KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+      e.preventDefault();
+      prompts.alert(
+        howto
+          ? "Das 'HowTo' Pad wird automatisch beim Reload der Seite zurückgesetzt. Alle anderen Pads werden automatisch gespeichert."
+          : "Das Pad wird automatisch alle fünf Sekunden gespeichert. Um den Inhalt herunterzuladen, nutze den Download-Button in der unteren rechten Ecke.",
+      );
+    }
+  };
+  onMount(() => document.addEventListener("keydown", handleSave));
+  onCleanup(() => document.removeEventListener("keydown", handleSave));
+
   return (
-    <div
-      class={`m-1 flex flex-1 flex-col overflow-hidden rounded border border-gray-200 dark:border-gray-700 print:hidden`}
-    >
-      <div class="flex-1 overflow-hidden" ref={editorRef} />
-      <div class="flex w-full items-center gap-2 border-t border-gray-200 p-1 font-mono text-xs dark:border-gray-700">
+    <div class={`flex h-full w-full flex-1 flex-col overflow-hidden rounded`}>
+      <div class="flex flex-1 overflow-hidden" ref={editorRef} />
+      <div class="m-1 mt-0 flex items-center gap-2 p-1 font-mono text-xs">
         <span class="text-dimmed min-w-0 flex-1 truncate">{filename()}</span>
 
-        <Show when={users().length > 1}>
-          <div class="group">
+        <Show when={!howto}>
+          <div class="inline-flex items-center gap-1 rounded px-1 ring ring-gray-200 dark:ring-gray-700">
             <Tooltip
               label={
                 <div class="flex flex-col gap-1">
+                  <p class="text-dimmed text-xs">
+                    <i class="ti ti-lock mr-1" />
+                    Das Pad ist Ende zu Ende verschlüsselt!
+                  </p>
+                  <hr class="border-gray-700" />
+                  <p>
+                    <i class="ti ti-users mr-1"></i> Online:
+                  </p>
                   <ul>
-                    <For each={users()}>
+                    <For each={users().slice(0, 5)}>
                       {(user) => (
-                        <li class="before:mr-1 before:content-['•']">{user}</li>
+                        <li class="flex items-center before:mr-1 before:flex-shrink-0 before:content-['•']">
+                          <span class="min-w-0 truncate">{user.name}</span>
+                          {user.self && (
+                            <span class="text-dimmed ml-1 flex-shrink-0">
+                              (Du)
+                            </span>
+                          )}
+                        </li>
                       )}
                     </For>
+                    {users().length > 5 && (
+                      <li class="before:mr-1 before:content-['•']">
+                        +{users().length - 5} weitere
+                      </li>
+                    )}
                   </ul>
-                  <p class="text-dimmed text-xs italic">
-                    Klicken um Namen zu ändern
-                  </p>
+                  {!username && (
+                    <>
+                      <hr class="border-gray-700" />
+                      <p class="text-dimmed text-xs italic">
+                        Melde dich an um deinen Namen zu ändern
+                      </p>
+                    </>
+                  )}
                 </div>
               }
             >
-              <button
-                class="text-dimmed relative inline-flex items-center gap-1"
-                onClick={() => {
-                  const newName = prompt(
-                    "Anzeigename\nDiesen Namen sehen andere Personen wenn du mit ihnen zusammenarbeitest",
-                    settings.name,
-                  );
-                  newName && setSettings({ name: newName });
-                }}
+              <div
+                class={`group text-dimmed relative inline-flex items-center gap-1`}
               >
-                {/* Icons change on hover to indicate edit functionality */}
-                <i class="ti ti-users group-hover:hidden"></i>
+                <span class="text-xs">{users().length}</span>
+                <i
+                  class={`ti hover:text-blue-500 ${users().length > 1 ? "ti-users" : "ti-user"}`}
+                />
+              </div>
+            </Tooltip>
 
-                <i class="ti ti-user-edit hidden text-blue-500 group-hover:block"></i>
-                {users().length}
-              </button>
+            <Tooltip label="Teilen">
+              <CopyButton>
+                {({ copy, wasCopied }) => (
+                  <button
+                    aria-label="Copy to Clipboard"
+                    onClick={() =>
+                      copy(window.location.href).then(() =>
+                        prompts.alert(
+                          "Der Link wurde in die Zwischenablage kopiert.",
+                        ),
+                      )
+                    }
+                  >
+                    <i class={`ti ${wasCopied() ? "ti-check" : "ti-send"}`} />
+                  </button>
+                )}
+              </CopyButton>
             </Tooltip>
           </div>
         </Show>
 
-        <Tooltip label="Kopieren">
+        <Tooltip
+          label={`Codeausführung ${pad?.enableCodeExecution ? "deaktivieren" : "aktivieren"}`}
+        >
+          <button
+            aria-label="Toggle code execution activation"
+            onClick={() =>
+              setPad({
+                ...pad,
+                enableCodeExecution: !pad?.enableCodeExecution,
+              })
+            }
+          >
+            <i
+              class={`ti ti-player-play ${pad?.enableCodeExecution ? "" : "opacity-40"}`}
+            />
+          </button>
+        </Tooltip>
+
+        <Tooltip
+          label={`Zeilenzahlen ${pad?.enableGutter ? "ausblenden" : "anzeigen"}`}
+        >
+          <button
+            aria-label="Show line numbers"
+            onClick={() =>
+              setPad({
+                ...pad,
+                enableGutter: !pad?.enableGutter,
+              })
+            }
+          >
+            <i
+              class={`ti ti-list-numbers ${pad?.enableGutter ? "" : "opacity-40"}`}
+            />
+          </button>
+        </Tooltip>
+
+        <Tooltip label="Inhalt kopieren">
           <CopyButton>
             {({ copy, wasCopied }) => (
               <button
@@ -189,7 +268,7 @@ const Editor = ({
         <Tooltip
           label={
             <span>
-              Als <code>.md</code> herunterladen
+              Inhalt als <code>.md</code> Datei herunterladen
             </span>
           }
         >

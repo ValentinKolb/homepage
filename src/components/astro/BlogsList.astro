@@ -1,0 +1,110 @@
+---
+import { dateFormat } from "@/lib/utils/dates";
+import { humanize, plainify, slugify } from "@/lib/utils/text";
+
+const { blogs } = Astro.props;
+
+// Group blogs by year and month
+const groupedBlogs =
+  blogs?.reduce((acc: any, post: any) => {
+    const date = new Date(post.data.date);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    if (!acc[year]) {
+      acc[year] = {};
+    }
+
+    if (!acc[year][month]) {
+      acc[year][month] = [];
+    }
+
+    acc[year][month].push(post);
+    return acc;
+  }, {}) || {};
+
+// Sort years and months in descending order
+const sortedYears = Object.keys(groupedBlogs).sort(
+  (a, b) => Number(b) - Number(a),
+);
+const monthNames = [
+  "Januar",
+  "Februar",
+  "März",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Dezember",
+];
+---
+
+{
+  blogs?.length > 0 ? (
+    <div class="space-y-8">
+      {sortedYears.map((year) => (
+        <div class="blog-year">
+          <h2 class="text-2xl font-bold mb-4 border-b pb-2">{year}</h2>
+
+          {Object.keys(groupedBlogs[year])
+            .sort((a, b) => Number(b) - Number(a))
+            .map((month) => (
+              <div class="blog-month mb-6">
+                <h3 class="text-xl font-medium text-gray-700 mb-3">
+                  {monthNames[Number(month)]}
+                </h3>
+
+                <ul class="space-y-3">
+                  {groupedBlogs[year][month].map((post: any) => (
+                    <li class="blog-post pb-3 mb-1">
+                      <h4 class="text-lg font-medium">
+                        <a
+                          href={`/blog/${post.slug}`}
+                          class="hover:text-primary transition-colors cursor-pointer"
+                        >
+                          {post.data.title}
+                        </a>
+                      </h4>
+
+                      <div class="text-sm text-gray-500 mt-2">
+                        <span class="flex items-center mr-4">
+                          <i class="ti ti-calendar-month mr-1 h-4 w-4" />
+                          {dateFormat(post.data.date)}
+                        </span>
+
+                        <span class="flex items-center flex-wrap mt-2">
+                          <i class="ti ti-hash mr-1 h-4 w-4" />
+                          {post.data.tags.map((tag: string, index: number) => (
+                            <span>
+                              <a
+                                href={`/blog/t/${slugify(tag)}`}
+                                class="hover:text-primary hover:underline cursor-pointer"
+                              >
+                                {humanize(tag)}
+                              </a>
+                              {index < post.data.tags.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </span>
+                      </div>
+
+                      <p class="text-gray-600 text-sm mt-2">
+                        {post.data.description ??
+                          plainify(`${post.body?.slice(0, Number(100))} ...`)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p class="text-center">Keine Blogs gefunden :(</p>
+  )
+}

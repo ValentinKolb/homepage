@@ -1,6 +1,8 @@
 ---
 /**
- * Shuffle function for random ordering
+ * Shuffle an array using Fisher-Yates algorithm
+ * @param array - Array to shuffle
+ * @returns New shuffled array (original is not modified)
  */
 export function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];

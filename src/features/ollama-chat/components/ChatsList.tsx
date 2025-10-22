@@ -1,4 +1,3 @@
-import Loader from "@/components/core/Loader";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 import { createAutoAnimate } from "@formkit/auto-animate/solid";
 import { For, Show } from "solid-js";
@@ -21,7 +20,7 @@ export default function ChatsList() {
   };
 
   return (
-    <Show when={chats} fallback={<Loader />}>
+    <Show when={chats} fallback={<i class="ti ti-loader animate-spin" />}>
       <ul
         ref={animationParent}
         class="no-scrollbar flex h-full flex-col gap-1 overflow-y-auto"

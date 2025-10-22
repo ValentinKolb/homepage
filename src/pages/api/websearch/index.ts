@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({
           error: "Validation error",
-          details: validationResult.error.format(),
+          details: z.treeifyError(validationResult.error),
         } as WebsearchAPIResponse),
         {
           status: 400,

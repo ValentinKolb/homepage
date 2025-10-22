@@ -1,4 +1,4 @@
-import Tooltip from "@/components/core/Tooltip";
+import Tooltip from "@/components/solidjs/Tooltip";
 import { createClipboard } from "@/lib/solidjs/clipboard";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 import convert from "convert";
@@ -7,7 +7,7 @@ import { db, type Chat, type ChatMessage } from "../utils/db";
 import useEditChatModal from "./EditChatModal";
 import { createChatcompletionMutation } from "../utils/ai";
 import useBase64ImageSelect from "./ImageSelectBtn";
-import MarkdownPreview from "@/components/core/MarkdownPreview";
+import MarkdownPreview from "@/components/solidjs/MarkdownPreview";
 import useRAGSettings from "./RAGSettings";
 
 // how many digits to show after the comma

@@ -1,250 +1,349 @@
 # HowTo
 
-**Pads** sind ein **Echtzeit-Kollaborationstool** für Markdown-Dokumente. Du kannst gemeinsam mit anderen Personen Notizen schreiben, Daten analysieren und Code ausführen - alles in einem einzigen, geteilten Dokument.
+:::info
+Hinweis: Änderungen in diesem **HowTo** Pad werden nicht gespeichert.
+:::
 
-- **Echtzeit-Kollaboration** ohne Anmeldung
-- **Markdown-Editor** mit Live-Vorschau
-- **Code-Ausführung** für Python, JavaScript und SQL
-- **Datenanalyse** mit CSV/Excel-Import
-- **Lokale Datenspeicherung** - alle Änderungen werden local bei dir gespeichert. Der Server speichert nichts!
+:::note
+Willkommen bei **Pad**! Du arbeitest hier mit einem erweiterten Markdown-Editor, der deine Texte intelligent formatiert und Code ausführen kann. Deine Pads werden automatisch verschlüsselt auf dem Server gespeichert und Änderungen können in Echtzeit mit anderen geteilt werden.
+:::
 
-Teile einfach den Link zu deinem Pad und arbeitet sofort zusammen!
+## Markdown Formatierung
 
-### Ansichtsmodi
+:::info
+Markdown ist eine einfache Textformatierung, die automatisch in schöne Darstellung umgewandelt wird.
+:::
 
-Du kannst zwischen drei verschiedenen Ansichten wechseln:
+**Textformatierung:**
+- `**fett**` -> **fett**
+- `*kursiv*` -> *kursiv*  
+- `~~durchgestrichen~~` -> ~~durchgestrichen~~
+- `` `Code` `` -> `Code`
 
-- **Editor**: Nur der Markdown-Editor
-- **Split**: Editor und Vorschau nebeneinander
-- **Vorschau**: Nur die gerenderte Ausgabe (Achtung ist Kollaboration nicht aktiv)
-
-## Markdown-Syntax
-
-Pads verwenden **Standard-Markdown** mit erweiterten Features für Mathematik und Code-Ausführung.
-
-### Grundlegende Formatierung
-
-**Text-Formatierung:**
-```markdown
-**Fettschrift** oder __Fettschrift__
-*Kursiv* oder _Kursiv_
-~~Durchgestrichen~~
-`Inline-Code`
-```
-
-**Überschriften:**
-```markdown
-# Überschrift 1
-## Überschrift 2
-### Überschrift 3
-```
+**Überschriften:** `# H1`, `## H2`, `### H3`
 
 **Listen:**
-```markdown
-- Ungeordnete Liste
-- Zweiter Punkt
-  - Verschachtelt
+- `- Punkt` für ungeordnete Listen
+- `1. Punkt` für nummerierte Listen
+- `- [ ] Todo` für Checkboxen
 
-1. Geordnete Liste
-2. Zweiter Punkt
-3. Dritter Punkt
-```
+**Links & Bilder:**
+- `[Text](https://url.com)` -> [Text](https://url.com)
+- `![Alt-Text](bild-url.jpg)` für Bilder
 
-**Links und Bilder:**
-```markdown
-[Linktext](https://example.com)
-![Bildbeschreibung](https://example.com/bild.jpg)
-```
+**Weitere Features:**
+- `> Zitat` für Blockquotes
+- `---` für horizontale Linien
+- `:emoji:` -> 😊 (z.B. `:smile:`, `:heart:`, `:rocket:`)
+- `` ```sprache `` für Code-Blöcke
+
+## Intelligente Blöcke
+
+Pad rendert verschiedene Markdown-Elemente automatisch zu interaktiven Komponenten. Klicke einfach darauf, um zwischen Ansicht und Bearbeitung zu wechseln.
+
+:::info
+**Tipp:** Klicke auf formatierte Elemente wie diese Info-Box, Tabellen oder Formeln, um sie zu bearbeiten!
+:::
+
+### Info-Blöcke
+
+:::note
+**Note** ist nützlich wenn du etwas einfach besonders hervorheben möchtest.
+:::
+
+:::info
+**Info** Ergibt blaube Boxen für hilfreiche Informationen
+:::
+
+:::success
+**Erfolg!** Diese grüne Box eignet sich für positive Meldungen.
+:::
+
+:::warning
+**Achtung:** Gelbe Boxen für wichtige Hinweise.
+:::
+
+:::danger
+**Gefahr:** Rote Boxen für kritische Warnungen.
+:::
 
 ### Tabellen
 
-Erstelle Tabellen mit der Standard-Markdown-Syntax:
+| Produkt | Preis | Lager |
+|---------|-------|-------|
+| Laptop | 899€ | 12 |
+| Maus | 29€ | 45 |
+| Tastatur | 79€ | 23 |
 
-```markdown
-| Spalte 1 | Spalte 2 | Spalte 3 |
-|----------|----------|----------|
-| Zeile 1  | Daten    | Mehr     |
-| Zeile 2  | Daten    | Mehr     |
-```
+### Mathematische Formeln
 
-### Code-Blöcke
+Die Gaußsche Normalverteilung: $f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}$
 
-Für Code-Highlighting verwende dreifache Backticks:
+Oder als Block für komplexere Formeln:
 
-````markdown
-```javascript
-function helloWorld() {
-    console.log("Hello World!");
-}
-```
-````
-
-### Mathematik mit KaTeX
-
-**Inline-Mathematik:**
-```markdown
-Die Formel $E = mc^2$ ist berühmt.
-```
-
-**Block-Mathematik:**
-```markdown
 $$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
-```
-
-**Beispiele für komplexere Formeln:**
-
-Matrizen:
-```markdown
-$$
-\begin{pmatrix}
-a & b \\
-c & d
-\end{pmatrix}
-$$
-```
-
-Summen und Produkte:
-```markdown
-$$
-\sum_{i=1}^n x_i = x_1 + x_2 + \cdots + x_n
-$$
-```
-
-### Diagramme mit Mermaid
-
-Erstelle interaktive Diagramme direkt im Markdown mit `mermaid`-Code-Blöcken:
-
-**Flowchart:**
-```mermaid
-graph TD
-    A[Start] --> B{Entscheidung}
-    B -->|Ja| C[Option 1]
-    B -->|Nein| D[Option 2]
-    C --> E[Ende]
-    D --> E
-```
-
-**Gantt Chart:**
-```mermaid
-gantt
-    title Projektplan
-    dateFormat  YYYY-MM-DD
-    section Planung
-    Konzept         :done, konzept, 2024-01-01, 2024-01-15
-    Design          :active, design, 2024-01-10, 2024-01-25
-    section Entwicklung
-    Backend         :backend, 2024-01-20, 2024-02-10
-    Frontend        :frontend, 2024-01-25, 2024-02-15
-```
-
-
-### Blockquotes
-
-```markdown
-> Dies ist ein Zitat.
-> Es kann mehrere Zeilen haben.
-> 
-> > Verschachtelte Zitate sind auch möglich.
-```
 
 ### To-Do Listen
 
-```markdown
-- [ ] Unerledigte Aufgabe
-- [x] Erledigte Aufgabe
-- [ ] Noch eine Aufgabe
-  - [x] Unteraufgabe erledigt
-  - [ ] Unteraufgabe offen
+- [x] Markdown lernen
+- [x] Pad ausprobieren
+- [ ] Code ausführen
+- [ ] Daten analysieren
+
+### Bilder
+
+![](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2p2amcwMXl4M2F5NDdubjN5YWE3dTZseWttdDh3aXczeDNlcWsxbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/DvyLQztQwmyAM/giphy.gif)
+
+### Diagramme mit Mermaid
+
+:::info
+Bearbeiten den `mermaid` Codeblock um das Diagramm zu verändern.
+:::
+
+```mermaid
+graph LR
+    A[Daten laden] --> B[Verarbeiten]
+    B --> C{Korrekt?}
+    C -->|Ja| D[Speichern]
+    C -->|Nein| B
 ```
 
-## Kollaboration und Synchronisation
+## Code-Ausführung mit Kit API
 
-Sobald zwei Personen das gleiche Pad mit derselben `ID` öffnen, arbeiten sie automatisch kollaborativ zusammen. Um andere einzuladen, teilst du also einfach den Link des Pads. Alle Änderungen werden in Echtzeit zwischen den Teilnehmern synchronisiert.
+Das Pad kann JavaScript-Code direkt in deinem Browser ausführen. Die **Kit API** bietet dabei Werkzeuge für Datenverarbeitung, Dateien und mehr.
 
-### Datenmodell und Speicherung
-
-Das System basiert auf einem dezentralen Ansatz: Alle Updates werden nur lokal bei den Teilnehmern gespeichert. Der Server speichert keine Daten und dient ausschließlich als Relay für die Übertragung der Änderungen zwischen den Clients.
-
-Für die Echtzeit-Synchronisation müssen alle Teilnehmer gleichzeitig online sein. Offline-Arbeit ist jedoch möglich - beim nächsten gemeinsamen Online-Sein werden alle Änderungen automatisch und konfliktfrei zusammengeführt.
-
-## Code-Ausführung
-
-Das Pad bietet die Möglichkeit, Code direkt im Browser auszuführen. Hinweis: Die Ausgaben werden nur lokal angezeigt und nicht zwischen den Nutzern synchronisiert.
-
-### Python
-
-Python-Code wird über Pyodide im Browser ausgeführt. 
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
-plt.plot(x, y)
-plt.show()
-```
-
-Matplotlib-Plots werden automatisch als Bilder in der Ausgabe eingebettet und können bei Bedarf ausgeblendet werden.
-
-Das System unterstützt automatisch populäre Pakete wie numpy, pandas, matplotlib und requests. Weitere Pakete können über micropip nachinstalliert werden.
-
-```python
-import micropip
-await micropip.install("cowsay")
-
-import cowsay
-cowsay.cow("Hello micropip!")
-```
-
-### JavaScript
-
-JavaScript-Code wird direkt in der Browser-Umgebung ausgeführt. Sowohl synchroner als auch asynchroner Code wird unterstützt.
+### Erste Schritte
 
 ```javascript
-console.log("Hello World");
+// Nach dem Namen fragen
+const name = await kit.dialog.prompt("Wie heißt du?");
 
-// Async code works too
-const data = await fetch('https://httpbin.org/get');
-console.log(await data.json());
+// Ergebnis ausgeben
+console.log(`Hallo ${name}!`);
 ```
 
-### SQL und Datenanalyse
+### Dateien verarbeiten
 
-SQL-Code-Blöcke bieten eine vollständige SQLite-Umgebung mit erweiterten Funktionen für Datenimport und -export.
+```javascript
+// CSV von URL laden
+const file = await kit.file.fetch('/docs/example.csv');
+const data = await kit.sheet.fromCsv(file);
+
+// Erste 3 Zeilen anzeigen
+console.table(data.slice(0, 3));
+
+// Ergebnis als CSV speichern
+const csv = kit.sheet.toCsv(data);
+kit.file.save(csv, 'meine-daten.csv');
+```
+
+### Datenbank-Operationen
+
+```javascript
+// Temporäre Datenbank (wird nach Reload gelöscht)
+await kit.db.use('memory://temp');
+
+// Tabelle erstellen und Daten einfügen
+await kit.db.exec(`
+  CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    age INTEGER
+  )
+`);
+
+await kit.db.exec(
+  'INSERT INTO users (name, age) VALUES (?, ?)',
+  ['Alice', 30]
+);
+
+// Daten abfragen
+const users = await kit.db.exec('SELECT * FROM users');
+console.table(users);
+
+// Datenbank löschen
+await kit.db.destroy('memory://temp');
+```
+
+### SQL-Codeblöcke
+
+Du kannst SQL-Befehle auch direkt in SQL-Codeblöcken ausführen. Diese nutzen automatisch die aktuell ausgewählte Datenbank oder eine temporäre memory-Datenbank.
+
+:::warning
+Bei mehreren SQL-Befehlen in einem Block wird nur das Ergebnis des **letzten** Befehls angezeigt!
+:::
 
 ```sql
---? SHOW INFO
-SELECT 1 as test;
+-- Tabelle erstellen
+CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    price REAL
+);
+
+-- Daten einfügen
+INSERT INTO products (name, price) VALUES 
+    ('Laptop', 899.99),
+    ('Mouse', 29.99);
+
+-- Daten abfragen (wird als Tabelle angezeigt)
+SELECT * FROM products;
 ```
 
-#### Meta-Befehle
+### Persistente Datenspeicherung
 
-SQL unterstützt spezielle Meta-Befehle mit dem Prefix `--?` für erweiterte Funktionen:
+:::warning
+Persistente Datenbanken werden nur auf deinem Geräte gespeichert und nicht mit den anderen Geräten synchronisiert!
+:::
 
-**Datenbank-Management:**
-```sql
---? LOAD "projektname" FROM STORAGE
---? LOAD "projektname" FROM FILE TO STORAGE
---? DELETE "datenbankname"
+```javascript
+// Persistente Datenbank (überlebt Reload)
+await kit.db.use('opfs://meine-db');
+
+// CSV importieren
+const file = await kit.file.fetch('/docs/example.csv');
+const orders = await kit.sheet.fromCsv(file);
+await kit.db.importData('orders', orders);
+
+// Komplexe Abfrage mit JOIN
+const result = await kit.db.exec(`
+  SELECT 
+    customer_name,
+    COUNT(*) as total_orders,
+    SUM(quantity * unit_price) as total_spent
+  FROM orders
+  WHERE status = 'delivered'
+  GROUP BY customer_name
+  ORDER BY total_spent DESC
+  LIMIT 5
+`);
+
+console.table(result);
 ```
 
-**Datenimport:**
-```sql
---? IMPORT FILE AS "tabellenname"
---? IMPORT FILE AS "tabellenname" OVERWRITE
+### Key-Value Storage
+
+```javascript
+// Daten persistent speichern
+await kit.store.set('user-settings', {
+  theme: 'dark',
+  language: 'de',
+  notifications: true
+});
+
+// Später wieder abrufen
+const settings = await kit.store.get('user-settings');
+console.log(settings);
+
+// Alle gespeicherten Keys auflisten
+const keys = await kit.store.list();
+console.log('Gespeicherte Keys:', keys);
 ```
 
-Der Import unterstützt CSV- und Excel-Dateien (.xlsx, .xls) mit automatischer Typerkennung für die Spalten.
+### Praktisches Beispiel: Datenanalyse
 
-**Informationen anzeigen:**
-```sql
---? SHOW INFO
---? SHOW INFO FULL
+```javascript
+// CSV laden und in Datenbank importieren
+const file = await kit.file.fetch('/docs/example.csv');
+const data = await kit.sheet.fromCsv(file);
+
+await kit.db.use('memory://analyse');
+await kit.db.importData('orders', data);
+
+// Umsatz pro Monat berechnen
+const monthlyRevenue = await kit.db.exec(`
+  SELECT 
+    strftime('%Y-%m', order_date) as month,
+    COUNT(*) as orders,
+    ROUND(SUM(quantity * unit_price), 2) as revenue
+  FROM orders
+  WHERE order_date IS NOT NULL
+  GROUP BY month
+`);
+
+console.table(monthlyRevenue);
+
+// Top-Produkte ermitteln
+const topProducts = await kit.db.exec(`
+  SELECT 
+    product,
+    SUM(quantity) as total_sold,
+    ROUND(AVG(unit_price), 2) as avg_price
+  FROM orders
+  GROUP BY product
+  ORDER BY total_sold DESC
+  LIMIT 5
+`);
+
+console.table(topProducts);
+
+// Ergebnisse exportieren
+kit.file.save(
+  kit.sheet.toCsv(monthlyRevenue),
+  'monatsumsatz.csv'
+);
+kit.file.save(
+  kit.sheet.toCsv(topProducts),
+  'top-produkte.csv'
+);
 ```
 
-#### Datenbank-Features
+## Weitere Kit API Features
 
-Das SQL-System bietet umfangreiche Funktionen für die Datenanalyse. Abfrageergebnisse können als CSV exportiert werden, und die komplette Datenbank lässt sich als .db-Datei herunterladen. Alle Datenbanken werden persistent im Browser-Storage gespeichert und bleiben auch nach dem Schließen des Tabs verfügbar.
+### Datum und Zeit
+
+```javascript
+// Aktuelles Datum
+const heute = kit.date.now();
+console.log(heute.format('DD.MM.YYYY'));
+
+// Datum manipulieren
+const morgen = heute.add(1, 'day');
+const naechsteWoche = heute.add(7, 'days');
+
+// Differenz berechnen
+const diff = naechsteWoche.diff(heute, 'days');
+console.log(`Tage bis nächste Woche: ${diff}`);
+```
+
+### Utility-Funktionen
+
+```javascript
+// Verzögerung einbauen
+console.log('Start...');
+await kit.util.sleep(2000);
+console.log('2 Sekunden später!');
+
+// Zufallszahlen
+const zufall = kit.util.random(1, 100);
+console.log(`Zufallszahl: ${zufall}`);
+
+// Array mischen
+const zahlen = [1, 2, 3, 4, 5];
+kit.util.shuffle(zahlen);
+console.log('Gemischt:', zahlen);
+```
+
+## Zusammenarbeit
+
+Teile einfach den Link deines Pads - andere können sofort mitarbeiten! Die Synchronisation erfolgt in Echtzeit und alle Änderungen werden konfliktfrei zusammengeführt.
+
+:::info
+**Datenschutz:** Deine Pads werden asymmetrisch verschlüsselt auf dem Server gespeichert. Das heißt, dass der Server die Inhalte nicht lesen kann, sondern nur du und die anderen Teilnehmenden. Diese Ende-zu-Ende-Verschlüsselung garantiert, dass nur Personen mit dem Pad-Link auf die Inhalte zugreifen können.
+:::
+
+## ChatGPT und Co
+
+Für erweiterte Hilfe zur Kit API kannst du die [KI-Dokumentation](/docs/pad-llms.txt) nutzen. Kopiere den Inhalt dieser Dateo und füge ihn in deinen bevorzugten KI-Assistenten ein, um interaktive Hilfe beim Programmieren zu erhalten.
+
+## Tastenkürzel
+
+- **Tab**: Einrücken (2 Leerzeichen)
+- **Strg/Cmd + F**: Suchen
+- **Strg/Cmd + H**: Suchen & Ersetzen
+- **Strg/Cmd + Z**: Rückgängig
+- **Strg/Cmd + Shift + Z**: Wiederholen
+
+Viel Spaß beim Erkunden der Pad-Features!

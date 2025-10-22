@@ -1,4 +1,4 @@
-import SidebarLayout from "@/components/core/SidebarLayout";
+import SidebarLayout from "@/components/solidjs/SidebarLayout";
 import { createLiveQuery } from "@/lib/solidjs/db-utils";
 import { Show } from "solid-js";
 import Chat from "./components/Chat";

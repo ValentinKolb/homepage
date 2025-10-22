@@ -1,12 +1,9 @@
-import { getColorTheme, onThemeChange } from "@/lib/client/color-theme";
+import { OPFS } from "@/lib/client/files";
 import { createLocalStore } from "@/lib/solidjs/localstorage";
-import { extractH1Title } from "@/lib/utils/markdown-util";
-import { createSignal } from "solid-js";
-import SuperJSON from "superjson";
+import { common } from "@/lib/utils/crypto";
+import { extractH1Title } from "@/lib/utils/markdown";
 import { LoroDoc, VersionVector } from "loro-crdt";
-import { getTextFromDoc } from "loro-codemirror";
-import { getRandomName } from "@/lib/client/random";
-import { nanoid } from "nanoid";
+import SuperJSON from "superjson";
 
 SuperJSON.registerCustom<LoroDoc, string>(
   {
@@ -38,47 +35,40 @@ SuperJSON.registerCustom<VersionVector, string>(
 /** Represents a markdown pad with metadata and content. */
 export type MarkdownPad = {
   content: string;
-  doc?: LoroDoc;
   created: Date;
   updated: Date;
   title?: string;
   pinned?: boolean;
-  collab?: boolean;
   id: string;
-};
-
-export type MarkdownPadSettings = {
-  name: string;
-  publicUserId: string;
+  enableGutter?: boolean;
+  enableCodeExecution?: boolean;
 };
 
 /**
- * Creates a reactive theme signal that automatically updates when system theme changes.
+ * This function loads an exported loro document from opfs
+ * @param pad the pad for which to load the document
  */
-export const createTheme = () => {
-  const [theme, setTheme] = createSignal(getColorTheme());
-
-  // Listen for theme changes
-  onThemeChange((newTheme) => {
-    setTheme(newTheme);
-  });
-
-  return theme;
+export const loadPadDoc = async (pad: MarkdownPad) => {
+  return await OPFS.read(`.pad/${await common.hash(pad.id)}.doc`);
 };
 
-export const getDocFromPad = (pad: MarkdownPad) => {
-  if (pad.doc) return pad.doc;
-
-  const d = new LoroDoc();
-  getTextFromDoc(d).insert(0, pad.content);
-  return d;
+/**
+ * This function saves an exported loro document to opfs
+ * @param pad the pad for which to save the document
+ * @param doc the document to save
+ */
+export const savePadDoc = async (pad: MarkdownPad, doc: LoroDoc) => {
+  await OPFS.write(
+    `.pad/${await common.hash(pad.id)}.doc`,
+    doc.export({ mode: "snapshot" }),
+  );
 };
 
 /**
  * Extracts display title from pad (title field, H1 from content, or "Untitled").
  */
 export const padTitle = (pad: MarkdownPad) =>
-  pad.title || extractH1Title(pad.content) || "Untitled";
+  pad.title?.toString() || extractH1Title(pad.content) || "Untitled";
 
 /** Storage instance for pad persistence. */
 export const PAD_STORAGE: Storage = window.localStorage;
@@ -96,16 +86,8 @@ export const createPadStore = (padId: string) =>
       created: new Date(),
       updated: new Date(),
       id: padId,
-    },
-    PAD_STORAGE,
-  );
-
-export const createPadSettings = () =>
-  createLocalStore<MarkdownPadSettings>(
-    "pad:settings",
-    {
-      name: getRandomName(),
-      publicUserId: nanoid(64),
+      enableGutter: false,
+      enableCodeExecution: true,
     },
     PAD_STORAGE,
   );

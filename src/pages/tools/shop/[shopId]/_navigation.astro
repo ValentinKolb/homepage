@@ -1,0 +1,91 @@
+---
+import type { Shop } from "@/actions/shop/types";
+import { euro } from "./_lib/util";
+
+export type Props = {
+  shop: Shop;
+};
+const { shop } = Astro.props;
+const auth = Astro.locals.auth;
+
+const presets = [
+  {
+    icon: "ti ti-building-store",
+    color: "teal-500",
+    label: shop.name,
+    href: `/tools/shop/${shop.id}`,
+  },
+  {
+    icon: "ti ti-building-warehouse",
+    color: "orange-500",
+    label: "Inventar",
+    href: `/tools/shop/${shop.id}/inventory`,
+    adminOnly: true,
+  },
+  {
+    icon: "ti ti-abacus",
+    color: "yellow-500",
+    label: "Transaktionen",
+    href: `/tools/shop/${shop.id}/transactions`,
+  },
+  {
+    icon: "ti ti-adjustments-cog",
+    color: "blue-500",
+    label: "Einstellungen",
+    href: `/tools/shop/${shop.id}/settings`,
+    adminOnly: true,
+  },
+];
+
+const active = presets.find((preset) => preset.href === Astro.url.pathname);
+---
+
+<header
+  class="flex flex-col gap-1 sm:gap-3 sm:mb-4 sm:flex-row sm:items-center sm:justify-between"
+>
+  <div
+    class="flex w-full flex-row text-nowrap flex-nowrap items-baseline justify-between sm:items-center"
+  >
+    <h1 class="truncate text-xl font-extrabold sm:text-4xl">
+      <i class={`mr-3 inline-block text-${active?.color} ${active?.icon}`}></i>{
+        active?.label
+      }
+    </h1>
+    {
+      active?.label === shop.name && auth !== undefined && (
+        <div
+          transition:name="balance"
+          id="user-balance"
+          class="rounded-full px-2 py-1 font-mono text-sm font-semibold hover:text-gray-700 hover:bg-gray-100 sm:text-base dark:text-gray-400 dark:bg-gray-800"
+        >
+          <span class="hidden md:inline">Guthaben</span>
+          {euro(shop.userBalance ?? 0)}
+        </div>
+      )
+    }
+  </div>
+
+  {
+    auth !== undefined && (
+      <div class="flex w-full flex-row gap-2 sm:w-auto">
+        {presets
+          .filter(
+            (preset) =>
+              !preset.adminOnly ||
+              shop.userPermission === "admin" ||
+              shop.userPermission === "manage",
+          )
+          .map((preset) => (
+            <a
+              transition:name={`shop-${preset.label.toLowerCase()}-btn`}
+              href={preset.href}
+              class={`
+                    ${preset.label === active?.label ? "!bg-blue-500 text-white" : `text-${preset.color} bg-gray-100 dark:bg-gray-800`}
+                    ${preset.icon} hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer rounded grow ti p-2 sm:text-lg text-sm justify-center text-center
+                    `}
+            />
+          ))}
+      </div>
+    )
+  }
+</header>

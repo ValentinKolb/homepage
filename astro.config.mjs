@@ -8,6 +8,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import bun from "@hedystia/astro-bun";
 import wasm from "vite-plugin-wasm";
+import config from "./src/config/config";
 
 export default defineConfig({
   env: {
@@ -33,7 +34,7 @@ export default defineConfig({
       format: "es",
     },
   },
-  site: "https://valentin-kolb.blog",
+  site: config.BASE_URL,
   base: "/",
   trailingSlash: "never",
   integrations: [sitemap(), mdx(), solidJs({ devtools: true })],

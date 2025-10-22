@@ -4,7 +4,7 @@ import { ActionError, defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { sql } from "bun";
 import { PaginationSchema } from "../util";
-const { APP_NAME, APP_SECRET } = config;
+const { APP_NAME } = config;
 
 /**
  * Verifies a token against all user's TOTP secrets
@@ -20,7 +20,7 @@ export const verifyTokenForUser = async (userId: string, token: string) => {
   // Check if any secret matches the token
   for (const row of rows) {
     const secret = await symmetric.decrypt({
-      key: APP_SECRET,
+      key: process.env.APP_SECRET!,
       payload: row.encrypted_secret,
     });
     if (await totp.verify({ secret, token })) return true;
@@ -50,7 +50,7 @@ export const totpActions = {
 
       // Encrypt the secret for db storage
       const encryptedSecret = await symmetric.encrypt({
-        key: APP_SECRET,
+        key: process.env.APP_SECRET!,
         payload: secret,
         stretched: false, // APP_SECRET has high entropy
       });
@@ -86,7 +86,7 @@ export const totpActions = {
 
       // Decrypt the secret
       const secret = await symmetric.decrypt({
-        key: APP_SECRET,
+        key: process.env.APP_SECRET!,
         payload: row.encrypted_secret,
       });
 

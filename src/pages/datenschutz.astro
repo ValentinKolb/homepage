@@ -1,0 +1,223 @@
+---
+import Base from "@/components/astro/Base.astro";
+
+const pageTitle = "Datenschutzerklärung";
+const pageDescription = "Datenschutzerklärung für valentin-kolb.blog";
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <div class="max-w-4xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold mb-8">Datenschutzerklärung</h1>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">1. Grundlegendes</h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Diese Webseite ist meine persönliche Spielwiese und dient als Blog sowie
+        zur Präsentation meiner Projekte und interaktiven Tools. Ich nehme den
+        Schutz deiner persönlichen Daten sehr ernst und verarbeite diese
+        ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TMG).
+      </p>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        <strong>Privacy by Design:</strong> Ich gebe grundsätzlich keine Daten an
+        Dritte weiter, verwende keine Tracking-Tools oder Analytics-Dienste. Die
+        Privatsphäre meiner Besucher hat oberste Priorität.
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">2. Verantwortlicher</h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Verantwortlicher für die Datenverarbeitung auf dieser Website ist:<br />
+        Valentin Kolb<br />
+        89081 Ulm<br />
+        E-Mail: <span class="font-mono">mail[at]valentin-kolb.com</span>
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">
+        3. Datenerfassung auf dieser Website
+      </h2>
+
+      <h3 class="text-lg font-medium mb-2 mt-4">Server-Log-Dateien</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Bei jedem Zugriff auf diese Webseite werden automatisch technische
+        Informationen in Server-Log-Dateien gespeichert:
+      </p>
+      <ul class="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">
+        <li>IP-Adresse (anonymisiert)</li>
+        <li>Datum und Uhrzeit der Anfrage</li>
+        <li>Aufgerufene Seite/Datei</li>
+        <li>Übertragene Datenmenge</li>
+        <li>Browsertyp und -version</li>
+        <li>Betriebssystem</li>
+        <li>Referrer URL</li>
+      </ul>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Diese Daten sind nicht bestimmten Personen zuordenbar und werden
+        ausschließlich zur Fehleranalyse und Sicherheit des Systems verwendet.
+      </p>
+
+      <h3 class="text-lg font-medium mb-2 mt-4">Cookies</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Diese Webseite verwendet ausschließlich technisch notwendige Cookies:
+      </p>
+      <ul class="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">
+        <li>
+          <strong>theme:</strong> Speichert deine Präferenz für das Hell/Dunkel-Design
+        </li>
+        <li>
+          <strong>session:</strong> Session-Cookie für eingeloggte Personen
+        </li>
+        <li>
+          <strong>agb:</strong> Speichert deine Zustimmung zur AGB und der Datenschutzerklärung
+        </li>
+      </ul>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Es werden <strong>keine</strong> Tracking-Cookies, Werbe-Cookies oder Cookies
+        von Drittanbietern verwendet.
+      </p>
+
+      <h3 class="text-lg font-medium mb-2 mt-4">Benutzerkonten</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Für die Nutzung interaktiver Services (Pad, Kiosk) kannst du einen
+        Account erstellen. <strong>Besonderheit:</strong> Unsere Accounts sind vollständig
+        anonym und nutzen Public-Key-Kryptographie:
+      </p>
+      <ul class="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">
+        <li>Keine E-Mail-Adresse erforderlich</li>
+        <li>Kein Klarname erforderlich</li>
+        <li>Public-Key-Authentifizierung statt Passwörter</li>
+        <li>Nur dein öffentlicher Schlüssel wird gespeichert</li>
+        <li>Dein privater Schlüssel verlässt niemals dein Gerät</li>
+      </ul>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        In der Datenbank wird ausschließlich dein öffentlicher Schlüssel (Public
+        Key) gespeichert. Der private Schlüssel bleibt immer in deinem Besitz.
+        Bei Verlust des privaten Schlüssels ist der Account unwiderruflich
+        verloren.
+      </p>
+
+      <h3 class="text-lg font-medium mb-2 mt-4">Erstellte Inhalte</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Inhalte, die du in Pads oder Kiosks erstellst, werden mit asymmetrischer
+        Verschlüsselung gesichert (wo technisch möglich). Aufgrund der
+        Verschlüsselung kann ich als Betreiber diese Inhalte nicht einsehen. Die
+        Inhalte werden gespeichert, bis:
+      </p>
+      <ul class="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">
+        <li>Du sie selbst löschst</li>
+        <li>Eine berechtigte Beschwerde vorliegt (siehe AGBs)</li>
+        <li>Der Service eingestellt wird (mit 30 Tagen Vorankündigung)</li>
+      </ul>
+
+      <h3 class="text-lg font-medium mb-2 mt-4">Kontaktaufnahme</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Bei Kontaktaufnahme per E-Mail werden deine Angaben zwecks Bearbeitung
+        der Anfrage gespeichert. Diese Daten gebe ich nicht ohne deine
+        Einwilligung weiter und lösche sie nach Abschluss der Kommunikation.
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">4. Deine Rechte</h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Du hast folgende Rechte bezüglich deiner personenbezogenen Daten:
+      </p>
+      <ul class="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">
+        <li>
+          <strong>Auskunft:</strong> Welche Daten ich über dich gespeichert habe
+        </li>
+        <li><strong>Berichtigung:</strong> Korrektur falscher Daten</li>
+        <li><strong>Löschung:</strong> "Recht auf Vergessenwerden"</li>
+        <li><strong>Einschränkung:</strong> Sperrung der Verarbeitung</li>
+        <li><strong>Widerspruch:</strong> Gegen die Verarbeitung</li>
+        <li><strong>Datenübertragbarkeit:</strong> Export deiner Daten</li>
+      </ul>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Zur Ausübung dieser Rechte kontaktiere mich einfach per E-Mail. Du hast
+        zudem das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu
+        beschweren.
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">5. Hosting & Sicherheit</h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Diese Webseite wird auf Servern der Kolb Antik GmbH in Deutschland
+        gehostet. Die Server befinden sich ausschließlich in Deutschland und
+        unterliegen den strengen deutschen Datenschutzbestimmungen.
+      </p>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        <strong>Wichtig:</strong> Die Kolb Antik GmbH stellt nur die technische Infrastruktur
+        bereit, hat aber keinen Zugriff auf die verarbeiteten Daten. Die Datenverarbeitung
+        liegt ausschließlich in meiner Kontrolle.
+      </p>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        <strong>SSL-Verschlüsselung:</strong> Diese Seite nutzt eine SSL-Verschlüsselung
+        zum Schutz der Datenübertragung. Eine verschlüsselte Verbindung erkennst
+        du am "https://" in der Adresszeile und am Schloss-Symbol im Browser.
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">6. Externe Dienste</h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Diese Webseite verwendet <strong>keine</strong> externen Dienste wie:
+      </p>
+      <ul
+        class="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300 line-through"
+      >
+        <li>Google Analytics oder andere Tracking-Dienste</li>
+        <li>Social Media Plugins</li>
+        <li>Externe Schriftarten (Google Fonts etc.)</li>
+        <li>CDN-Dienste</li>
+        <li>Werbenetzwerke</li>
+      </ul>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Alle Ressourcen werden lokal von meinem Server ausgeliefert, um deine
+        Privatsphäre zu schützen. Der Quellcode der gesamten Website ist
+        öffentlich einsehbar auf GitHub: github.com/ValentinKolb/homepage
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">7. Änderungen</h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Ich behalte mir vor, diese Datenschutzerklärung anzupassen, um sie an
+        geänderte Rechtslagen oder Services anzupassen. Die jeweils aktuelle
+        Version gilt für deinen Besuch. Größere Änderungen werde ich auf der
+        Startseite ankündigen.
+      </p>
+    </section>
+
+    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+      <h2 class="text-lg font-semibold mb-4">
+        Weitere rechtliche Informationen
+      </h2>
+      <ul class="text-gray-700 dark:text-gray-300">
+        <li>
+          <a
+            href="/impressum"
+            class="underline hover:text-blue-600 dark:hover:text-blue-400"
+            >Impressum</a
+          >
+        </li>
+        <li>
+          <a
+            href="/agb"
+            class="underline hover:text-blue-600 dark:hover:text-blue-400"
+            >Allgemeine Geschäftsbedingungen (AGB)</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="mt-8">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Stand: November 2025<br />
+        Version: 1.0
+      </p>
+    </div>
+  </div>
+</Base>

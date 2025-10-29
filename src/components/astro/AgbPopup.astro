@@ -1,0 +1,102 @@
+---
+// AGB Popup Component - Shows consent dialog if "agb" cookie is not set
+const agbAccepted = Astro.cookies.get("agb")?.value === "accepted";
+
+if (agbAccepted) {
+  return null;
+}
+---
+
+<!-- Backdrop -->
+<div id="agb-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40">
+</div>
+
+<div
+  id="agb-popup"
+  class="fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto sm:left-auto"
+>
+  <div class="paper p-6">
+    <h3 class="text-lg font-semibold mb-3">
+      <i class="ti ti-checkbox"></i>
+      Zustimmung Notwendig
+    </h3>
+
+    <div class="mb-4">
+      <label id="agb-consent" class="flex items-start gap-2 cursor-pointer">
+        <span class="text-sm text-gray-700 dark:text-gray-300">
+          Um diesen Service des Blogs zu nutzen, musst du den
+          <a
+            href="/agb"
+            target="_blank"
+            class="underline hover:text-blue-600 dark:hover:text-blue-400"
+            >AGB</a
+          >
+          und der
+          <a
+            href="/datenschutz"
+            target="_blank"
+            class="underline hover:text-blue-600 dark:hover:text-blue-400"
+            >Datenschutzerklärung</a
+          >
+          zustimmen.
+        </span>
+      </label>
+    </div>
+
+    <div class="flex gap-3">
+      <button
+        aria-labelledby="agb-consent"
+        id="agb-accept"
+        class="btn-primary flex-1 px-3 py-2"
+      >
+        [y] Zustimmen
+      </button>
+      <a href="/" id="agb-decline" class="btn-subtle px-3 py-2">
+        [N] Ablehnen
+      </a>
+    </div>
+
+    <p class="text-xs text-dimmed mt-3">
+      Du kannst deine Zustimmung jederzeit widerrufen.
+    </p>
+  </div>
+
+  <script>
+    // Set consent cookie (1 year validity)
+    const setConsentCookie = () => {
+      const expiryDate = new Date();
+      expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+      document.cookie = `agb=accepted; expires=${expiryDate.toUTCString()}; path=/; SameSite=Strict`;
+    };
+
+    // Disable page interaction by preventing all clicks outside the popup
+    document.getElementById("agb-backdrop")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    // Handle accept
+    document.getElementById("agb-accept")?.addEventListener("click", () => {
+      setConsentCookie();
+      window.location.reload();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", (e) => {
+      // Prevent any other key actions while popup is open
+      const key = e.key.toLowerCase();
+
+      if (key === "y" || key === "j") {
+        e.preventDefault();
+        setConsentCookie();
+        window.location.reload();
+      } else if (key === "n") {
+        e.preventDefault();
+        window.location.href = "/";
+      }
+    });
+
+    // Prevent scrolling while popup is open
+    document.body.style.overflow = "hidden";
+  </script>
+</div>

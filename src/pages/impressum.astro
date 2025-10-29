@@ -1,0 +1,101 @@
+---
+import Base from "@/components/astro/Base.astro";
+
+const pageTitle = "Impressum";
+const pageDescription = "Impressum von Valentin Kolb";
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <div class="max-w-4xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold mb-8">Impressum</h1>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">Angaben gemäß § 5 TMG</h2>
+      <p class="mb-2">
+        Valentin Kolb<br />
+        89081 Ulm<br />
+        Deutschland
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">Kontakt</h2>
+      <p>
+        E-Mail: <span class="font-mono">mail[at]valentin-kolb.com</span><br />
+        <span class="text-sm text-gray-600 dark:text-gray-400">
+          (Bitte "[at]" durch "@" ersetzen)
+        </span>
+      </p>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">
+        Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+      </h2>
+      <p>
+        Valentin Kolb<br />
+        89081 Ulm
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">Haftungsausschluss</h2>
+
+      <h3 class="text-lg font-medium mb-2 mt-4">Haftung für Inhalte</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Die Inhalte meiner Seiten wurden mit größter Sorgfalt erstellt. Für die
+        Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird jedoch
+        keine Gewähr übernommen. Als Diensteanbieter bin ich gemäß § 7 Abs.1 TMG
+        für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
+        verantwortlich.
+      </p>
+
+      <h3 class="text-lg font-medium mb-2">Haftung für Links</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Mein Angebot enthält Links zu externen Webseiten Dritter, auf deren
+        Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden
+        Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten
+        Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten
+        verantwortlich.
+      </p>
+
+      <h3 class="text-lg font-medium mb-2">Urheberrecht</h3>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Die durch mich erstellten Inhalte und Werke auf diesen Seiten
+        unterliegen dem deutschen Urheberrecht. Die Vervielfältigung,
+        Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
+        Grenzen des Urheberrechtes bedürfen meiner schriftlichen Zustimmung.
+        Downloads und Kopien dieser Seite sind nur für den privaten, nicht
+        kommerziellen Gebrauch gestattet.
+      </p>
+    </section>
+
+    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+      <h2 class="text-lg font-semibold mb-4">
+        Weitere rechtliche Informationen
+      </h2>
+      <ul class="text-gray-700 dark:text-gray-300">
+        <li>
+          <a
+            href="/datenschutz"
+            class="underline hover:text-blue-600 dark:hover:text-blue-400"
+            >Datenschutzerklärung</a
+          >
+        </li>
+        <li>
+          <a
+            href="/agb"
+            class="underline hover:text-blue-600 dark:hover:text-blue-400"
+            >Allgemeine Geschäftsbedingungen (AGB)</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="mt-8">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Stand: November 2025
+      </p>
+    </div>
+  </div>
+</Base>

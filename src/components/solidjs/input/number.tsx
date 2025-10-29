@@ -1,3 +1,19 @@
+import { InputWrapper } from "./util";
+
+/**
+ * Number input component with increment/decrement buttons
+ * @param label - Optional label text
+ * @param description - Optional description text
+ * @param placeholder - Placeholder text
+ * @param value - Reactive number value getter
+ * @param onChange - Called on change event
+ * @param onInput - Called on input event
+ * @param error - Reactive error message getter
+ * @param max - Maximum allowed value (default: Infinity)
+ * @param min - Minimum allowed value (default: -Infinity)
+ * @param step - Step increment/decrement amount (default: 1)
+ * @param required - Show required asterisk after label
+ */
 const NumberInput = ({
   label,
   description,
@@ -9,6 +25,7 @@ const NumberInput = ({
   max = Infinity,
   min = -Infinity,
   step = 1,
+  required = false,
 }: {
   label?: string;
   description?: string;
@@ -20,59 +37,67 @@ const NumberInput = ({
   max?: number;
   min?: number;
   step?: number;
+  required?: boolean;
 }) => {
-  const parse = (value: string) => {
+  const parse = (value: string, applyConstraints: boolean = true) => {
     const parsed = parseInt(value);
-    return isNaN(parsed) ? min : Math.max(min, Math.min(max, parsed));
+    if (isNaN(parsed)) return min;
+    // Only apply min/max constraints on change (blur), not on input
+    return applyConstraints ? Math.max(min, Math.min(max, parsed)) : parsed;
   };
 
   return (
-    <div class="flex flex-col gap-2">
-      {(label || description) && (
-        <label for="text-input">
-          {label && <p class="mb-1 block text-xs font-medium">{label}</p>}
-          {description && (
-            <p class="text-dimmed block text-xs">{description}</p>
-          )}
-        </label>
-      )}
-      <div class="flex flex-row flex-nowrap gap-3 text-nowrap">
-        <button
-          class={`btn btn-subtle ti ti-minus rounded-full p-2 px-3 ${(value() ?? -Infinity) <= min && "opacity-40"}`}
-          aria-label="Decrease Value"
-          onClick={() => onChange?.((value() ?? 0) - step)}
-          disabled={(value() ?? -Infinity) <= min}
-        />
-        <div class="group relative flex-1">
-          <input
-            id="text-input"
-            type="number"
-            class={`input-base w-full p-2 text-center font-mono font-semibold ring-1 ring-gray-200 dark:ring-0`}
-            placeholder={placeholder}
-            value={value()}
-            onChange={(e) => {
-              const v = parse(e.currentTarget.value);
-              onChange?.(v);
-              e.currentTarget.value = `${v}`;
-            }}
-            onInput={(e) => {
-              const v = parse(e.currentTarget.value);
-              onInput?.(v);
-              e.currentTarget.value = `${v}`;
-            }}
+    <InputWrapper
+      label={label}
+      description={description}
+      error={error}
+      required={required}
+    >
+      {({ inputId, ariaDescribedBy }) => (
+        <div class="flex flex-row flex-nowrap gap-3 text-nowrap">
+          <button
+            type="button"
+            class={`btn btn-subtle ti ti-minus rounded-full p-2 px-3 ${(value() ?? -Infinity) <= min && "opacity-40"}`}
+            aria-label="Wert verringern"
+            onClick={() => onChange?.((value() ?? 0) - step)}
+            disabled={(value() ?? -Infinity) <= min}
+          />
+          <div class="group relative flex-1">
+            <input
+              id={inputId}
+              type="number"
+              class={`input-base w-full p-2 text-center font-mono font-semibold ring-1 ring-gray-200 dark:ring-0`}
+              placeholder={placeholder}
+              value={value()}
+              onChange={(e) => {
+                const v = parse(e.currentTarget.value, true);
+                onChange?.(v);
+                e.currentTarget.value = `${v}`;
+              }}
+              onInput={(e) => {
+                const v = parse(e.currentTarget.value, false);
+                onInput?.(v);
+              }}
+              aria-label={!label ? placeholder || "Zahl eingeben" : undefined}
+              aria-describedby={ariaDescribedBy}
+              aria-invalid={!!error?.()}
+              aria-required={required}
+              aria-valuemin={min}
+              aria-valuemax={max}
+              aria-valuenow={value()}
+            />
+          </div>
+
+          <button
+            type="button"
+            class={`btn btn-subtle ti ti-plus rounded-full p-2 px-3 ${(value() ?? Infinity) >= max && "opacity-40"}`}
+            aria-label="Wert erhöhen"
+            onClick={() => onChange?.((value() ?? 0) + step)}
+            disabled={(value() ?? Infinity) >= max}
           />
         </div>
-
-        <button
-          class={`btn btn-subtle ti ti-plus rounded-full p-2 px-3 ${(value() ?? Infinity) >= max && "opacity-40"}`}
-          aria-label="Increase Value"
-          onClick={() => onChange?.((value() ?? 0) + step)}
-          disabled={(value() ?? Infinity) >= max}
-        />
-      </div>
-
-      {error?.() && <p class="text-sm text-red-500">{error()}</p>}
-    </div>
+      )}
+    </InputWrapper>
   );
 };
 

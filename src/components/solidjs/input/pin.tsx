@@ -1,4 +1,5 @@
 import { For, onMount } from "solid-js";
+import { InputWrapper } from "./util";
 
 type PinInputProps = {
   label?: string;
@@ -9,17 +10,31 @@ type PinInputProps = {
   error?: () => string | undefined;
   disabled?: boolean;
   stretch?: boolean;
+  required?: boolean;
 };
 
+/**
+ * PIN input component with individual digit fields
+ * @param label - Optional label text
+ * @param description - Optional description text
+ * @param length - Number of PIN digits (default: 6)
+ * @param value - Reactive string value getter
+ * @param onChange - Called when PIN value changes
+ * @param error - Reactive error message getter
+ * @param disabled - Disable all input fields
+ * @param stretch - Make input fields stretch to full width
+ * @param required - Show required asterisk after label
+ */
 const PinInput = ({
   label,
   description,
   length = 6,
-  value = () => "",
+  value,
   onChange,
   error,
   disabled = false,
   stretch = false,
+  required = false,
 }: PinInputProps) => {
   let inputRefs: HTMLInputElement[] = [];
 
@@ -29,7 +44,7 @@ const PinInput = ({
     // Only allow single digits
     const digit = newValue.slice(-1).replace(/[^0-9]/g, "");
 
-    const currentValue = value();
+    const currentValue = value?.() || "";
     const before = currentValue.slice(0, index);
     const after = currentValue.slice(index + 1);
 
@@ -47,10 +62,11 @@ const PinInput = ({
 
     switch (e.key) {
       case "Backspace":
-        if (!value()[index] && index > 0) {
+        const val = value?.() || "";
+        if (!val[index] && index > 0) {
           e.preventDefault();
           // Move to previous field and delete its content
-          const currentValue = value();
+          const currentValue = val;
           const before = currentValue.slice(0, index - 1);
           const after = currentValue.slice(index);
           onChange?.(before + after);
@@ -89,7 +105,7 @@ const PinInput = ({
       );
       const index = startIndex >= 0 ? startIndex : 0;
 
-      const currentValue = value();
+      const currentValue = value?.() || "";
       const before = currentValue.slice(0, index);
       const pasted = pastedDigits.slice(0, length - index);
       const after = currentValue.slice(index + pasted.length);
@@ -113,54 +129,43 @@ const PinInput = ({
   });
 
   return (
-    <div class="flex flex-col gap-2">
-      {(label || description) && (
-        <div>
-          {label && (
-            <p class="mb-1 block text-xs font-medium" id="pin-label">
-              {label}
-            </p>
-          )}
-          {description && (
-            <p class="text-dimmed block text-xs" id="pin-description">
-              {description}
-            </p>
-          )}
+    <InputWrapper
+      label={label}
+      description={description}
+      error={error}
+      required={required}
+    >
+      {({ inputId, ariaDescribedBy }) => (
+        <div
+          class="flex gap-1 md:gap-2"
+          role="group"
+          aria-labelledby={inputId}
+          aria-describedby={ariaDescribedBy}
+        >
+          <For each={new Array(length).fill(0)}>
+            {(_, index) => (
+              <input
+                ref={(el) => (inputRefs[index()] = el)}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]"
+                maxLength={1}
+                class={`input-subtle h-10 ${stretch ? "w-full" : "w-10"} text-center font-mono text-sm font-semibold transition-all ${(value?.() || "")[index()] ? "bg-gray-50 dark:bg-gray-800" : ""} ${disabled ? "cursor-not-allowed opacity-50" : ""} ${error?.() ? "ring-1 ring-red-500" : ""} focus:ring-2 focus:ring-blue-500`}
+                value={(value?.() || "")[index()] || ""}
+                onInput={(e) => handleChange(index(), e.currentTarget.value)}
+                onKeyDown={(e) => handleKeyDown(index(), e)}
+                onFocus={(e) => e.currentTarget.select()}
+                disabled={disabled}
+                aria-label={`PIN Ziffer ${index() + 1} von ${length}`}
+                aria-invalid={!!error?.()}
+                aria-required={index() === 0 ? required : undefined}
+                autocomplete="off"
+              />
+            )}
+          </For>
         </div>
       )}
-
-      <div
-        class="flex gap-1 md:gap-2"
-        role="group"
-        aria-labelledby={label ? "pin-label" : undefined}
-        aria-describedby={
-          description ? "pin-description" : error ? "pin-error" : undefined
-        }
-      >
-        <For each={new Array(length).fill(0)}>
-          {(_, index) => (
-            <input
-              ref={(el) => (inputRefs[index()] = el)}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]"
-              maxLength={1}
-              class={`input-subtle h-10 ${stretch ? "w-full" : "w-10"} text-center font-mono text-sm font-semibold transition-all ${value()[index()] ? "bg-gray-50 dark:bg-gray-800" : ""} ${disabled ? "cursor-not-allowed opacity-50" : ""} ${error ? "ring-1 ring-red-500" : ""} focus:ring-2 focus:ring-blue-500`}
-              value={value()[index()] || ""}
-              onInput={(e) => handleChange(index(), e.currentTarget.value)}
-              onKeyDown={(e) => handleKeyDown(index(), e)}
-              onFocus={(e) => e.currentTarget.select()}
-              disabled={disabled}
-              aria-label={`PIN Ziffer ${index() + 1} von ${length}`}
-              aria-invalid={!!error}
-              autocomplete="off"
-            />
-          )}
-        </For>
-      </div>
-
-      {error?.() && <p class="text-sm text-red-500">{error()}</p>}
-    </div>
+    </InputWrapper>
   );
 };
 

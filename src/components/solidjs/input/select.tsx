@@ -1,8 +1,9 @@
 import { createSignal, createMemo, Show, For, onCleanup } from "solid-js";
+import { InputWrapper } from "./util";
 
 type SelectOption =
   | string
-  | { id: string; label: string; description?: string; icon?: string };
+  | { id: string; label?: string; description?: string; icon?: string };
 
 type SelectInputProps = {
   label?: string;
@@ -14,7 +15,22 @@ type SelectInputProps = {
   onChange?: (value: string) => void;
   error?: () => string | undefined;
   options: SelectOption[];
+  required?: boolean;
 };
+
+/**
+ * Select input component with dropdown menu
+ * @param label - Optional label text
+ * @param description - Optional description text
+ * @param placeholder - Placeholder text when no option selected
+ * @param icon - Icon shown when dropdown is closed
+ * @param activeIcon - Icon shown when dropdown is open
+ * @param value - Reactive string value getter (selected option id)
+ * @param onChange - Called when selection changes
+ * @param error - Reactive error message getter
+ * @param options - Array of options (strings or objects with id/label)
+ * @param required - Show required asterisk after label
+ */
 
 const SelectInput = (props: SelectInputProps) => {
   const {
@@ -26,10 +42,13 @@ const SelectInput = (props: SelectInputProps) => {
     value,
     onChange,
     error,
+    required = false,
   } = props;
 
   const options = props.options.map((o) =>
-    typeof o === "object" ? o : { id: o, label: o },
+    typeof o === "object"
+      ? { ...o, label: o.label || o.id }
+      : { id: o, label: o },
   );
 
   // State management - reduziert!
@@ -156,118 +175,116 @@ const SelectInput = (props: SelectInputProps) => {
   onCleanup(() => dialogRef?.close());
 
   return (
-    <div class="flex flex-col gap-2">
-      <Show when={label || description}>
-        <label for="select-input">
-          <Show when={label}>
-            <p class="mb-1 block text-xs font-medium">{label}</p>
-          </Show>
-          <Show when={description}>
-            <p class="text-dimmed block text-xs">{description}</p>
-          </Show>
-        </label>
-      </Show>
+    <InputWrapper
+      label={label}
+      description={description}
+      error={error}
+      required={required}
+    >
+      {({ inputId, ariaDescribedBy }) => (
+        <div ref={containerRef} class="relative">
+          <div class="group relative flex-1">
+            <div class="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-gray-500">
+              <i
+                class={`${
+                  selectedOption()?.icon || (isOpen() ? activeIcon : icon)
+                } ${isOpen() ? "text-blue-500" : ""}`}
+              />
+            </div>
 
-      <div ref={containerRef} class="relative">
-        <div class="group relative flex-1">
-          <div class="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-gray-500">
-            <i
-              class={`${
-                selectedOption()?.icon || (isOpen() ? activeIcon : icon)
-              } ${isOpen() ? "text-blue-500" : ""}`}
-            />
-          </div>
-
-          <div
-            ref={triggerRef}
-            id="select-input"
-            class={`input-subtle w-full cursor-pointer p-2 pr-8 pl-9 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-              isOpen() ? "ring-2 ring-blue-500" : ""
-            }`}
-            onClick={() => toggleDropdown(!isOpen())}
-            onKeyDown={handleKeyDown}
-            tabIndex={0}
-            role="combobox"
-            aria-expanded={isOpen()}
-            aria-haspopup="listbox"
-            aria-label={label || "Select an option"}
-          >
-            <Show
-              when={selectedOption()}
-              fallback={
-                <span class="text-gray-400 dark:text-gray-500">
-                  {placeholder}
+            <div
+              ref={triggerRef}
+              id={inputId}
+              class={`input-subtle w-full cursor-pointer p-2 pr-8 pl-9 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                isOpen() ? "ring-2 ring-blue-500" : ""
+              }`}
+              onClick={() => toggleDropdown(!isOpen())}
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
+              role="combobox"
+              aria-expanded={isOpen()}
+              aria-haspopup="listbox"
+              aria-label={!label ? "Option auswählen" : undefined}
+              aria-describedby={ariaDescribedBy}
+              aria-invalid={!!error?.()}
+              aria-required={required}
+            >
+              <Show
+                when={selectedOption()}
+                fallback={
+                  <span class="text-gray-400 dark:text-gray-500">
+                    {placeholder}
+                  </span>
+                }
+              >
+                <span class="text-gray-700 dark:text-gray-300">
+                  {selectedOption()!.label}
                 </span>
-              }
-            >
-              <span class="text-gray-700 dark:text-gray-300">
-                {selectedOption()!.label}
-              </span>
-            </Show>
+              </Show>
+            </div>
           </div>
-        </div>
 
-        <dialog
-          ref={dialogRef}
-          class="dark:bg-dark rounded-lg bg-white p-1 ring-2 ring-gray-200 backdrop:bg-transparent dark:ring-gray-700"
-          onKeyDown={handleKeyDown}
-          onClick={handleDialogClick}
-        >
-          <div
-            class="scrollbar flex max-h-60 flex-col gap-1 overflow-y-auto rounded-lg"
-            role="listbox"
-            aria-label={label || "Options"}
+          <dialog
+            ref={dialogRef}
+            class="dark:bg-dark rounded-lg bg-white p-1 ring-2 ring-gray-200 backdrop:bg-transparent dark:ring-gray-700"
+            onKeyDown={handleKeyDown}
+            onClick={handleDialogClick}
+            aria-label="Optionen"
           >
-            <For
-              each={options}
-              fallback={
-                <div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                  Keine Optionen verfügbar
-                </div>
-              }
+            <div
+              class="scrollbar flex max-h-60 flex-col gap-1 overflow-y-auto rounded-lg"
+              role="listbox"
+              aria-label={label || "Options"}
             >
-              {(option, index) => {
-                const isSelected = () => option.id === value?.();
-                const isFocused = () => index() === focusedIndex();
-
-                return (
-                  <div
-                    ref={(el) => (optionRefs[index()] = el)}
-                    class={`flex cursor-pointer items-center rounded px-3 py-2 text-sm transition-colors select-none ${
-                      isFocused()
-                        ? "bg-gray-100 dark:bg-gray-800"
-                        : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                    }`}
-                    onClick={() => selectOption(option)}
-                    onMouseEnter={() => setFocusedIndex(index())}
-                    role="option"
-                    aria-label={option.label}
-                    aria-selected={isSelected()}
-                  >
-                    <Show when={option.icon}>
-                      <i class={`${option.icon} mr-3 text-gray-500`} />
-                    </Show>
-
-                    <div class="min-w-0 flex-1">
-                      <span class="truncate text-gray-700 dark:text-gray-300">
-                        {option.label}
-                      </span>
-                      <Show when={option.description}>
-                        <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                          {option.description}
-                        </div>
-                      </Show>
-                    </div>
+              <For
+                each={options}
+                fallback={
+                  <div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                    Keine Optionen verfügbar
                   </div>
-                );
-              }}
-            </For>
-          </div>
-        </dialog>
-      </div>
+                }
+              >
+                {(option, index) => {
+                  const isSelected = () => option.id === value?.();
+                  const isFocused = () => index() === focusedIndex();
 
-      {error?.() && <p class="text-sm text-red-500">{error()}</p>}
-    </div>
+                  return (
+                    <div
+                      ref={(el) => (optionRefs[index()] = el)}
+                      class={`flex cursor-pointer items-center rounded px-3 py-2 text-sm transition-colors select-none ${
+                        isFocused()
+                          ? "bg-gray-100 dark:bg-gray-800"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                      }`}
+                      onClick={() => selectOption(option)}
+                      onMouseEnter={() => setFocusedIndex(index())}
+                      role="option"
+                      aria-label={option.label}
+                      aria-selected={isSelected()}
+                    >
+                      <Show when={option.icon}>
+                        <i class={`${option.icon} mr-3 text-gray-500`} />
+                      </Show>
+
+                      <div class="min-w-0 flex-1">
+                        <span class="truncate text-gray-700 dark:text-gray-300">
+                          {option.label}
+                        </span>
+                        <Show when={option.description}>
+                          <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                            {option.description}
+                          </div>
+                        </Show>
+                      </div>
+                    </div>
+                  );
+                }}
+              </For>
+            </div>
+          </dialog>
+        </div>
+      )}
+    </InputWrapper>
   );
 };
 

@@ -7,6 +7,13 @@
 import { prompts } from "@/lib/client/prompt-lib";
 
 export const createDialogAPI = () => ({
+  form: (fields: any) =>
+    prompts.form({
+      title: "Kit Formular",
+      icon: "ti ti-tool",
+      fields,
+    }),
+
   prompt: (message: string, defaultValue?: string) =>
     prompts.prompt(message, defaultValue, {
       title: "Kit Dialog",

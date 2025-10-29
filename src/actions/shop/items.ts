@@ -166,7 +166,7 @@ export const shopItemActions = {
             ${data.description ? sql`description = ${data.description},` : sql``}
             ${data.ean13 ? sql`ean13 = ${data.ean13},` : sql``}
             ${data.priceCents ? sql`price_cents = ${data.priceCents},` : sql``}
-            ${data.active ? sql`active = ${data.active},` : sql``}
+            ${data.active !== undefined ? sql`active = ${data.active},` : sql``}
             ${data.imgData ? sql`img_data = ${data.imgData},` : sql``}
             ${data.tags ? sql`tags = ${"{" + data.tags.join(",") + "}"},` : sql``}
             updated_at = NOW()

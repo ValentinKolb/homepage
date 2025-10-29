@@ -33,6 +33,12 @@ const menu = {
 ---
 
 <ClientRouter />
-<Base title={"Pad"} fixedPage={true} menuOverwrites={menu} transition:persist>
+<Base
+  title={"Pad"}
+  fixedPage={true}
+  menuOverwrites={menu}
+  transition:persist
+  agbRequired
+>
   <PadView urlParam={padId} username={username} client:only />
 </Base>

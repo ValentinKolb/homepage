@@ -31,7 +31,7 @@ const { data: transactions, error: transactionsErr } = await Astro.callAction(
 if (transactionsErr) return ErrorPage({ error: transactionsErr });
 ---
 
-<Base title={shop.name}>
+<Base title={shop.name} agbRequired>
   <div
     class="container flex flex-col mx-auto max-w-6xl px-4 py-4 lg:py-12 gap-2 sm:gap-6"
   >

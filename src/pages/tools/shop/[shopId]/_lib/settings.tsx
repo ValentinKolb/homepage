@@ -10,7 +10,7 @@ const Settings = (initial: { shop: Shop }) => {
   const [newSettings, setNewSettings, handler] = createForm({
     initial: {
       name: initial.shop.name,
-      description: initial.shop.description,
+      description: initial.shop.description ?? "",
     },
     validate: {
       name: (v) =>

@@ -60,7 +60,7 @@ const DefaultMenu: MenuItems = {
     },
     {
       name: "Impressum",
-      url: "/privacy-policy",
+      url: "/impressum",
     },
   ],
 };

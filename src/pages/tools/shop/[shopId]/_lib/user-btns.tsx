@@ -24,62 +24,36 @@ const roles = [
 export const AddUserButton = (inital: { shopId: string }) => {
   const mutation = createMutation({
     mutation: async () => {
-      const newUser = await prompts.dialog((close) => {
-        const [value, setValue] = createStore({
-          userId: "",
-          permission: undefined as string | undefined,
-        });
-
-        return (
-          <div class="flex flex-col gap-4">
-            <DialogHeader
-              icon="ti ti-user-plus"
-              title="Person hinzufügen"
-              close={close}
-            />
-
-            <TextInput
-              label="Person"
-              description="Bitte gebe die User-ID der Person ein, die hinzugefügt werden soll."
-              icon="ti ti-id-badge-2"
-              value={() => value.userId}
-              onChange={(val) => setValue("userId", val)}
-              placeholder="XXX-YYYY-XXX-YYYY"
-              monospace
-            />
-
-            <SelectInput
-              label="Rolle"
-              description="Welche Rechte soll die Person haben?"
-              value={() => value.permission}
-              onChange={(val) => setValue("permission", val)}
-              options={roles}
-            />
-            <div class="flex flex-row justify-end gap-2">
-              <button
-                class="btn-subtle px-3 py-2 text-sm"
-                onClick={() => close()}
-              >
-                Abbrechen
-              </button>
-              <button
-                class="btn-success px-3 py-2 text-sm"
-                onClick={() => close(value)}
-              >
-                Hinzufügen
-                <i class="ti ti-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-        );
+      const newUser = await prompts.form({
+        title: "Person hinzufügen",
+        icon: "ti ti-user-plus",
+        fields: {
+          userId: {
+            label: "Person",
+            description:
+              "Bitte gebe die User-ID der Person ein, die hinzugefügt werden soll.",
+            placeholder: "XXX-YYYY-XXX-YYYY",
+            icon: "ti ti-id-badge-2",
+            type: "text",
+            required: true,
+          },
+          permission: {
+            label: "Rolle",
+            description: "Bitte wähle die Rolle der Person aus.",
+            icon: "ti ti-user-cog",
+            type: "select",
+            options: roles,
+            required: true,
+          },
+        },
       });
 
-      if (!newUser || !newUser.userId || !newUser.permission) return;
+      if (!newUser) return;
 
       await actions.shop.users.add.orThrow({
         shopId: inital.shopId,
         userId: newUser.userId,
-        permission: newUser.permission,
+        permission: newUser.permission as any,
       });
 
       window.location.reload();
@@ -152,56 +126,27 @@ export const TopUpUserButton = (inital: {
 }) => {
   const mutation = createMutation({
     mutation: async () => {
-      const value = await prompts.dialog((close) => {
-        const [topupCents, setTopupCents] = createSignal(0);
-
-        return (
-          <div class="flex flex-col gap-4">
-            <DialogHeader
-              icon="ti ti-currency-euro"
-              title="Konto Aufladen"
-              close={close}
-            />
-
-            <TextInput
-              description={`Gebe den Betrag in Euro an, der auf das Konto von ${inital.username} eingezahlt werden soll.`}
-              placeholder="Gutschrift"
-              value={() => (topupCents() / 100).toFixed(2).replace(".", ",")}
-              icon="ti ti-currency-euro"
-              activeIcon="ti ti-plus"
-              onChange={(value) => {
-                const euros = parseFloat(value.replace(",", "."));
-                if (!isNaN(euros)) {
-                  setTopupCents(Math.round(euros * 100));
-                }
-              }}
-            />
-
-            <div class="flex flex-row justify-end gap-2">
-              <button
-                class="btn-subtle px-3 py-2 text-sm"
-                onClick={() => close()}
-              >
-                Abbrechen
-              </button>
-              <button
-                class="btn-success px-3 py-2 text-sm"
-                onClick={() => close(topupCents())}
-              >
-                Aufladen
-                <i class="ti ti-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-        );
+      const value = await prompts.form({
+        title: "Konto Aufladen",
+        icon: "ti ti-currency-euro",
+        fields: {
+          amountCents: {
+            label: "Betrag",
+            type: "currency",
+            required: true,
+            placeholder: "Gutschrift",
+            description: `Gebe den Betrag in Euro an, der auf das Konto von ${inital.username} eingezahlt werden soll.`,
+            min: 0,
+          },
+        },
       });
 
-      if (!value || value <= 0) return;
+      if (!value) return;
 
       await actions.shop.transactions.topup.orThrow({
         shopId: inital.shopId,
         targetUserId: inital.userId,
-        amountCents: value,
+        amountCents: value.amountCents,
       });
 
       window.location.reload();

@@ -6,6 +6,6 @@ import LoggedIn from "./_logged-in.astro";
 const hasSession = Astro.locals.auth !== undefined;
 ---
 
-<Base title={"Account"}>
+<Base title={"Account"} agbRequired>
   {hasSession ? <LoggedIn /> : <LoggedOut />}
 </Base>

@@ -1,5 +1,5 @@
 import { parseImage, showFileDialog } from "@/lib/client/files";
-import { DialogHeader, prompts } from "@/lib/client/prompt-lib";
+import { prompts } from "@/lib/client/prompt-lib";
 import { createMutation } from "@/lib/solidjs/mutation";
 import { actions } from "astro:actions";
 import { createStore } from "solid-js/store";
@@ -7,8 +7,6 @@ import { euro } from "./util";
 import { navigate } from "astro:transitions/client";
 import TextInput from "@/components/solidjs/input/text";
 import TagsInput from "@/components/solidjs/input/tags";
-import { createSignal } from "solid-js";
-import NumberInput from "@/components/solidjs/input/number";
 import type { ShopItem } from "@/actions/shop/types";
 
 // Helper function to create a deep copy of ShopItem
@@ -44,53 +42,23 @@ const InventoryItemView = (initial: { item: ShopItem }) => {
 
   const updateStockMutation = createMutation({
     mutation: async () => {
-      const updates = await prompts.dialog((close) => {
-        const [value, setValue] = createStore({
-          quantity: 0,
-          creditUser: true,
-        });
-        return (
-          <div class="flex flex-col gap-4">
-            <DialogHeader icon="ti ti-plus" title="Auffüllen" close={close} />
-
-            {item.imgSrc && (
-              <img
-                src={item.imgSrc}
-                alt={item.name}
-                class="h-30 w-30 self-center overflow-hidden rounded-lg object-cover"
-              />
-            )}
-            <p class="text-dimmed text-sm">
-              Bitte gib die Anzahl der Artikel ein, die in den Kiosk aufgefüllt
-              werden sollen.
-            </p>
-            <NumberInput
-              value={() => value.quantity}
-              onChange={(v) => setValue("quantity", v)}
-              min={0}
-            />
-
-            <div class="flex flex-row items-center gap-2">
-              <input
-                aria-label="Credit User"
-                type="checkbox"
-                checked={value.creditUser}
-                onChange={(e) => setValue("creditUser", e.target.checked)}
-              />
-              <span class="text-dimmed text-sm">
-                Warenwert zu deinem Guthaben hinzufügen?
-              </span>
-            </div>
-
-            <button
-              class="btn-primary self-start px-3 py-2"
-              onClick={() => close(value)}
-            >
-              Auffüllen
-              <i class="ti ti-arrow-right"></i>
-            </button>
-          </div>
-        );
+      const updates = await prompts.form({
+        title: "Auffüllen",
+        icon: "ti ti-plus",
+        fields: {
+          quantity: {
+            type: "number",
+            label: "Anzahl",
+            required: true,
+            description: "Wie viele Produkte fügst du zum Kiosk hinzu?",
+            min: 1,
+            default: 1,
+          },
+          creditUser: {
+            type: "boolean",
+            label: "Warenwert zu deinem Guthaben hinzufügen?",
+          },
+        },
       });
 
       if (!updates) return;
@@ -124,46 +92,16 @@ const InventoryItemView = (initial: { item: ShopItem }) => {
 
   const lossMutation = createMutation({
     mutation: async () => {
-      const quantity = await prompts.dialog((close) => {
-        const [value, setValue] = createSignal(0);
-        return (
-          <div class="flex flex-col gap-4">
-            <DialogHeader
-              icon="ti ti-egg-cracked"
-              title="Artikelverlust"
-              close={close}
-            />
-
-            <div class="flex flex-row justify-between gap-4 border-b-1 border-gray-200 pb-2 dark:border-gray-700">
-              <p class="font-semibold">Artikelverlust</p>
-              <button
-                onClick={() => close()}
-                class="ti ti-x"
-                aria-label="close"
-              />
-            </div>
-            {item.imgSrc && (
-              <img
-                src={item.imgSrc}
-                alt={item.name}
-                class="h-30 w-30 self-center overflow-hidden rounded-lg object-cover"
-              />
-            )}
-            <p class="text-dimmed text-sm">
-              Bitte gib die Anzahl der Artikel ein, die aus dem Kiosk entfernt
-              werden sollen.
-            </p>
-            <NumberInput value={value} onChange={setValue} min={0} />
-            <button
-              class="btn-danger self-start px-3 py-2"
-              onClick={() => close(value())}
-            >
-              Verlust eintragen
-              <i class="ti ti-arrow-right"></i>
-            </button>
-          </div>
-        );
-      });
+      const quantity = await prompts.promptNumber(
+        "Bitte gib die Anzahl der Artikel ein, die aus dem Kiosk entfernt werden sollen.",
+        0,
+        {
+          title: "Artikelverlust",
+          icon: "ti ti-egg-cracked",
+          min: 0,
+          max: item.stock,
+        },
+      );
 
       if (!quantity) return;
 

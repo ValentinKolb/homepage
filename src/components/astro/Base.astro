@@ -2,6 +2,7 @@
 import Footer from "@/components/astro/Footer.astro";
 import Header from "@/components/astro/Header.astro";
 import TwSizeIndicator from "@/components/astro/TwSizeIndicator.astro";
+import AGBPopup from "@/components/astro/AgbPopup.astro";
 import config from "@/config/config";
 import { plainify } from "@/lib/utils/text";
 import { ClientRouter } from "astro:transitions";
@@ -19,6 +20,7 @@ export interface Props {
   fixedPage?: boolean;
   menuOverwrites?: Partial<MenuItems>;
   hideHeader?: boolean;
+  agbRequired?: boolean;
 }
 
 // distructure frontmatters
@@ -31,6 +33,7 @@ const {
   fixedPage,
   menuOverwrites,
   hideHeader,
+  agbRequired,
 } = Astro.props;
 
 // get theme from cookie
@@ -121,8 +124,6 @@ if (Astro.cookies.has("theme")) {
   <body
     class={`${fixedPage && "max-h-[100vh] overflow-hidden "}
     bg-white dark:bg-black text-black dark:text-white antialiased
-
-
     flex flex-col min-h-[100vh]`}
   >
     <TwSizeIndicator />
@@ -134,5 +135,6 @@ if (Astro.cookies.has("theme")) {
       </slot>
     </main>
     <Footer menuOverwrites={menuOverwrites} />
+    {agbRequired && <AGBPopup />}
   </body>
 </html>

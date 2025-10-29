@@ -1,15 +1,11 @@
 import type { ShopItem } from "@/actions/shop/types";
+import Tooltip from "@/components/solidjs/Tooltip";
+import { prompts } from "@/lib/client/prompt-lib";
+import { createMutation } from "@/lib/solidjs/mutation";
+import { ActionError, actions } from "astro:actions";
+import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { euro } from "./util";
-import { createSignal } from "solid-js";
-import Tooltip from "@/components/solidjs/Tooltip";
-import { createMutation } from "@/lib/solidjs/mutation";
-import { DialogHeader, prompts } from "@/lib/client/prompt-lib";
-import NumberInput from "@/components/solidjs/input/number";
-import { ActionError, actions } from "astro:actions";
-import PinInput from "@/components/solidjs/input/pin";
-import SelectInput from "@/components/solidjs/input/select";
-import { createForm } from "@/lib/solidjs/form";
 
 const ItemView = (initial: {
   item: ShopItem;
@@ -17,112 +13,67 @@ const ItemView = (initial: {
   isGuest: boolean;
   users: { userId: string; username: string }[];
 }) => {
+  const users = initial.users
+    .sort((a, b) => a.username.localeCompare(b.username))
+    .map((user) => ({
+      id: user.userId,
+      label: user.username,
+      description: user.userId,
+    }));
   const [item, setItem] = createStore(initial.item);
   const [userBalance, setUserBalance] = createSignal(initial.userBalance);
 
   const purchaseMutation = createMutation({
     mutation: async () => {
-      const data = await prompts.dialog((close) => {
-        const [values, setValues, handler] = createForm({
-          initial: {
-            userId: undefined as string | undefined,
-            quantity: 1,
-            token: undefined as string | undefined,
+      const data = await prompts.form({
+        title: `${item.name} kaufen`,
+        icon: "ti ti-cash-register",
+        confirmText: initial.isGuest ? "Weiter zum Anmelden" : "Kaufen",
+        fields: {
+          quantity: {
+            label: "Menge",
+            description: "Wie viele Artikel möchtest du kaufen?",
+            type: "number",
+            min: 1,
+            default: 1,
+            max: item.stock,
+            required: true,
           },
-        });
-
-        return (
-          <div class="flex flex-col gap-6">
-            <DialogHeader
-              icon="ti ti-cash-register"
-              title={item.name}
-              close={close}
-            />
-
-            {item.imgSrc && (
-              <img
-                src={item.imgSrc}
-                alt={item.name}
-                class="h-30 w-30 self-center overflow-hidden rounded-lg object-cover"
-              />
-            )}
-            <p class="text-dimmed text-sm">
-              Wie viel Artikel möchtest du{" "}
-              {item.priceCents > 0 ? (
-                <>
-                  für einen Gesamtpreis von{" "}
-                  <span class="font-mono tabular-nums">
-                    {euro(item.priceCents * values.quantity)}
-                  </span>{" "}
-                  kaufen
-                </>
-              ) : (
-                "entnehmen"
-              )}
-              ?
-            </p>
-            <NumberInput
-              value={() => values.quantity}
-              onChange={(v) => setValues("quantity", v)}
-              min={1}
-            />
-            {initial.isGuest && (
-              <>
-                <SelectInput
-                  label="Person auswählen"
-                  description="Wähle dich aus der Liste aus."
-                  value={() => values.userId}
-                  onChange={(v) => setValues("userId", v)}
-                  options={initial.users
-                    .sort((a, b) => a.username.localeCompare(b.username))
-                    .map((user) => ({
-                      id: user.userId,
-                      label: user.username,
-                      description: user.userId,
-                    }))}
-                />
-
-                <PinInput
-                  label="TOTP Code"
-                  description="Bitte gebe einen TOTP Code ein um dich zu authentifizieren."
-                  value={() => values.token ?? ""}
-                  onChange={(v) => setValues("token", v)}
-                  stretch
-                />
-              </>
-            )}
-
-            <div class="flex flex-row justify-end gap-2">
-              <button
-                class="btn-subtle px-3 py-2 text-sm"
-                onClick={() => close()}
-              >
-                Abbrechen
-              </button>
-              <button
-                class="btn-success px-3 py-2 text-sm"
-                onClick={handler.submit(close)}
-              >
-                {item.priceCents > 0 ? "Kaufen" : "Entnehmen"}
-                <i class="ti ti-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-        );
+        },
       });
 
-      if (data === undefined) return false;
+      if (!data) return false;
+
+      const authData = initial.isGuest
+        ? await prompts.form({
+            title: `${item.name} kaufen`,
+            icon: "ti ti-cash-register",
+            confirmText: "Kaufen",
+            fields: {
+              userId: {
+                label: "Wer bist du?",
+                description: "Bitte wähle deinen Benutzer aus.",
+                type: "select" as const,
+                options: users,
+                required: true,
+              },
+              token: {
+                label: "TOTP Code",
+                description:
+                  "Bitte gebe einen TOTP Code ein um dich zu authentifizieren.",
+                type: "pin" as const,
+                required: true,
+                stretch: true,
+              },
+            },
+          })
+        : undefined;
 
       const { remainingStock, newBalance } =
         await actions.shop.transactions.purchase.orThrow({
           itemId: item.id,
-          quantity: data.quantity,
-          totp: initial.isGuest
-            ? {
-                userId: data.userId,
-                token: data.token,
-              }
-            : undefined,
+          quantity: data.quantity as number,
+          totp: authData ?? undefined,
         });
 
       setItem("stock", remainingStock);

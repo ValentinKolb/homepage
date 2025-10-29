@@ -69,7 +69,7 @@ const CopyAccountInfo = () => {
                 onClick={async () =>
                   await copy(exportCredentials(account)).then(() =>
                     prompts.alert(
-                      "Speichere den Schlüssel sicher (z.B. in einem Passwortmanager) und teile ihn mit <b>niemandem</b>.",
+                      "Speichere den Schlüssel sicher (z.B. in einem Passwortmanager) und teile ihn mit niemandem.",
                       {
                         title: "Backup-Schlüssel kopiert",
                         icon: "ti ti-check",

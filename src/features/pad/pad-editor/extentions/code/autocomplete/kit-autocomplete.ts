@@ -85,6 +85,15 @@ const dialogCompletions: Completion[] = [
     detail: "(message) → Promise<boolean>",
     info: "Show a confirmation dialog. Returns true for OK, false for Cancel.",
   }),
+  snippetCompletion(
+    "form({\n  ${1:fieldName}: {\n    type: '${2|text,number,select,tags,currency,image,pin|}',\n    ${3:required: true}\n  }\n})",
+    {
+      label: "form",
+      type: "method",
+      detail: "(schema) → Promise<values|null>",
+      info: "Dynamic form builder. Schema: {field: {type, label?, required?, default?, validate?}}. Types: text, number, select, tags, currency, image, pin, info.",
+    },
+  ),
 ];
 
 // ==========================
@@ -115,6 +124,12 @@ const utilsCompletions: Completion[] = [
     type: "method",
     detail: "(array: any[]) → any[]",
     info: "Randomly shuffle array elements in place. Returns the same array.",
+  }),
+  snippetCompletion("lorem(${1:50})", {
+    label: "lorem",
+    type: "method",
+    detail: "(count?: number) → string",
+    info: "Generate lorem ipsum text with specified word count. Default: 50 words.",
   }),
 ];
 

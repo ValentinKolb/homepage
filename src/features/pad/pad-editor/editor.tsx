@@ -5,7 +5,7 @@ import { createTheme } from "@/lib/solidjs/color-theme";
 import { autocompletion } from "@codemirror/autocomplete";
 import { foldGutter } from "@codemirror/language";
 import { lineNumbers } from "@codemirror/view";
-import { createCodeMirror } from "solid-codemirror";
+import { createCodeMirror, createEditorReadonly } from "solid-codemirror";
 import { For, Show, createEffect, onCleanup, onMount } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
 import { padTitle, type MarkdownPad } from "../util";
@@ -69,6 +69,8 @@ const Editor = ({
   } = createCodeMirror({
     value: howto ? howtoText : undefined,
   });
+
+  createEditorReadonly(editorView, () => !!pad?.lockEditing);
 
   // Auto-focus editor when it's ready
   createEffect(() => {
@@ -216,6 +218,39 @@ const Editor = ({
             </Tooltip>
           </div>
         </Show>
+
+        <Tooltip
+          label={
+            pad?.lockEditing ? (
+              <>
+                Bearbeiten ist bei dir{" "}
+                <span class="text-red-400">gesperrt</span>.
+                <br />
+                Andere können das Pad weiterhin bearbeiten.
+              </>
+            ) : (
+              <>
+                Bearbeiten <span class="text-green-500">aktiviert</span>.
+                <br />
+                Klicke um bearbeiten bei dir zu sperren.
+              </>
+            )
+          }
+        >
+          <button
+            aria-label="Toggle code execution activation"
+            onClick={() =>
+              setPad({
+                ...pad,
+                lockEditing: !pad?.lockEditing,
+              })
+            }
+          >
+            <i
+              class={`ti ${pad?.lockEditing ? "ti-pencil-off text-red-500" : "ti-pencil"}`}
+            />
+          </button>
+        </Tooltip>
 
         <Tooltip
           label={`Codeausführung ${pad?.enableCodeExecution ? "deaktivieren" : "aktivieren"}`}

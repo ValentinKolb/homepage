@@ -40,6 +40,7 @@ export type MarkdownPad = {
   title?: string;
   pinned?: boolean;
   id: string;
+  lockEditing?: boolean;
   enableGutter?: boolean;
   enableCodeExecution?: boolean;
 };
@@ -86,6 +87,7 @@ export const createPadStore = (padId: string) =>
       created: new Date(),
       updated: new Date(),
       id: padId,
+      lockEditing: false,
       enableGutter: false,
       enableCodeExecution: true,
     },

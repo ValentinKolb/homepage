@@ -37,6 +37,18 @@ const topLevelCompletions: Completion[] = [
     info: "SQL database with persistent storage",
   },
   {
+    label: "store",
+    type: "namespace",
+    detail: "Key-Value Store",
+    info: "Persistent key-value storage with OPFS backend",
+  },
+  {
+    label: "opfs",
+    type: "namespace",
+    detail: "File System",
+    info: "Origin Private File System for file operations",
+  },
+  {
     label: "util",
     type: "namespace",
     detail: "Utilities",
@@ -86,12 +98,12 @@ const dialogCompletions: Completion[] = [
     info: "Show a confirmation dialog. Returns true for OK, false for Cancel.",
   }),
   snippetCompletion(
-    "form({\n  ${1:fieldName}: {\n    type: '${2|text,number,select,tags,currency,image,pin|}',\n    ${3:required: true}\n  }\n})",
+    "form({\n  ${1:fieldName}: {\n    type: '${2|text,number,boolean,select,tags,currency,image,pin|}',\n    ${3:required: true}\n  }\n})",
     {
       label: "form",
       type: "method",
       detail: "(schema) → Promise<values|null>",
-      info: "Dynamic form builder. Schema: {field: {type, label?, required?, default?, validate?}}. Types: text, number, select, tags, currency, image, pin, info.",
+      info: "Dynamic form builder. Schema: {field: {type, label?, required?, default?, validate?}}. Types: text, number, boolean, select, tags, currency, image, pin, info.",
     },
   ),
 ];
@@ -306,6 +318,80 @@ const sheetCompletions: Completion[] = [
 ];
 
 // ==========================
+// Store API Completions
+// ==========================
+
+const storeCompletions: Completion[] = [
+  snippetCompletion("set(${1:'key'}, ${2:value})", {
+    label: "set",
+    type: "method",
+    detail: "(key: string, value: any) → Promise<void>",
+    info: "Set a value in the store. Value will be serialized automatically.",
+  }),
+  snippetCompletion("get(${1:'key'})", {
+    label: "get",
+    type: "method",
+    detail: "(key: string) → Promise<any>",
+    info: "Get a value from the store. Returns undefined if key doesn't exist.",
+  }),
+  snippetCompletion("delete(${1:'key'})", {
+    label: "delete",
+    type: "method",
+    detail: "(key: string) → Promise<void>",
+    info: "Delete a key from the store.",
+  }),
+  snippetCompletion("list(${1:'prefix'})", {
+    label: "list",
+    type: "method",
+    detail: "(prefix?: string) → Promise<string[]>",
+    info: "List all keys with optional prefix filter. Returns sorted array.",
+  }),
+  {
+    label: "clear",
+    type: "method",
+    detail: "() → Promise<void>",
+    info: "Clear all data from the store. Use with caution!",
+  },
+];
+
+// ==========================
+// OPFS API Completions
+// ==========================
+
+const opfsCompletions: Completion[] = [
+  snippetCompletion("ls(${1:'path'})", {
+    label: "ls",
+    type: "method",
+    detail: "(path?: string) → Promise<string[]>",
+    info: "List directory contents. Directories end with /. Defaults to root.",
+  }),
+  snippetCompletion("rm(${1:'path'})", {
+    label: "rm",
+    type: "method",
+    detail: "(path: string) → Promise<void>",
+    info: "Remove file or directory recursively. Cannot delete root.",
+  }),
+  snippetCompletion("write(${1:'path'}, ${2:'content'})", {
+    label: "write",
+    type: "method",
+    detail: "(path: string, data: string | Uint8Array) → Promise<void>",
+    info: "Write file. Creates parent directories if needed.",
+  }),
+  snippetCompletion("read(${1:'path'})", {
+    label: "read",
+    type: "method",
+    detail: "(path: string) → Promise<string | undefined>",
+    info: "Read file content as string. Returns undefined if file doesn't exist.",
+  }),
+  snippetCompletion("readBytes(${1:'path'})", {
+    label: "readBytes",
+    type: "method",
+    detail: "(path: string) → Promise<Uint8Array | undefined>",
+    info: "Read file content as Uint8Array. Returns undefined if file doesn't exist.",
+  }),
+];
+
+// ==========================
 // Main Completion Source
 // ==========================
 
@@ -409,6 +495,26 @@ const kitCompletionSource = (
     };
   }
 
+  // Completing after "kit.store."
+  if (text === "kit.store." || /^kit\.store\.\w*$/.test(text)) {
+    const lastDotPos = text.lastIndexOf(".");
+    return {
+      from: word.from + lastDotPos + 1,
+      options: storeCompletions,
+      validFor: /^\w*$/,
+    };
+  }
+
+  // Completing after "kit.opfs."
+  if (text === "kit.opfs." || /^kit\.opfs\.\w*$/.test(text)) {
+    const lastDotPos = text.lastIndexOf(".");
+    return {
+      from: word.from + lastDotPos + 1,
+      options: opfsCompletions,
+      validFor: /^\w*$/,
+    };
+  }
+
   return null;
 };
 
@@ -421,6 +527,7 @@ const kitCompletionSource = (
  * @returns CodeMirror extension with JavaScript-specific completions
  */
 export const kitAutocomplete = () => {
+  console.log("Kit autocomplete extension initialized");
   return javascriptLanguage.data.of({
     autocomplete: kitCompletionSource,
   });

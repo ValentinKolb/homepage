@@ -6,15 +6,13 @@
 
 import type { CodeRunner } from ".";
 import type { Output } from "./output-builder";
-import { getKitAPI } from "./kit";
+import { run } from "./javascript";
 
 export const sqlRunner: CodeRunner = {
   language: "sql",
 
   async execute(code: string, output: Output) {
-    try {
-      const kit = getKitAPI();
-
+    return run(async (kit) => {
       // Execute SQL query
       const results = await kit.db.exec(code);
 
@@ -24,10 +22,6 @@ export const sqlRunner: CodeRunner = {
       } else {
         output.text("Success (zero rows returned)", "info");
       }
-
-      await kit._finalize();
-    } catch (error) {
-      output.text(`[SQL] ${error}`, "error");
-    }
+    }, output);
   },
 };

@@ -87,7 +87,7 @@ export function showFileDialog(conf: {
 /**
  * Show native file picker dialog implementation
  */
-export function showFileDialog(conf: {
+export function showFileDialog(conf?: {
   accept?: string;
   multiple?: boolean;
 }): Promise<File | File[]> {
@@ -96,11 +96,11 @@ export function showFileDialog(conf: {
     input.type = "file";
     input.style.display = "none";
 
-    if (conf.accept) {
+    if (conf?.accept) {
       input.accept = conf.accept;
     }
 
-    if (conf.multiple) {
+    if (conf?.multiple) {
       input.multiple = true;
     }
 
@@ -113,7 +113,7 @@ export function showFileDialog(conf: {
         return reject(new Error("No file selected"));
       }
 
-      if (conf.multiple) {
+      if (conf?.multiple) {
         resolve(Array.from(files));
       } else {
         resolve(files[0]);

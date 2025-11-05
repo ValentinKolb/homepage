@@ -58,6 +58,12 @@ export const createFileAPI = () => ({
    * Open a file and return File object
    */
   open: showFileDialog,
+
+  /**
+   * Open multiple files and return array of File objects
+   */
+  openMultiple: async () => showFileDialog({ multiple: true }),
+
   /**
    * Open multiple files and return array of File objects
    */

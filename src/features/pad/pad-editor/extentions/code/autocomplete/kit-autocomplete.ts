@@ -212,10 +212,16 @@ const fileCompletions: Completion[] = [
     info: "Open file picker dialog. Returns selected File object.",
   },
   {
+    label: "openMultiple",
+    type: "method",
+    detail: "() → Promise<File[]>",
+    info: "Open file picker for multiple files. Returns array of selected File objects.",
+  },
+  {
     label: "openFolder",
     type: "method",
     detail: "() → Promise<File[]>",
-    info: "Open folder picker. Returns array of File objects.",
+    info: "Opens folder picker and returns array of all files. WARNING: Limited browser support! If not supported, use openMultiple() instead.",
   },
   snippetCompletion("save(${1:data}, ${2:'filename.txt'})", {
     label: "save",

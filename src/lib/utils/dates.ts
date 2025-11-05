@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/de";
 
 /**
@@ -21,7 +21,7 @@ const dateFormat = (
  * @returns Formatted date-time string
  */
 const dateTimeFormat = (
-  date: Date | string,
+  date: Date | string | Dayjs,
   pattern: string = "HH:mm • DD.MM.YYYY",
 ): string => {
   return dayjs(date).format(pattern);

@@ -236,7 +236,7 @@ const InventoryItemView = (initial: { item: ShopItem }) => {
             <button
               class="btn btn-primary dark:btn-subtle group dark:hover:text-blue-500"
               onClick={() => {
-                showFileDialog(".jpg,.jpeg,.png,.gif,.webp")
+                showFileDialog({ accept: ".jpg,.jpeg,.png,.gif,.webp" })
                   .then((file) => parseImage(file))
                   .then((image) => setUpdatedItem("imgSrc", image));
               }}

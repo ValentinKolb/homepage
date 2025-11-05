@@ -57,30 +57,66 @@ export const createDownloadLink = (
 };
 
 /**
- * Show native file picker dialog
- * @param accept - Accepted file types (e.g., ".txt,.pdf")
+ * Show native file picker dialog for single file selection
+ * @param conf - Configuration object
+ * @param conf.accept - Accepted file types (e.g., ".txt,.pdf")
+ * @param conf.multiple - Must be false or undefined for single file
  * @returns Promise resolving to selected File or rejecting if cancelled
+ * @example
+ * const file = await showFileDialog({ accept: ".pdf" });
  */
-export const showFileDialog = (accept?: string): Promise<File> => {
+export function showFileDialog(conf: {
+  accept?: string;
+  multiple?: false;
+}): Promise<File>;
+
+/**
+ * Show native file picker dialog for multiple file selection
+ * @param conf - Configuration object
+ * @param conf.accept - Accepted file types (e.g., ".txt,.pdf")
+ * @param conf.multiple - Must be true for multiple files
+ * @returns Promise resolving to array of Files or rejecting if cancelled
+ * @example
+ * const files = await showFileDialog({ accept: ".jpg,.png", multiple: true });
+ */
+export function showFileDialog(conf: {
+  accept?: string;
+  multiple: true;
+}): Promise<File[]>;
+
+/**
+ * Show native file picker dialog implementation
+ */
+export function showFileDialog(conf: {
+  accept?: string;
+  multiple?: boolean;
+}): Promise<File | File[]> {
   return new Promise((resolve, reject) => {
     const input = document.createElement("input");
     input.type = "file";
     input.style.display = "none";
 
-    if (accept) {
-      input.accept = accept;
+    if (conf.accept) {
+      input.accept = conf.accept;
     }
 
-    input.addEventListener("change", (event) => {
-      const target = event.target as HTMLInputElement;
-      const file = target.files?.[0];
+    if (conf.multiple) {
+      input.multiple = true;
+    }
+
+    input.addEventListener("change", ({ target }) => {
+      const files = (target as HTMLInputElement).files;
 
       document.body.removeChild(input);
 
-      if (file) {
-        resolve(file);
+      if (!files || files.length === 0) {
+        return reject(new Error("No file selected"));
+      }
+
+      if (conf.multiple) {
+        resolve(Array.from(files));
       } else {
-        reject(new Error("No file selected"));
+        resolve(files[0]);
       }
     });
 
@@ -92,7 +128,7 @@ export const showFileDialog = (accept?: string): Promise<File> => {
     document.body.appendChild(input);
     input.click();
   });
-};
+}
 
 /**
  * Show native folder picker dialog

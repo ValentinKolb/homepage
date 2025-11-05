@@ -89,7 +89,7 @@ const ImageInput = ({
               type="button"
               class="btn btn-subtle group dark:hover:text-blue-500"
               onClick={() => {
-                showFileDialog(".jpg,.jpeg,.png,.gif,.webp")
+                showFileDialog({ accept: ".jpg,.jpeg,.png,.gif,.webp" })
                   .then((file) => parseImage(file))
                   .then((image) => onChange?.(image));
               }}

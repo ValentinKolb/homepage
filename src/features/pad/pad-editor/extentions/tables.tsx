@@ -15,7 +15,7 @@ import type { EditorState, Extension, Range } from "@codemirror/state";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
 import type { DecorationSet } from "@codemirror/view";
 import { dateTimeFormat } from "@/lib/utils/dates";
-import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 // ==========================
 // Types
@@ -118,8 +118,9 @@ export function createTable(
       return cell.toFixed(4).replace(/\.?0+$/, "");
     if (
       cell instanceof Date ||
-      cell instanceof Dayjs ||
-      cell.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/)
+      (typeof cell === "object" && cell && dayjs.isDayjs(cell)) ||
+      (typeof cell === "string" &&
+        cell.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/))
     ) {
       return dateTimeFormat(cell);
     }

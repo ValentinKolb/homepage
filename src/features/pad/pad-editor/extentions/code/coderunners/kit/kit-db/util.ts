@@ -129,16 +129,13 @@ export const createImportData = (impl: WorkerApi) => {
         throw new Error(insertResult.error);
       }
 
-      // Progress logging for large datasets
-      if (totalRows > 2000) {
-        const progress = Math.min(i + chunkSize, totalRows);
-        if ("progress" in console) {
-          //@ts-ignore
-          console.progress(
-            `[KitDB] Importing ${totalRows} rows into "${tableName}"`,
-            (progress * 100) / totalRows,
-          );
-        }
+      // Progress logging
+      if ("progress" in console) {
+        //@ts-ignore
+        console.progress(
+          `[KitDB] Importing ${totalRows} rows into "${tableName}"`,
+          (Math.min(i + chunkSize, totalRows) * 100) / totalRows,
+        );
       }
     }
   };
